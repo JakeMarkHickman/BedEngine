@@ -7,7 +7,10 @@ namespace Bed
     
     void Application::Run()
     {
-        printf("Here");
+        while(true)
+        {
+            printf("Update\n");
+        }
     }
 
 } // namespace Bed
