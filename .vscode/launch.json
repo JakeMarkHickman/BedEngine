@@ -6,7 +6,7 @@
             "name": "Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/testergame",
+            "program": "${workspaceRoot}/build/testergame",
             "args": [],
             "cwd": "${workspaceRoot}",
             "console": "integratedTerminal"

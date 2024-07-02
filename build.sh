@@ -14,9 +14,9 @@ else
     outputFile=TesterGame.exe
     Platform="-BED_WINDOWS_PLATFORM"
 
-    clang++ -D BED_WINDOWS_PLATFORM -D BED_BUILD_DLL -g BedEngine/Source/Bed/App/Application.cpp -shared -o BedEngine.dll
+    clang++ -D BED_WINDOWS_PLATFORM -D BED_BUILD_DLL -g BedEngine/Source/Bed/App/Application.cpp -shared -o build/BedEngine.dll
 
 fi
 
 echo "building .exe"
-clang++ -D BED_WINDOWS_PLATFORM $includes TesterGame/Source/App.cpp -o $outputFile 
+clang++ -D BED_WINDOWS_PLATFORM $includes TesterGame/Source/App.cpp -o build/$outputFile 
