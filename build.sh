@@ -3,24 +3,70 @@
 
 #!/bin/bash
 
+#Build Path
+buildPath="build"                           # The path to build to
+
+#Output
+outputFile="TesterGame"                     # No extention as we will set it after we know what OS we are building for
+engineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
+
+#Includes
 includes="-IBedEngine/Source"
-engineincludes="-IBedEngine/Platforms"
+engineIncludes="-IBedEngine/Platforms"
 
-if [[ "$uname" == "Linux" ]]; then
-    echo "not currently supported for linux"
-    outputFile=TesterGame.bin
+#Libarys
+libs="$buildPath/BedEngine.lib"             # Libs for the game
+engineLibs=""                               # Libs for the engine
 
+#flags
+flags="-fuse-ld=lld-link"                   # Flags for the game
+engineFlags=""                              # Flags for the engine
+
+#Preprocessor Definitions
+predef=""                                   # Definitions for the game
+enginePredef="-DBED_BUILD_DLL"              # Definitions for the engine
+
+#BuildEntry
+entry="TesterGame/Source/App.cpp"
+engineEntry="BedEngine/Source/Bed/App/Application.cpp"
+
+
+#Check what system is being used
+
+if [[ "$uname" == "Linux" ]]; then           # This checks if the version is Linux
+
+    echo Linux is currently unsupported
+
+    # Set Variables
+    predef="$predef -DBED_LINUX_PLATFORM"
+    enginePredef="$enginePredef -DBED_LINUX_PLATFORM"
+    outputFile="$outputFile.elf"
 
 elif [[ "$uname" == "Darwin" ]]; then
-    echo "not currently supported for mac"
+
+    echo Mac is currently unsupported
+
+    # Set Variables
+    predef="$predef -DBED_MAC_PLATFORM"
+    enginePredef="$enginePredef -DBED_MAC_PLATFORM"
+    outputFile="$outputFile.app"
+
 else
-    echo "Running on windows"
-    outputFile=TesterGame.exe
 
-    Platform="BED_WINDOWS_PLATFORM"
+    echo Building for Windows...
 
-    clang++ -D BED_WINDOWS_PLATFORM -D BED_BUILD_DLL $engineincludes -g BedEngine/Source/Bed/App/Application.cpp -luser32 -shared -o build/BedEngine.dll # Builds the entrypoint for 
+    # Set Variables
+    engineLibs="$engineLibs -luser32"
+    predef="$predef -DBED_WINDOWS_PLATFORM"
+    enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM"
+    outputFile="$outputFile.exe"
+
 fi
 
-echo "building .exe"
-clang++ -D $Platform $includes -fuse-ld=lld-link -o build/$outputFile TesterGame/Source/App.cpp build/BedEngine.lib
+# Build the Engine 
+echo Building Engine DLL...
+clang++ -shared $engineIncludes $engineLibs $engineFlags $enginePredef -o"$buildPath/$engineOutputFile" $engineEntry
+
+# Build the Game
+echo Building Game...
+clang++ $includes $libs $flags $predef -o"$buildPath/$outputFile" $entry
