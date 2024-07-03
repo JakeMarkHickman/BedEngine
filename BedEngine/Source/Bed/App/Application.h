@@ -9,6 +9,7 @@ namespace Bed
     {
     public:
         void Run();
+        void Update();
     }; 
 
     Application* CreateApplication();
