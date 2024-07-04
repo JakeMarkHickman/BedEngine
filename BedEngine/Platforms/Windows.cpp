@@ -19,11 +19,13 @@ bool PlatformCreateWindow(int width, int height, char* title)
     char* ID = "BedEngineGame";
 
     WNDCLASSA WindowClass = {}; //Window class
+    WindowClass.lpfnWndProc = DefWindowProcA; // Call back for input in window
+    WindowClass.lpszClassName = ID; //This is an ID not the actual name of the title
+
+
     WindowClass.hInstance = instance; //set the window handle instance to the instance we set earlier
     WindowClass.hIcon = LoadIcon(instance, IDI_APPLICATION); //set the window icon, IDI_APPLICATION is the default window icon
     WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW); //Set the cursor
-    WindowClass.lpszClassName = ID; //This is an ID not the actual name of the title
-    WindowClass.lpfnWndProc = DefWindowProcA; // Call back for input in window
 
     if(!RegisterClassA(&WindowClass))
     {

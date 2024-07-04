@@ -58,6 +58,7 @@ else
     # Set Variables
     engineLibs="$engineLibs -luser32"
     predef="$predef -DBED_WINDOWS_PLATFORM"
+    
     enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM"
     outputFile="$outputFile.exe"
 

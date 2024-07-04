@@ -5,7 +5,7 @@
 
 class TesterGame : public Bed::Application
 {
-
+    
 };
 
 Bed::Application* CreateApplication()
