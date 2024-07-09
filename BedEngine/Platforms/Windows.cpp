@@ -12,11 +12,11 @@ static HWND Window;
 //                         Functions                            //
 //////////////////////////////////////////////////////////////////
 
-bool PlatformCreateWindow(int width, int height, char* title)
+bool PlatformCreateWindow(int width, int height, const char* title)
 {
     HINSTANCE instance = GetModuleHandleA(0); //GetModuleHandle() usually calls this function, A is just the encoder
 
-    char* ID = "BedEngineGame";
+    const char* ID = "BedEngineGame";
 
     WNDCLASSA WindowClass = {}; //Window class
     WindowClass.lpfnWndProc = DefWindowProcA; // Call back for input in window

@@ -14,4 +14,3 @@
 
 bool PlatformCreateWindow(int width, int height, char* title);
 void PlatformUpdateWindow();
-bool 

@@ -7,7 +7,7 @@ namespace Bed
 {
     void Application::Run()
     {
-        if(PlatformCreateWindow(800, 550, "TestGame")) // Creates Platform App and checks to make sure its open
+        if(!PlatformCreateWindow(800, 550, "TestGame")) // Creates Platform App and checks to make sure its open
         {
             printf("Failed to create app");
             return; // leaves the function
