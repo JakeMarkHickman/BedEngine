@@ -14,7 +14,7 @@
 //                         Functions                            //
 //////////////////////////////////////////////////////////////////
 
-void CreateWindow(int width, int height, char* title);
+bool CreateWindow(int width, int height, char* title);
 void UpdateWindow();
 bool IsWindowOpen();
 void CloseWindow();

@@ -6,7 +6,10 @@ namespace Bed
 {
     void Application::Run()
     {
-        CreateWindow(800, 550, "TestGame"); // Create the window
+        if(!CreateWindow(800, 550, "TestGame")) // Check to make sure the Window is created
+        {
+            return; // Return if the Window wasnt created
+        }
 
         Update();
     }

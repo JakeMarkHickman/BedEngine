@@ -11,23 +11,28 @@
 GraphicsAPI::GraphicsAPIFlags AvailableFlags;
 GraphicsAPI::GraphicsAPIFlags CurrentFlag = GraphicsAPI::OpenGL;
 
-void CreateWindow(int width, int height, const char* title)
-{
-    switch (CurrentFlag) //This 
+bool CreateWindow(int width, int height, const char* title)
+{   
+    bool WindowCreated;
+    switch (CurrentFlag) //This Checks to See what the Current 
     {
         case GraphicsAPI::OpenGL:
-            OpenGLCreateWindow(width, height, title);
-            CurrentFlag = GraphicsAPI::OpenGL;
+            WindowCreated = OpenGLCreateWindow(width, height, title);
             break;
         case GraphicsAPI::Vulkan:
             CurrentFlag = GraphicsAPI::Vulkan;
+            WindowCreated = false;
             break;
         case GraphicsAPI::DirectX:
+            WindowCreated = false;
             CurrentFlag = GraphicsAPI::DirectX;
             break;
         case GraphicsAPI::Metal:
+            WindowCreated = false;
             break;
     }
+
+    return WindowCreated;
 }
 
 void UpdateWindow()
