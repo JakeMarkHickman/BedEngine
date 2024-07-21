@@ -1,35 +1,27 @@
 
 #include <Platform.h>
 #include "Application.h"
-#include "stdio.h"
 
 namespace Bed
 {
     void Application::Run()
     {
-        if(!PlatformCreateWindow(800, 550, "TestGame")) // Creates Platform App and checks to make sure its open
-        {
-            printf("Failed to create app");
-            return; // leaves the function
-        }
+        CreateWindow(800, 550, "TestGame"); // Create the window
 
         Update();
     }
 
     void Application::Update()
     {
-        bool ApplicationOpen = true;
-
         //Game Loop
-        while (ApplicationOpen)
+        while (IsWindowOpen())
         {
-            if(!ApplicationOpen) { return; } // If the application is no longer open close
-
-            PlatformUpdateWindow(); // Update the platform App
+            UpdateWindow(); // Update the platform App
 
             // TODO: Create an update event that fires to everything that uses it.
         }
         
+        CloseWindow(); // Close the window
     } 
 
 }

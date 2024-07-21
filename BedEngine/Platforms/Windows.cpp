@@ -1,59 +1,94 @@
-#define WIN32_LEAN_AND_MEAN
-#define NOMINAX
-#include <windows.h> //Include Windows
-
-//////////////////////////////////////////////////////////////////
-//                         Variables                            //
-//////////////////////////////////////////////////////////////////
-
-static HWND Window;
+#include <GraphicsAPI.h>
+#include <OpenGL/OpenGl.h>
 
 //////////////////////////////////////////////////////////////////
 //                         Functions                            //
 //////////////////////////////////////////////////////////////////
 
-bool PlatformCreateWindow(int width, int height, const char* title)
+// TODO: Make this more optimised, some ways of doing this could be that the platform.h is removed completly and this functionality is moved into the Graphics folder.
+// Dont do that however as I may want to create windows myself
+
+GraphicsAPI::GraphicsAPIFlags AvailableFlags;
+GraphicsAPI::GraphicsAPIFlags CurrentFlag = GraphicsAPI::OpenGL;
+
+void CreateWindow(int width, int height, const char* title)
 {
-    HINSTANCE instance = GetModuleHandleA(0); //GetModuleHandle() usually calls this function, A is just the encoder
-
-    const char* ID = "BedEngineGame";
-
-    WNDCLASSA WindowClass = {}; //Window class
-    WindowClass.lpfnWndProc = DefWindowProcA; // Call back for input in window
-    WindowClass.lpszClassName = ID; //This is an ID not the actual name of the title
-
-
-    WindowClass.hInstance = instance; //set the window handle instance to the instance we set earlier
-    WindowClass.hIcon = LoadIcon(instance, IDI_APPLICATION); //set the window icon, IDI_APPLICATION is the default window icon
-    WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW); //Set the cursor
-
-    if(!RegisterClassA(&WindowClass))
+    switch (CurrentFlag) //This 
     {
-        return false;
+        case GraphicsAPI::OpenGL:
+            OpenGLCreateWindow(width, height, title);
+            CurrentFlag = GraphicsAPI::OpenGL;
+            break;
+        case GraphicsAPI::Vulkan:
+            CurrentFlag = GraphicsAPI::Vulkan;
+            break;
+        case GraphicsAPI::DirectX:
+            CurrentFlag = GraphicsAPI::DirectX;
+            break;
+        case GraphicsAPI::Metal:
+            break;
+    }
+}
+
+void UpdateWindow()
+{
+    switch (CurrentFlag)
+    {
+        case GraphicsAPI::OpenGL:
+            OpenGLUpdateWindow();
+            CurrentFlag = GraphicsAPI::OpenGL;
+            break;
+        case GraphicsAPI::Vulkan:
+            CurrentFlag = GraphicsAPI::Vulkan;
+            break;
+        case GraphicsAPI::DirectX:
+            CurrentFlag = GraphicsAPI::DirectX;
+            break;
+        case GraphicsAPI::Metal:
+            break;
     }
     
-    //WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX
-    int dwStyle = WS_OVERLAPPEDWINDOW;
-
-    Window = CreateWindowExA(0, ID, title, dwStyle, 100, 100, width, height, NULL, NULL, instance, NULL);
-
-    if(Window == NULL)
-    {
-        return false;
-    }
-
-    ShowWindow(Window, SW_SHOW);
-
-    return true;
 }
 
-void PlatformUpdateWindow()
+bool IsWindowOpen()
 {
-    MSG msg;
-
-    while(PeekMessageA(&msg, Window, 0, 0, PM_REMOVE))
+    bool WindowOpen = false;
+    switch (CurrentFlag)
     {
-        TranslateMessage(&msg);
-        DispatchMessageA(&msg); //send it to the call back of the window (WindowClass.lpfnWndProc)
+        case GraphicsAPI::OpenGL:
+            WindowOpen = OpenGLIsWindowOpen();
+            CurrentFlag = GraphicsAPI::OpenGL;
+            break;
+        case GraphicsAPI::Vulkan:
+            CurrentFlag = GraphicsAPI::Vulkan;
+            break;
+        case GraphicsAPI::DirectX:
+            CurrentFlag = GraphicsAPI::DirectX;
+            break;
+        case GraphicsAPI::Metal:
+            break;
     }
+    return WindowOpen;
 }
+
+void CloseWindow()
+{
+    switch (CurrentFlag)
+    {
+        case GraphicsAPI::OpenGL:
+            OpenGLCloseWindow();
+            CurrentFlag = GraphicsAPI::OpenGL;
+            break;
+        case GraphicsAPI::Vulkan:
+            CurrentFlag = GraphicsAPI::Vulkan;
+            break;
+        case GraphicsAPI::DirectX:
+            CurrentFlag = GraphicsAPI::DirectX;
+            break;
+        case GraphicsAPI::Metal:
+            break;
+    }
+    
+}
+
+

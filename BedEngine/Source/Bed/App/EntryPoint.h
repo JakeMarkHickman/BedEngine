@@ -4,9 +4,9 @@
 
 extern Bed::Application* CreateApplication();
 
- int main(int argc, char** argv)
- {
-      Bed::Application* app = CreateApplication();
-      app->Run();
-      delete app;
- }
+int main(int argc, char** argv)
+{
+     Bed::Application* app = CreateApplication();
+     app->Run();
+     delete app;
+}

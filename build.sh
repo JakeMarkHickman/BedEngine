@@ -1,5 +1,3 @@
-# TODO: make the directory use linking
-# TODO: determine between engine build
 
 #!/bin/bash
 
@@ -12,11 +10,11 @@ engineOutputFile="BedEngine.dll"            # The engine will always be a dynami
 
 #Includes
 includes="-IBedEngine/Source"
-engineIncludes="-IBedEngine/Platforms"
+engineIncludes="-IBedEngine/Platforms -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include -IBedEngine/Graphics"
 
 #Libarys
-libs="$buildPath/BedEngine.lib"             # Libs for the game
-engineLibs=""                               # Libs for the engine
+libs="$buildPath/BedEngine.lib"                     # Libs for the game
+engineLibs=""  # Libs for the engine
 
 #flags
 flags="-fuse-ld=lld-link"                   # Flags for the game
@@ -56,10 +54,10 @@ else
     echo Building for Windows...
 
     # Set Variables
-    engineLibs="$engineLibs -luser32"
+    engineLibs="$engineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
     predef="$predef -DBED_WINDOWS_PLATFORM"
     
-    enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM"
+    enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM -DGLEW_STATIC"
     outputFile="$outputFile.exe"
 
 fi

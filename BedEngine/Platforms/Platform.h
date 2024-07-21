@@ -1,5 +1,7 @@
 #pragma once
 
+#include <GraphicsAPI.h>
+
 #ifdef BED_LINUX_PLATFORM // Checks if the platform is Linux
     #include "Linux.cpp"
 #elif BED_MAC_PLATFORM // Checks if the platform is Mac
@@ -12,5 +14,7 @@
 //                         Functions                            //
 //////////////////////////////////////////////////////////////////
 
-bool PlatformCreateWindow(int width, int height, char* title);
-void PlatformUpdateWindow();
+void CreateWindow(int width, int height, char* title);
+void UpdateWindow();
+bool IsWindowOpen();
+void CloseWindow();
