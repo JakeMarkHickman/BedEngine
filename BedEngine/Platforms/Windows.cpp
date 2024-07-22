@@ -93,7 +93,4 @@ void CloseWindow()
         case GraphicsAPI::Metal:
             break;
     }
-    
 }
-
-
