@@ -4,6 +4,9 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 //TEMP
 unsigned int shader;
@@ -16,6 +19,46 @@ float positions[6] =
      0.5f, -0.5f
 };
 //TEMP
+
+struct ShaderProgramSource
+{
+    std::string VertexSource;
+    std::string FragmentSource;
+};
+
+static ShaderProgramSource ParseShader(const std::string& filePath)
+{
+    std::ifstream stream(filePath);
+
+    enum class ShaderType
+    {
+        NONE = -1, VERTEX = 0, FRAGMENT = 1
+    };
+
+    std::string line;
+    std::stringstream ss[2];
+    ShaderType type = ShaderType::NONE;
+    while (getline(stream, line))
+    {
+        if (line.find("#shader") != std::string::npos)
+        {
+            if(line.find("vertex") != std::string::npos)
+            {
+                type = ShaderType::VERTEX;
+            }
+            else if(line.find("fragment") != std::string::npos)
+            {
+                type = ShaderType::FRAGMENT;
+            }
+        }
+        else
+        {
+            ss[(int)type] << line << '\n';
+        }
+    }
+
+    return { ss[0].str(), ss[1].str() };
+}
 
 static unsigned int CompileShader(unsigned int type, const std::string& source)
 {
@@ -91,27 +134,13 @@ static unsigned int CreateShader(const std::string& vertexShader, const std::str
         glVertexAttribPointer(0, 2 /*2 represents the number of dimensions so 3 would be 3D*/, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
         glEnableVertexAttribArray(0);
 
-        std::string vertexShader = 
-            "#version 330 core\n"
-            ""
-            "layout(location = 0) in vec4 position;"
-            ""
-            "void main()"
-            "{"
-            "   gl_Position = position;"
-            "}";
 
-        std::string fragmentShader = 
-            "#version 330 core\n"
-            ""
-            "layout(location = 0) out vec4 colour;"
-            ""
-            "void main()"
-            "{"
-            "   colour = vec4(0.651, 0.086, 0.902, 1.0);"
-            "}";
+        ShaderProgramSource source = ParseShader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader"); //TODO: Change this to install Dir
 
-        shader = CreateShader(vertexShader, fragmentShader);
+        std::cout << "VERTEX" << std::endl;
+        std::cout << source.VertexSource << std::endl;
+
+        shader = CreateShader(source.VertexSource, source.FragmentSource);
         glUseProgram(shader);
         //TEMP
 
