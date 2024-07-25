@@ -1,6 +1,6 @@
 
-#include <Platform.h>
 #include "Application.h"
+#include <Platforms/PlatformWrapper.h>
 
 namespace Bed
 {
