@@ -9,10 +9,11 @@
 #include <sstream>
 
 //TEMP
-unsigned int shader;
-unsigned int buffer;
-unsigned int indexBufferObject;
-float positions[] = 
+unsigned int VertexArrayObject;
+unsigned int Shader;
+unsigned int Buffer;
+unsigned int IndexBufferObject;
+float Positions[] = 
 {
 //   X      Y
     -0.5f, -0.5f,   // 0
@@ -21,7 +22,7 @@ float positions[] =
      0.5f, -0.5f    // 3
 };
 
-unsigned int indices[]
+unsigned int Indices[]
 {
     0, 1, 2,
     0, 2, 3
@@ -31,8 +32,8 @@ unsigned int indices[]
 
 struct ShaderProgramSource
 {
-    std::string vertexSource;
-    std::string fragmentSource;
+    std::string VertexSource;
+    std::string FragmentSource;
 };
 
 static ShaderProgramSource ParseShader(const std::string& filePath)

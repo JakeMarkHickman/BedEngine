@@ -19,7 +19,7 @@ Bed::Platform* Platform;
 //                         Functions                            //
 //////////////////////////////////////////////////////////////////
 
-bool CreateWindow(int width, int height, char* title)
+bool CreateWindow(int width, int height, const char* title, GraphicsAPI::EGraphicsAPIFlags Pipeline)
 {
 
     switch (PlatTypes)
@@ -39,7 +39,7 @@ bool CreateWindow(int width, int height, char* title)
         break;
     }
 
-    return Platform->PlatformCreateWindow(width, height, title);;
+    return Platform->PlatformCreateWindow(width, height, title, Pipeline);
 }
 
 void UpdateWindow()

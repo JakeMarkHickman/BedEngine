@@ -5,7 +5,7 @@
 buildPath="build"                           # The path to build to
 
 #Output
-outputFile="TesterGame"                     # No extention as we will set it after we know what OS we are building for
+outputFile="Playground"                     # No extention as we will set it after we know what OS we are building for
 engineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
 
 #Includes
@@ -25,8 +25,12 @@ predef=""                                   # Definitions for the game
 enginePredef="-DBED_BUILD_DLL"              # Definitions for the engine
 
 #BuildEntry
-entry="TesterGame/Source/App.cpp"
+entry="Playground/Source/App.cpp"
 engineEntry="BedEngine/Source/Bed/App/Application.cpp"
+
+#ExtraCpps
+cpp=""
+enginecpp="BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp BedEngine/Source/Graphics/Renderer.cpp"
 
 
 #Check what system is being used
@@ -64,8 +68,8 @@ fi
 
 # Build the Engine 
 echo Building Engine DLL...
-clang++ -shared $engineIncludes $engineLibs $engineFlags $enginePredef -o"$buildPath/$engineOutputFile" $engineEntry
+clang++ -shared $engineIncludes $engineLibs $engineFlags $enginePredef -o"$buildPath/$engineOutputFile" $engineEntry $enginecpp
 
 # Build the Game
 echo Building Game...
-clang++ $includes $libs $flags $predef -o"$buildPath/$outputFile" $entry
+clang++ $includes $libs $flags $predef -o"$buildPath/$outputFile" $entry $cpp

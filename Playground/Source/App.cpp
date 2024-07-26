@@ -10,5 +10,9 @@ class TesterGame : public Bed::Application
 
 Bed::Application* CreateApplication()
 {
-    return new TesterGame;
+    Bed::Application* App = new TesterGame;
+    const char* Name = "Playground";
+    App->SetApplicationName(Name);
+
+    return App;
 }

@@ -2,6 +2,8 @@
 
 #include "Platform.h"
 #include <Graphics/OpenGL/OpenGl.h>
+#include <Graphics/VertexBuffer.h>
+#include <Graphics/IndexBuffer.h>
 #include <iostream>
 
 namespace Bed
@@ -15,18 +17,15 @@ namespace Bed
             AvaiableFlags.SetFlag(GraphicsAPI::OpenGL);
             AvaiableFlags.SetFlag(GraphicsAPI::Vulkan);
             AvaiableFlags.SetFlag(GraphicsAPI::DirectX);
-
-            if(!AvaiableFlags.HasFlag(m_CurrentFlag) || m_CurrentFlag == 0)
-            {
-                std::cout << m_CurrentFlag << " is not allowed on Windows or isn't valid, Switching to OpenGL" << std::endl;
-                m_CurrentFlag = GraphicsAPI::OpenGL;
-            }
         };
+
         ~Win32() {};
 
-        bool PlatformCreateWindow(int width, int height, char* title) 
+        bool PlatformCreateWindow(int width, int height, const char* title, GraphicsAPI::EGraphicsAPIFlags Pipeline) 
         {
             bool WindowCreated;
+
+            m_CurrentFlag = UseGraphicsPipeline(Pipeline);
 
             switch (m_CurrentFlag)
             {
@@ -127,16 +126,22 @@ namespace Bed
         float interval2 = 0.03f;
         float interval3 = 0.01f;
 
+        IndexBuffer* ib;
+
         int location;
 
         GLFWwindow* window;
 
-        bool OpenGlCreateWindow(int width, int height, char* title)
+        bool OpenGlCreateWindow(int width, int height, const char* title)
         {
             if(!glfwInit())
             {
                 return false;
             }
+
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
             window = glfwCreateWindow(width, height, title, NULL, NULL);
             if (!window)
@@ -155,28 +160,43 @@ namespace Bed
             }
 
             //TEMP
-            //Array Buffer
-            glGenBuffers(1, &buffer);
-            glBindBuffer(GL_ARRAY_BUFFER, buffer);
-            glBufferData(GL_ARRAY_BUFFER, 6 * 2 * sizeof(float), positions, GL_STATIC_DRAW);
+            //Vertex array object
+            glGenVertexArrays(1, &VertexArrayObject);
+            glBindVertexArray(VertexArrayObject);
 
-            glVertexAttribPointer(0, 2 /*2 represents the number of dimensions so 3 would be 3D*/, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+            //Array Buffer
+            VertexBuffer* vb = new VertexBuffer(Positions, 4 * 2 * sizeof(float));
+
+            //glGenBuffers(1, &Buffer);
+            //glBindBuffer(GL_ARRAY_BUFFER, Buffer);
+            //glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), Positions, GL_STATIC_DRAW);
+
+            glVertexAttribPointer(0, 2 /*2 represents the number of dimensions so 3 would be 3D*/, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // This is what links the Array buffer to the Vertex Array
             glEnableVertexAttribArray(0);
 
             //Index Element buffer
-            glGenBuffers(1, &indexBufferObject);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+            ib = new IndexBuffer(Indices, 6);
+
+            //glGenBuffers(1, &IndexBufferObject);
+            //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferObject);
+            //glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), Indices, GL_STATIC_DRAW);
 
 
-            ShaderProgramSource source = ParseShader("D:/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader"); //TODO: Change this to install Dir
+            ShaderProgramSource source = ParseShader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader"); //TODO: Change this to install Dir
 
-            shader = CreateShader(source.vertexSource, source.fragmentSource);
-            glUseProgram(shader);
+            Shader = CreateShader(source.VertexSource, source.FragmentSource);
+            glUseProgram(Shader);
 
-            location = glGetUniformLocation(shader, "u_Colour");
+            location = glGetUniformLocation(Shader, "u_Colour");
             
             glUniform4f(location, r, g, b, 1.0f);
+
+            //Set Everything to 0
+            glBindVertexArray(0);
+            glUseProgram(0);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
             //TEMP
 
             return true;
@@ -187,7 +207,13 @@ namespace Bed
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
 
+            glUseProgram(Shader);
             glUniform4f(location, r, g, b, 1.0f);
+
+            glBindVertexArray(VertexArrayObject);
+
+            ib->Bind();
+
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
             if (r > 1.0f)
@@ -226,7 +252,7 @@ namespace Bed
 
         void OpenGLCloseWindow()
         {
-            glDeleteProgram(shader);
+            glDeleteProgram(Shader);
             glfwTerminate();
         }
     };

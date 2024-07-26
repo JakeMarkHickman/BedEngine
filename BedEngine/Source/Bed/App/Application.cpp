@@ -6,7 +6,7 @@ namespace Bed
 {
     void Application::Run()
     {
-        if(!CreateWindow(800, 550, "TestGame")) // Check to make sure the Window is created
+        if(!CreateWindow(800, 550, m_ApplicationName, GraphicsAPI::OpenGL)) // Check to make sure the Window is created
         {
             return; // Return if the Window wasnt created
         }
