@@ -4,6 +4,7 @@
 #include <Graphics/OpenGL/OpenGl.h>
 #include <Graphics/VertexBuffer.h>
 #include <Graphics/IndexBuffer.h>
+#include <Graphics/VertexArray.h>
 #include <iostream>
 
 namespace Bed
@@ -126,7 +127,8 @@ namespace Bed
         float interval2 = 0.03f;
         float interval3 = 0.01f;
 
-        IndexBuffer* ib;
+        Bed::IndexBuffer* ib;
+        Bed::VertexArray* va;
 
         int location;
 
@@ -164,23 +166,17 @@ namespace Bed
             glGenVertexArrays(1, &VertexArrayObject);
             glBindVertexArray(VertexArrayObject);
 
-            //Array Buffer
-            VertexBuffer* vb = new VertexBuffer(Positions, 4 * 2 * sizeof(float));
+            va = new VertexArray();
 
-            //glGenBuffers(1, &Buffer);
-            //glBindBuffer(GL_ARRAY_BUFFER, Buffer);
-            //glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), Positions, GL_STATIC_DRAW);
+            //Vertex Buffer
+            Bed::VertexBuffer vb(Positions, 4 * 2 * sizeof(float));
 
-            glVertexAttribPointer(0, 2 /*2 represents the number of dimensions so 3 would be 3D*/, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // This is what links the Array buffer to the Vertex Array
-            glEnableVertexAttribArray(0);
+            VertexBufferLayout layout;
+            layout.Push<float>(2);
+            va->AddBuffer(vb, layout);
 
             //Index Element buffer
-            ib = new IndexBuffer(Indices, 6);
-
-            //glGenBuffers(1, &IndexBufferObject);
-            //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferObject);
-            //glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), Indices, GL_STATIC_DRAW);
-
+            ib = new Bed::IndexBuffer(Indices, 6);
 
             ShaderProgramSource source = ParseShader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader"); //TODO: Change this to install Dir
 
@@ -210,9 +206,7 @@ namespace Bed
             glUseProgram(Shader);
             glUniform4f(location, r, g, b, 1.0f);
 
-            glBindVertexArray(VertexArrayObject);
-
-            ib->Bind();
+            va->Bind();
 
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
@@ -229,7 +223,6 @@ namespace Bed
                 interval2 = 0.03f;
             
             g += interval2;
-
 
             if (b > 1.0f)
                 interval3 = -0.01f;

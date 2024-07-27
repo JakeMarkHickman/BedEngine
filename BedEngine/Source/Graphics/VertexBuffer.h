@@ -3,16 +3,18 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-
-class VertexBuffer
+namespace Bed
 {
-private:
-    unsigned int m_RendererID;
+    class VertexBuffer
+    {
+    public:
+        VertexBuffer(const void* data, unsigned int size);
+        ~VertexBuffer();
 
-public:
-    VertexBuffer(const void* data, unsigned int size);
-    ~VertexBuffer();
+        void Bind() const;
+        void Unbind() const;
 
-    void Bind() const;
-    void Unbind() const;
-};
+    private:
+        unsigned int m_RendererID;
+    };
+}
