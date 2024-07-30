@@ -5,6 +5,7 @@
 #include <Graphics/VertexBuffer.h>
 #include <Graphics/IndexBuffer.h>
 #include <Graphics/VertexArray.h>
+#include <Graphics/Shader.h>
 #include <iostream>
 
 namespace Bed
@@ -129,6 +130,7 @@ namespace Bed
 
         Bed::IndexBuffer* ib;
         Bed::VertexArray* va;
+        Bed::Shader* shader;
 
         int location;
 
@@ -178,21 +180,15 @@ namespace Bed
             //Index Element buffer
             ib = new Bed::IndexBuffer(Indices, 6);
 
-            ShaderProgramSource source = ParseShader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader"); //TODO: Change this to install Dir
+            shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader");
+            shader->Bind();
+            shader->SetUniform4f("u_Colour", Bed::Vector4 { r, g, b, 1.0f });
 
-            Shader = CreateShader(source.VertexSource, source.FragmentSource);
-            glUseProgram(Shader);
-
-            location = glGetUniformLocation(Shader, "u_Colour");
-            
-            glUniform4f(location, r, g, b, 1.0f);
-
-            //Set Everything to 0
-            glBindVertexArray(0);
-            glUseProgram(0);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+            // Unbind everthing
+            va->Unbind();
+            shader->Unbind();
+            vb.Unbind();
+            ib->Unbind();
             //TEMP
 
             return true;
@@ -203,8 +199,8 @@ namespace Bed
             /* Render here */
             glClear(GL_COLOR_BUFFER_BIT);
 
-            glUseProgram(Shader);
-            glUniform4f(location, r, g, b, 1.0f);
+            shader->Bind();
+            shader->SetUniform4f("u_Colour", Bed::Vector4 { r, g, b, 1.0f });
 
             va->Bind();
 
@@ -245,7 +241,7 @@ namespace Bed
 
         void OpenGLCloseWindow()
         {
-            glDeleteProgram(Shader);
+            delete shader;
             glfwTerminate();
         }
     };

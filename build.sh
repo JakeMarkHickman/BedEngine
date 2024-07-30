@@ -30,7 +30,7 @@ engineEntry="BedEngine/Source/Bed/App/Application.cpp"
 
 #ExtraCpps
 cpp=""
-enginecpp="BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp"
+enginecpp="BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp"
 
 
 #Check what system is being used

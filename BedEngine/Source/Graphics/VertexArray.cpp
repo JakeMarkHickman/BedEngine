@@ -1,6 +1,7 @@
 
 #include "VertexArray.h"
 #include <Graphics/OpenGL/OpenDebugger.h>
+#include <cstdint>
 
 Bed::VertexArray::VertexArray()
 {
@@ -22,7 +23,7 @@ void Bed::VertexArray::AddBuffer(const Bed::VertexBuffer& vb, const Bed::VertexB
     for (unsigned int i = 0; i < elements.size(); i++)
     {
         const Bed::VertexBufferLayoutElement element = elements[i];
-        glVertexAttribPointer(i, element.count, element.type, element.normalised, layout.GetStride(), (const void*)offset); // This is what links the Array buffer to the Vertex Array
+        glVertexAttribPointer(i, element.count, element.type, element.normalised, layout.GetStride(), reinterpret_cast<const void*>(uintptr_t(offset))); // This is what links the Array buffer to the Vertex Array
         glEnableVertexAttribArray(i);
         offset += element.count * Bed::VertexBufferLayoutElement::GetSizeOfType(element.type);
     }
