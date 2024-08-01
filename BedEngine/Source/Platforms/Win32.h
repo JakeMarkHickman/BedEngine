@@ -1,15 +1,30 @@
 #pragma once
 
 #include "Platform.h"
-#include <Graphics/OpenGL/OpenGl.h>
 #include <Graphics/VertexBuffer.h>
 #include <Graphics/IndexBuffer.h>
 #include <Graphics/VertexArray.h>
+#include <Graphics/Renderer.h>
 #include <Graphics/Shader.h>
 #include <iostream>
 
 namespace Bed
 {
+    float Positions[] = 
+    {
+    //   X      Y
+        -0.5f, -0.5f,   // 0
+        -0.5f,  0.5f,   // 1
+         0.5f,  0.5f,   // 2
+         0.5f, -0.5f    // 3
+    };
+
+    unsigned int Indices[]
+    {
+        0, 1, 2,
+        0, 2, 3
+    };
+
     class Win32 : public Bed::Platform
     {
     public:
@@ -131,8 +146,12 @@ namespace Bed
         Bed::IndexBuffer* ib;
         Bed::VertexArray* va;
         Bed::Shader* shader;
+        Bed::Renderer* renderer;
 
         int location;
+
+        
+
 
         GLFWwindow* window;
 
@@ -165,10 +184,7 @@ namespace Bed
 
             //TEMP
             //Vertex array object
-            glGenVertexArrays(1, &VertexArrayObject);
-            glBindVertexArray(VertexArrayObject);
-
-            va = new VertexArray();
+            va = new Bed::VertexArray();
 
             //Vertex Buffer
             Bed::VertexBuffer vb(Positions, 4 * 2 * sizeof(float));
@@ -180,9 +196,13 @@ namespace Bed
             //Index Element buffer
             ib = new Bed::IndexBuffer(Indices, 6);
 
+            //Shader
             shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader");
-            shader->Bind();
             shader->SetUniform4f("u_Colour", Bed::Vector4 { r, g, b, 1.0f });
+
+
+            renderer->Draw(va, ib, shader);
+
 
             // Unbind everthing
             va->Unbind();
@@ -197,14 +217,12 @@ namespace Bed
         void OpenGLUpdateWindow()
         {
             /* Render here */
-            glClear(GL_COLOR_BUFFER_BIT);
+            renderer->Clear();
 
             shader->Bind();
             shader->SetUniform4f("u_Colour", Bed::Vector4 { r, g, b, 1.0f });
 
-            va->Bind();
-
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+            renderer->Draw(va, ib, shader);
 
             if (r > 1.0f)
                 interval1 = -0.05f;
