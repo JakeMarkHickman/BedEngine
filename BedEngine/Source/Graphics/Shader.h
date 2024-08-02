@@ -25,6 +25,7 @@ namespace Bed
 
         // set uniforms
         void SetUniform4f(const std::string& name, Bed::Vector4 value);
+        void SetUniform1i(const std::string& name, int value);
 
     private:
         unsigned int m_RendererID;

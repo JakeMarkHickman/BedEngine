@@ -6,6 +6,7 @@
 #include <Graphics/VertexArray.h>
 #include <Graphics/Renderer.h>
 #include <Graphics/Shader.h>
+#include <Graphics/Texture.h>
 #include <iostream>
 
 namespace Bed
@@ -13,10 +14,10 @@ namespace Bed
     float Positions[] = 
     {
     //   X      Y
-        -0.5f, -0.5f,   // 0
-        -0.5f,  0.5f,   // 1
-         0.5f,  0.5f,   // 2
-         0.5f, -0.5f    // 3
+        -0.5f, -0.5f, 0.0f, 0.0f,   // 0
+        -0.5f,  0.5f, 0.0f, 1.0f,   // 1
+         0.5f,  0.5f, 1.0f, 1.0f,   // 2
+         0.5f, -0.5f, 1.0f, 0.0f    // 3
     };
 
     unsigned int Indices[]
@@ -135,23 +136,13 @@ namespace Bed
 
     private:
 
-        float r = 0.5f;
-        float g = 0.5f;
-        float b = 0.5f;
-        
-        float interval1 = 0.05f;
-        float interval2 = 0.03f;
-        float interval3 = 0.01f;
-
         Bed::IndexBuffer* ib;
         Bed::VertexArray* va;
         Bed::Shader* shader;
         Bed::Renderer* renderer;
-
+        Bed::Texture* texture;
+ 
         int location;
-
-        
-
 
         GLFWwindow* window;
 
@@ -182,14 +173,17 @@ namespace Bed
                 return false;
             }
 
-            //TEMP
+            // TODO: From here needs to be moved else where as it not Windows Specific.
+            
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glEnable(GL_BLEND);
+
             //Vertex array object
             va = new Bed::VertexArray();
-
-            //Vertex Buffer
-            Bed::VertexBuffer vb(Positions, 4 * 2 * sizeof(float));
+            Bed::VertexBuffer vb(Positions, 4 * 4 * sizeof(float));
 
             VertexBufferLayout layout;
+            layout.Push<float>(2);
             layout.Push<float>(2);
             va->AddBuffer(vb, layout);
 
@@ -198,9 +192,14 @@ namespace Bed
 
             //Shader
             shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader");
-            shader->SetUniform4f("u_Colour", Bed::Vector4 { r, g, b, 1.0f });
+
+            //Texture
+            texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestImage.png");
+            texture->Bind();
+            shader->SetUniform1i("u_Texture", 0);
 
 
+            //Draw
             renderer->Draw(va, ib, shader);
 
 
@@ -220,30 +219,9 @@ namespace Bed
             renderer->Clear();
 
             shader->Bind();
-            shader->SetUniform4f("u_Colour", Bed::Vector4 { r, g, b, 1.0f });
+            texture->Bind();
 
             renderer->Draw(va, ib, shader);
-
-            if (r > 1.0f)
-                interval1 = -0.05f;
-            else if (r < 0.0f )
-                interval1 = 0.05f;
-
-            r += interval1;
-
-            if (g > 1.0f)
-                interval2 = -0.03f;
-            else if (g < 0.0f )
-                interval2 = 0.03f;
-            
-            g += interval2;
-
-            if (b > 1.0f)
-                interval3 = -0.01f;
-            else if (b < 0.0f )
-                interval3 = 0.01f;
-            
-            b += interval3;
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

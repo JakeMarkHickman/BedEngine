@@ -33,6 +33,11 @@ void Bed::Shader::SetUniform4f(const std::string& name, Bed::Vector4 value)
     glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w);
 }
 
+void Bed::Shader::SetUniform1i(const std::string& name, int value)
+{
+    glUniform1i(GetUniformLocation(name), value);
+}
+
 int Bed::Shader::GetUniformLocation(const std::string& name)
 {
     if (m_UniformLocationCashe.find(name) != m_UniformLocationCashe.end())

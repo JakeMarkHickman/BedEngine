@@ -10,7 +10,7 @@ engineOutputFile="BedEngine.dll"            # The engine will always be a dynami
 
 #Includes
 includes="-IBedEngine/Source"
-engineIncludes="-IBedEngine/Source -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include"
+engineIncludes="-IBedEngine/Source -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image"
 
 #Libarys
 libs="$buildPath/BedEngine.lib"                     # Libs for the game
@@ -30,7 +30,9 @@ engineEntry="BedEngine/Source/Bed/App/Application.cpp"
 
 #ExtraCpps
 cpp=""
-enginecpp="BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp"
+enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp
+            BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp
+            BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp"
 
 
 #Check what system is being used
