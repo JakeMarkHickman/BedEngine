@@ -4,6 +4,9 @@
 #include <Bed/Math/Vector.h>
 #include <unordered_map>
 
+// TODO: replace GLM Includes
+#include <glm.hpp>
+
 // TODO: Make this file able to be used with diffrent Renderers
 
 namespace Bed
@@ -26,6 +29,7 @@ namespace Bed
         // set uniforms
         void SetUniform4f(const std::string& name, Bed::Vector4 value);
         void SetUniform1i(const std::string& name, int value);
+        void SetUniformMat4f(const std::string& name, const glm::mat4& Matrix);
 
     private:
         unsigned int m_RendererID;

@@ -10,7 +10,7 @@ engineOutputFile="BedEngine.dll"            # The engine will always be a dynami
 
 #Includes
 includes="-IBedEngine/Source"
-engineIncludes="-IBedEngine/Source -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image"
+engineIncludes="-IBedEngine/Source -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image -IBedEngine/Dependencies/glm"
 
 #Libarys
 libs="$buildPath/BedEngine.lib"                     # Libs for the game

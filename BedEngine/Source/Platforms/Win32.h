@@ -9,6 +9,10 @@
 #include <Graphics/Texture.h>
 #include <iostream>
 
+// TODO: replace GLM Includes
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+
 namespace Bed
 {
     float Positions[] = 
@@ -190,14 +194,21 @@ namespace Bed
             //Index Element buffer
             ib = new Bed::IndexBuffer(Indices, 6);
 
+            glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+            glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(2, 1, 0));
+
+            glm::mat4 mvp = proj * view * model;
+
             //Shader
             shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader");
+            shader->Bind();
+            shader->SetUniformMat4f("u_MVP", mvp);
 
             //Texture
-            texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestImage.png");
+            texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png");
             texture->Bind();
             shader->SetUniform1i("u_Texture", 0);
-
 
             //Draw
             renderer->Draw(va, ib, shader);
