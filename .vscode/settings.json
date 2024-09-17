@@ -53,6 +53,14 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "sstream": "cpp",
-        "vector": "cpp"
-    }
+        "vector": "cpp",
+        "xhash": "cpp",
+        "unordered_map": "cpp",
+        "cstdarg": "cpp",
+        "functional": "cpp",
+        "iomanip": "cpp",
+        "list": "cpp",
+        "typeindex": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }

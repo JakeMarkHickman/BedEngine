@@ -1,0 +1,155 @@
+#pragma once
+
+#include <vector>
+#include <typeindex>
+#include <memory>
+#include <any>
+#include <unordered_map>
+#include <Bed/Tools/SparseSet.h>
+
+
+/*
+for(int i = 0; i <= m_Entities.size() - 1; i++)
+{
+    std::cout << "Entity: " << i << " has component(s): ";
+
+    if(!m_Entities.at(i).empty())
+    {
+        for(int l = 0; l <= m_Entities.at(i).size() - 1; l++)
+        {
+            std::cout << m_Entities.at(i).at(l) << " ";
+        }
+    }
+    else
+    {
+        std::cout << "No Components";
+    }
+
+    std::cout << "\n";
+}
+*/
+
+
+
+
+namespace Bed
+{
+    class ECS
+    {
+    public:
+        ECS() {};
+        ~ECS() {};
+
+        /////////////////////////////////////
+        //              ENTITY             //
+        /////////////////////////////////////
+
+        std::vector<uint64_t> GetAllEntities() { return m_Entities; };
+
+        uint64_t CreateEntity();
+
+        void RemoveEntity(uint64_t entityToRemove);
+
+
+        /////////////////////////////////////
+        //             COMPONENT           //
+        /////////////////////////////////////
+
+        //Add Component(s) to an Entity
+        template<typename... Components>
+        void AttachComponents(uint64_t entity, const Components&... comp)
+        {
+            ([&] {
+                uint64_t typeHash = typeid(comp).hash_code(); // Gets the Hash code of the data parsed for the sparse set
+                uint64_t CompID;
+
+                if(!IsRegisteredComponent(typeHash))
+                {
+                    std::cout << "Hash code: " << typeHash << " is not yet registered" << std::endl;
+
+                    CompID = RegisterComponent(typeHash); // Register the component
+
+                    Bed::SparseSet<std::any> newCompSet; // Create a new sparse set
+                    newCompSet.Insert(entity, std::any(comp)); // populate the new sparse set
+
+                    m_EntityComponents.Insert(CompID, newCompSet); // add the new set to the already existing one
+                }
+                else
+                {
+                    std::cout << "Hash code: " << typeHash << " is registered" << std::endl;
+
+                    CompID = GetComponentIndex(typeHash);
+
+                    Bed::SparseSet<std::any> CompSet = m_EntityComponents.GetData(CompID);
+
+                    CompSet.Insert(entity, std::any(comp));
+
+                }
+            }(), ...);
+        }
+
+        //Remove Component(s) from an Entity
+        template<typename... Components>
+        void RemoveComponents(uint64_t entity, Components... comp)
+        {
+            ([&] {
+                //do things
+            }(), ...);
+        }
+
+        template<typename... Components>
+        bool HasComponents(uint64_t entity, Components... comp)
+        {
+            bool result = true;
+            ([&] {
+                uint64_t typeHash = typeid(comp).hash_code();
+
+                if(!IsRegisteredComponent(typeHash))
+                {
+                    result = false;
+                }
+
+                //TODO: Check for component on entity
+            }(), ...);
+            return result;
+        }
+
+
+        /////////////////////////////////////
+        //             SYSTEMS             //
+        /////////////////////////////////////
+
+        void UpdateSystems(float DeltaTime);
+
+    private:
+
+        uint64_t RegisterComponent(uint64_t hashCode)
+        {
+            uint64_t compID = m_NextComponent;
+
+            m_RegisteredComponents.insert({hashCode, compID});
+
+            m_NextComponent++;
+
+            return compID;
+        }
+
+        bool IsRegisteredComponent(uint64_t hashCode)
+        {
+            return m_RegisteredComponents.find(hashCode) != m_RegisteredComponents.end();
+        }
+
+        uint64_t GetComponentIndex(uint64_t hashCode)
+        {
+            return m_RegisteredComponents.at(hashCode);
+        }
+
+        std::vector<uint64_t> m_Entities;
+        uint64_t m_NextEntity = 0;
+
+        std::unordered_map<uint64_t, uint64_t> m_RegisteredComponents;
+        uint64_t m_NextComponent = 0;
+
+        SparseSet<SparseSet<std::any>> m_EntityComponents;
+    };
+}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Core.h"
+#include <Bed/Core.h>
 
 namespace Bed
 {

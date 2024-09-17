@@ -32,7 +32,7 @@ engineEntry="BedEngine/Source/Bed/App/Application.cpp"
 cpp=""
 enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp
             BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp
-            BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp"
+            BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp BedEngine/Source/Bed/GameObjects/ECS/ECS.cpp"
 
 
 #Check what system is being used
@@ -70,7 +70,7 @@ fi
 
 # Build the Engine 
 echo Building Engine DLL...
-clang++ -shared $engineIncludes $engineLibs $engineFlags $enginePredef -o"$buildPath/$engineOutputFile" $engineEntry $enginecpp
+clang++ -shared $engineIncludes $engineLibs $engineFlags $enginePredef -o"$buildPath/$engineOutputFile" $engineEntry $enginecpp -std=c++17 -Wno-c++17-extensions
 
 # Build the Game
 echo Building Game...
