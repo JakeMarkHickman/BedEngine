@@ -60,7 +60,8 @@
         "functional": "cpp",
         "iomanip": "cpp",
         "list": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "any": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

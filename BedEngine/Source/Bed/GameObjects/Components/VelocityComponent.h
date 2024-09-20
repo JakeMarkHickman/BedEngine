@@ -1,14 +1,13 @@
 #pragma once
 
-#include "EntityComponent.h"
 #include <Bed/Math/Vector.h>
 
 namespace Bed
 {
-    struct Velocity : public EntityComponent
+    struct Velocity
     {
-        Velocity(Bed::Vector3 velocity) : Velocity(velocity) {};
+        Velocity(Bed::Vector3 velocity) : m_Velocity(velocity) {};
 
-        Bed::Vector3 Velocity;
-    }
+        Bed::Vector3 m_Velocity;
+    };
 }

@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <Bed/Tools/SparseSet.h>
 
-
 /*
 for(int i = 0; i <= m_Entities.size() - 1; i++)
 {
@@ -30,10 +29,12 @@ for(int i = 0; i <= m_Entities.size() - 1; i++)
 */
 
 
-
-
 namespace Bed
 {
+    class ECS;
+
+    using SystemFunc = void (*)(ECS&, float);
+
     class ECS
     {
     public:
@@ -98,11 +99,11 @@ namespace Bed
         }
 
         template<typename... Components>
-        bool HasComponents(uint64_t entity, Components... comp)
+        bool HasComponents(uint64_t entity)
         {
             bool result = true;
             ([&] {
-                uint64_t typeHash = typeid(comp).hash_code();
+                uint64_t typeHash = typeid(Components).hash_code();
 
                 if(!IsRegisteredComponent(typeHash))
                 {
@@ -110,6 +111,13 @@ namespace Bed
                 }
 
                 //TODO: Check for component on entity
+                uint64_t compID = GetComponentIndex(typeHash);
+
+                if(!m_EntityComponents.GetData(compID).HasIndex(entity))
+                {
+                    result = false;
+                }
+
             }(), ...);
             return result;
         }
@@ -119,7 +127,18 @@ namespace Bed
         //             SYSTEMS             //
         /////////////////////////////////////
 
-        void UpdateSystems(float DeltaTime);
+        void UpdateSystems(float DeltaTime)
+        {
+            for(SystemFunc& Func : m_Systems)
+            {
+                Func(*this, DeltaTime);
+            }
+        };
+
+        void AddSystem(SystemFunc System)
+        {
+            m_Systems.push_back(System);
+        }
 
     private:
 
@@ -151,5 +170,7 @@ namespace Bed
         uint64_t m_NextComponent = 0;
 
         SparseSet<SparseSet<std::any>> m_EntityComponents;
+
+        std::vector<SystemFunc> m_Systems;
     };
 }

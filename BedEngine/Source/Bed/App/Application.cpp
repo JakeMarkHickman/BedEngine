@@ -30,7 +30,7 @@ namespace Bed
             UpdateWindow(); // Update the platform App
 
             //TODO: Remove this
-            GameMap->Update( 0.0f );
+            GameMap->Update( 0.016f );
             
             // TODO: Create an update event that fires to everything that uses it.
         }

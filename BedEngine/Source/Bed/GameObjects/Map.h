@@ -24,11 +24,20 @@ namespace Bed
             ecs.AttachComponents(newerEnt, Bed::Transform(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
                                             Bed::Vector3(1.0f, 1.0f, 1.0f));
 
+            if(ecs.HasComponents<Bed::Transform>(newEntity))
+            {
+                std::cout << "true" << std::endl;
+            }
+
+            ecs.AddSystem(Bed::MoveSystem);
         };
         virtual ~Map() {};
 
         virtual void BeginPlay() {};
-        virtual void Update(float DeltaTime) {};
+        virtual void Update(float DeltaTime) 
+        {
+            ecs.UpdateSystems(DeltaTime);
+        };
 
     protected:
         ECS ecs;
