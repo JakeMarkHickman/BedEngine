@@ -56,6 +56,8 @@ namespace Bed
         //             COMPONENT           //
         /////////////////////////////////////
 
+        SparseSet<SparseSet<std::any>> GetEntityComponents() { return m_EntityComponents; }
+
         //Add Component(s) to an Entity
         template<typename... Components>
         void AttachComponents(uint64_t entity, const Components&... comp)
@@ -122,6 +124,40 @@ namespace Bed
             return result;
         }
 
+        template<typename Component>
+        Component GetComponent(uint64_t entity)
+        {
+            uint64_t typeHash = typeid(Component).hash_code();
+
+            if(!IsRegisteredComponent(typeHash))
+            {
+                
+            }
+
+            uint64_t compID = GetComponentIndex(typeHash);
+
+            try
+            {
+                return std::any_cast<Component>(m_EntityComponents.GetData(compID).GetData(entity));
+            }
+            catch (const std::bad_any_cast& e)
+            {
+                // Handle the case where the cast fails (e.g., wrong type)
+                // Maybe log an error or throw an exception?
+                // ...
+                // For now, let's return a default-constructed Component:
+                
+            }
+        }
+
+        template<typename Component>
+        void SetComponent(uint64_t entity, const Component& comp)
+        {
+            uint64_t typeHash = typeid(Component).hash_code();
+            uint64_t compID = GetComponentIndex(typeHash);
+
+            m_EntityComponents.GetData(compID).SetData(entity, comp);
+        }
 
         /////////////////////////////////////
         //             SYSTEMS             //

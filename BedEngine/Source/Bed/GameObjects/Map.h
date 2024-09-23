@@ -17,17 +17,13 @@ namespace Bed
 
             //Entity 1
             uint64_t newEntity = ecs.CreateEntity();
-            ecs.AttachComponents(newEntity, Bed::Transform(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)));
+            ecs.AttachComponents(newEntity, Bed::Transform(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
+                                            Bed::Velocity(Bed::Vector3(0.5f, 0.5f, 0.5f)));
 
             //Entity 2
             uint64_t newerEnt = ecs.CreateEntity();
             ecs.AttachComponents(newerEnt, Bed::Transform(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
                                             Bed::Vector3(1.0f, 1.0f, 1.0f));
-
-            if(ecs.HasComponents<Bed::Transform>(newEntity))
-            {
-                std::cout << "true" << std::endl;
-            }
 
             ecs.AddSystem(Bed::MoveSystem);
         };

@@ -56,6 +56,11 @@ namespace Bed
             return m_Data[m_Sparse[id]];
         }
 
+        void SetData(uint64_t id, const T& data)
+        {
+            m_Data[m_Sparse[id]] = data;
+        }
+
         const std::vector<uint64_t>& GetIDs() const
         {
             return m_Dense;
