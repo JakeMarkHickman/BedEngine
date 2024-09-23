@@ -15,15 +15,14 @@ namespace Bed
             
             if(ecs.HasComponents<Bed::Transform, Bed::Velocity>(i))
             {
-                std::cout << "~~~~ Entity: " << i << " Has Transform and Velocity! ~~~~" << std::endl;
-                Bed::Transform Trans = ecs.GetComponent<Bed::Transform>(i);
+                Bed::Transform transform = ecs.GetComponent<Bed::Transform>(i);
                 Bed::Velocity Vel = ecs.GetComponent<Bed::Velocity>(i);
 
-                Trans.m_Position = Bed::Vector3(Trans.m_Position.x + Vel.m_Velocity.x, Trans.m_Position.y + Vel.m_Velocity.y, Trans.m_Position.z + Vel.m_Velocity.z);
+                transform.m_Position = Bed::Vector3(transform.m_Position.x + Vel.m_Velocity.x, transform.m_Position.y + Vel.m_Velocity.y, transform.m_Position.z + Vel.m_Velocity.z);
 
-                ecs.SetComponent<>(i, Trans);
+                ecs.SetComponent<>(i, transform);
 
-                std::cout << "~~~~ Entity: " << i << " position is: x: " << Trans.m_Position.x << " y: " << Trans.m_Position.y << " z: " << Trans.m_Position.z << std::endl; 
+                std::cout << "~~~~ Entity: " << i << " position is: x: " << transform.m_Position.x << " y: " << transform.m_Position.y << " z: " << transform.m_Position.z << std::endl; 
             }
         }
     }

@@ -83,10 +83,7 @@ namespace Bed
 
                     CompID = GetComponentIndex(typeHash);
 
-                    Bed::SparseSet<std::any> CompSet = m_EntityComponents.GetData(CompID);
-
-                    CompSet.Insert(entity, std::any(comp));
-
+                    m_EntityComponents.GetData(CompID).Insert(entity, std::any(comp));
                 }
             }(), ...);
         }

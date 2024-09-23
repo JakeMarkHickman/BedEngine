@@ -25,6 +25,10 @@ namespace Bed
             ecs.AttachComponents(newerEnt, Bed::Transform(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
                                             Bed::Vector3(1.0f, 1.0f, 1.0f));
 
+            uint64_t GreatEntity = ecs.CreateEntity();
+            ecs.AttachComponents(GreatEntity, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
+                                              Bed::Velocity(Bed::Vector3(0.1f, 0.0f, 0.0f)));
+
             ecs.AddSystem(Bed::MoveSystem);
         };
         virtual ~Map() {};
