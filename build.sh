@@ -32,13 +32,13 @@ engineEntry="BedEngine/Source/Bed/App/Application.cpp"
 cpp=""
 enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp
             BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp
+            BedEngine/Source/Graphics/OpenGL/OpenRenderer.cpp
             BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp BedEngine/Source/Bed/GameObjects/ECS/ECS.cpp"
 
 
 #Check what system is being used
 
 if [[ "$uname" == "Linux" ]]; then           # This checks if the version is Linux
-
     echo Linux is currently unsupported
 
     # Set Variables

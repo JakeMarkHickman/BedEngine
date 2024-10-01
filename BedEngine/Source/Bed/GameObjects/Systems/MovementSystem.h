@@ -9,8 +9,6 @@ namespace Bed
     {
         for(uint64_t i = 0; ecs.GetAllEntities().size() > i; i++)
         {
-            std::cout << "Entity: " << i << " Checked" << std::endl;
-
             //TODO: Check Crashes when there is no entities with one of the components
             
             if(ecs.HasComponents<Bed::Transform, Bed::Velocity>(i))

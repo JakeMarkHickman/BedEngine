@@ -4,6 +4,7 @@
 #include "ECS/ECS.h"
 #include "Components/TransformComponent.h"
 #include "Systems/MovementSystem.h"
+#include "Components/2DRenderComponent.h"
 
 // TODO: BED_API
 namespace Bed
@@ -23,11 +24,11 @@ namespace Bed
             //Entity 2
             uint64_t newerEnt = ecs.CreateEntity();
             ecs.AttachComponents(newerEnt, Bed::Transform(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
-                                            Bed::Vector3(1.0f, 1.0f, 1.0f));
+                                            Bed::TwoDimensionalRender(new Bed::Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestImage.png"), 0));
 
             uint64_t GreatEntity = ecs.CreateEntity();
             ecs.AttachComponents(GreatEntity, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
-                                              Bed::Velocity(Bed::Vector3(0.1f, 0.0f, 0.0f)));
+                                              Bed::Velocity(Bed::Vector3(1.0f, 0.0f, 0.0f)));
 
             ecs.AddSystem(Bed::MoveSystem);
         };

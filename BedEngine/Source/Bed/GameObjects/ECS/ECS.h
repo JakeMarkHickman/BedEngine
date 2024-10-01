@@ -7,28 +7,6 @@
 #include <unordered_map>
 #include <Bed/Tools/SparseSet.h>
 
-/*
-for(int i = 0; i <= m_Entities.size() - 1; i++)
-{
-    std::cout << "Entity: " << i << " has component(s): ";
-
-    if(!m_Entities.at(i).empty())
-    {
-        for(int l = 0; l <= m_Entities.at(i).size() - 1; l++)
-        {
-            std::cout << m_Entities.at(i).at(l) << " ";
-        }
-    }
-    else
-    {
-        std::cout << "No Components";
-    }
-
-    std::cout << "\n";
-}
-*/
-
-
 namespace Bed
 {
     class ECS;
@@ -46,6 +24,8 @@ namespace Bed
         /////////////////////////////////////
 
         std::vector<uint64_t> GetAllEntities() { return m_Entities; };
+
+        uint64_t GetEntityAtIndex(uint64_t index) { return m_Entities.at(index); }
 
         uint64_t CreateEntity();
 
