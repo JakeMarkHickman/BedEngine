@@ -145,6 +145,13 @@ namespace Bed
         Bed::Shader* shader;
         Bed::Renderer* renderer;
         Bed::Texture* texture;
+
+        glm::mat4 mvp;
+        glm::vec3 model1;
+        glm::vec3 model2;
+        glm::mat4 proj;
+        glm::mat4 view;
+
  
         int location;
 
@@ -194,25 +201,45 @@ namespace Bed
             //Index Element buffer
             ib = new Bed::IndexBuffer(Indices, 6);
 
-            glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
-            glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-
-            glm::mat4 mvp = proj * view * model;
-
             //Shader
             shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader");
             shader->Bind();
-            shader->SetUniformMat4f("u_MVP", mvp);
 
             //Texture
             texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png");
             texture->Bind();
             shader->SetUniform1i("u_Texture", 0);
 
-            //Draw
-            renderer->Draw(va, ib, shader);
+            model1 = glm::vec3(0,0,0);
+            model2 = glm::vec3(1,1,0);
 
+            //CAMERA
+            proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f); // Camera Screen Size
+            view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)); // Camera Pos
+            
+            //MODEL 1
+            {
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), model1); // Model Pos
+                mvp = proj * view * model;
+
+                shader->Bind(); //TODO: this is redundant, a cage would be used to catch if a shader is already bound
+                shader->SetUniformMat4f("u_MVP", mvp);
+
+                //Draw
+                renderer->Draw(va, ib, shader);
+            }
+
+            //MODEL 2
+            {
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), model2); // Model Pos
+                mvp = proj * view * model;
+
+                shader->Bind(); //TODO: this is redundant, a cage would be used to catch if a shader is already bound
+                shader->SetUniformMat4f("u_MVP", mvp);
+
+                //Draw
+                renderer->Draw(va, ib, shader);
+            }
 
             // Unbind everthing
             va->Unbind();
@@ -229,11 +256,32 @@ namespace Bed
             /* Render here */
             renderer->Clear();
 
-            shader->Bind();
             texture->Bind();
 
-            renderer->Draw(va, ib, shader);
+            //MODEL 1
+            {
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), model1); // Model Pos
+                mvp = proj * view * model;
 
+                shader->Bind(); //TODO: this is redundant, a cage would be used to catch if a shader is already bound
+                shader->SetUniformMat4f("u_MVP", mvp);
+
+                //Draw
+                renderer->Draw(va, ib, shader);
+            }
+
+            //MODEL 2
+            {
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), model2); // Model Pos
+                mvp = proj * view * model;
+
+                shader->Bind(); //TODO: this is redundant, a cage would be used to catch if a shader is already bound
+                shader->SetUniformMat4f("u_MVP", mvp);
+
+                //Draw
+                renderer->Draw(va, ib, shader);
+            }
+            
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 
