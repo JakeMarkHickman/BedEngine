@@ -2,6 +2,11 @@
 
 #include <Bed/GameObjects/Components/2DRenderComponent.h>
 #include <Bed/GameObjects/Components/TransformComponent.h>
+#include <Graphics/GraphicVariables.h>
+
+//TODO: Remove this
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
 
 namespace Bed
 {
@@ -21,9 +26,8 @@ namespace Bed
                     transform = ecs.GetComponent<Bed::Transform>(i);
                 }
 
-                //TODO: Do rendering stuffs for components
-
-                renderer.m_Texture->Bind();
+                //TODO: Do rendering stuffs
+                
             }
         }
     }

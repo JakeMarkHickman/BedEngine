@@ -4,8 +4,8 @@
 #include <Graphics/VertexBuffer.h>
 #include <Graphics/IndexBuffer.h>
 #include <Graphics/VertexArray.h>
-#include <Graphics/Renderer.h>
-#include <Graphics/Shader.h>
+#include <Graphics/GraphicVariables.h>
+#include <Bed/GameObjects/Models/Square.h>
 #include <Graphics/Texture.h>
 #include <iostream>
 
@@ -15,21 +15,6 @@
 
 namespace Bed
 {
-    float Positions[] = 
-    {
-    //   X      Y
-        -0.5f, -0.5f, 0.0f, 0.0f,   // 0
-        -0.5f,  0.5f, 0.0f, 1.0f,   // 1
-         0.5f,  0.5f, 1.0f, 1.0f,   // 2
-         0.5f, -0.5f, 1.0f, 0.0f    // 3
-    };
-
-    unsigned int Indices[]
-    {
-        0, 1, 2,
-        0, 2, 3
-    };
-
     class Win32 : public Bed::Platform
     {
     public:
@@ -140,10 +125,6 @@ namespace Bed
 
     private:
 
-        Bed::IndexBuffer* ib;
-        Bed::VertexArray* va;
-        Bed::Shader* shader;
-        Bed::Renderer* renderer;
         Bed::Texture* texture;
 
         glm::mat4 mvp;
@@ -151,9 +132,6 @@ namespace Bed
         glm::vec3 model2;
         glm::mat4 proj;
         glm::mat4 view;
-
- 
-        int location;
 
         GLFWwindow* window;
 

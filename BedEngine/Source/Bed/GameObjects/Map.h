@@ -5,6 +5,7 @@
 #include "Components/TransformComponent.h"
 #include "Systems/MovementSystem.h"
 #include "Components/2DRenderComponent.h"
+#include "Components/CameraComponent.h"
 
 // TODO: BED_API
 namespace Bed
@@ -17,8 +18,8 @@ namespace Bed
             // TODO: Remove this
 
             //Entity 1
-            uint64_t newEntity = ecs.CreateEntity();
-            ecs.AttachComponents(newEntity, Bed::Transform(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
+            uint64_t Player = ecs.CreateEntity();
+            ecs.AttachComponents(Player, Bed::Transform(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
                                             Bed::Velocity(Bed::Vector3(0.5f, 0.5f, 0.5f)));
 
             //Entity 2
@@ -29,6 +30,9 @@ namespace Bed
             uint64_t GreatEntity = ecs.CreateEntity();
             ecs.AttachComponents(GreatEntity, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
                                               Bed::Velocity(Bed::Vector3(1.0f, 0.0f, 0.0f)));
+
+            uint64_t Camera = ecs.CreateEntity();
+            ecs.AttachComponents(Camera, Bed::Camera(Bed::RenderType::Orthographic));
 
             ecs.AddSystem(Bed::MoveSystem);
         };
