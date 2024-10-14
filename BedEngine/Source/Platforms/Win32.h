@@ -128,22 +128,23 @@ namespace Bed
         Bed::Texture* texture;
 
         glm::mat4 mvp;
-        glm::vec3 model1;
+        glm::vec3 worldOrigin;
         glm::mat4 proj;
         glm::mat4 view;
 
         GLFWwindow* window;
 
-        float Verts[24] = {
-            -1.5f,  0.5f,  0.0f,
-            -0.5f,  0.5f,  0.0f,
-            -1.5f, -0.5f,  0.0f,
-            -0.5f, -0.5f,  0.0f,
+        float Verts[56] = {
+            //x     //y    //z    //r     //g    //b     //a
+            -1.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,
+            -0.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,
+            -1.5f, -0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,
+            -0.5f, -0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,
 
-             0.5f,  0.5f,  0.0f,
-             1.5f,  0.5f,  0.0f,
-             0.5f, -0.5f,  0.0f,
-             1.5f, -0.5f,  0.0f
+             0.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,
+             1.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,
+             0.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,
+             1.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f
         };
 
         uint32_t indices[12] = {
@@ -158,8 +159,8 @@ namespace Bed
                 return false;
             }
 
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
             window = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -187,15 +188,16 @@ namespace Bed
             va = new Bed::VertexArray();
             Bed::VertexBuffer vb(Verts, sizeof(Verts));
 
-            VertexBufferLayout layout;
-            layout.Push<float>(3);
-            va->AddBuffer(vb, layout);
+            VertexBufferLayout vertLayout;
+            vertLayout.Push<float>(3); // Position: 3 Floats (x, y, z)
+            vertLayout.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
+            va->AddBuffer(vb, vertLayout);
 
             //Index Element buffer
-            ib = new Bed::IndexBuffer(indices, sizeof(indices));
+            ib = new Bed::IndexBuffer(indices, sizeof(indices)/ sizeof(uint32_t));
 
             //Shader
-            shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Basic.shader");
+            shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Colour.shader");
             shader->Bind();
 
             //Texture
@@ -203,15 +205,15 @@ namespace Bed
             texture->Bind();
             shader->SetUniform1i("u_Texture", 0);
 
-            model1 = glm::vec3(0,0,0);
+            worldOrigin = glm::vec3(0,0,0);
 
             //CAMERA
-            proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f); // Camera Screen Size
+            proj = glm::ortho(-2.0f *2, 2.0f*2, -1.5f*2, 1.5f*2, -1.0f, 1.0f); // Camera Screen Size
             view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)); // Camera Pos
             
             //MODEL 1
             {
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), model1); // Model Pos
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), worldOrigin); // Model Pos
                 mvp = proj * view * model;
 
                 shader->Bind(); //TODO: this is redundant, a cage would be used to catch if a shader is already bound
@@ -240,7 +242,7 @@ namespace Bed
 
             //MODEL 1
             {
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), model1); // Model Pos
+                glm::mat4 model = glm::translate(glm::mat4(1.0f), worldOrigin); // Model Pos
                 mvp = proj * view * model;
 
                 shader->Bind(); //TODO: this is redundant, a cage would be used to catch if a shader is already bound

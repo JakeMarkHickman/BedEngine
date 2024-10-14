@@ -20,13 +20,32 @@ void Bed::VertexArray::AddBuffer(const Bed::VertexBuffer& vb, const Bed::VertexB
     vb.Bind();
     const std::vector<VertexBufferLayoutElement> elements = layout.GetElements();
     unsigned int offset = 0;
+
+
     for (unsigned int i = 0; i < elements.size(); i++)
     {
         const Bed::VertexBufferLayoutElement element = elements[i];
 
-        //TODO: Make this not be a cast
-        glVertexAttribPointer(i, element.count, element.type, element.normalised, layout.GetStride(), reinterpret_cast<const void*>(uintptr_t(offset))); // This is what links the Array buffer to the Vertex Array
         glEnableVertexAttribArray(i);
+        GLenum error = glGetError();
+        if (error != GL_NO_ERROR) {
+            std::cerr << "Error enabling vertex attribute at index " << i << ": " << error << std::endl;
+        }
+
+
+        glVertexAttribPointer(
+            i,
+            element.count,
+            element.type,
+            element.normalised,
+            layout.GetStride(),
+            reinterpret_cast<const void*>(static_cast<uintptr_t>(offset))
+        );
+        error = glGetError();
+        if (error != GL_NO_ERROR) {
+            std::cerr << "Error setting vertex attribute pointer at index " << i << ": " << error << std::endl;
+        }
+
         offset += element.count * Bed::VertexBufferLayoutElement::GetSizeOfType(element.type);
     }
 }
