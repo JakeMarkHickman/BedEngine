@@ -5,7 +5,8 @@
 #include <Graphics/IndexBuffer.h>
 #include <Graphics/VertexArray.h>
 #include <Graphics/GraphicVariables.h>
-#include <Bed/GameObjects/Models/Square.h>
+#include <Graphics/Vertex.h>
+#include <Bed/GameObjects/Mesh/Quad.h>
 #include <Graphics/Texture.h>
 #include <iostream>
 
@@ -128,14 +129,17 @@ namespace Bed
         Bed::Texture* texture;
         Bed::Texture* testTexture;
 
+        Bed::VertexBuffer* vb;
+
         glm::mat4 mvp;
         glm::vec3 worldOrigin;
+        glm::mat4 model;
         glm::mat4 proj;
         glm::mat4 view;
 
         GLFWwindow* window;
 
-        float Verts[80] = {
+        /*float Verts[80] = {
             //x     //y    //z    //r     //g    //b     //a    //x    //y    //TexID
             -1.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  0.0f,  1.0f,  0.0f,
             -0.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  1.0f,  1.0f,  0.0f,
@@ -146,7 +150,7 @@ namespace Bed
              1.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  1.0f,  1.0f,  1.0f,
              0.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  0.0f,  0.0f,  1.0f,
              1.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  1.0f,  0.0f,  1.0f
-        };
+        };*/
 
         uint32_t indices[12] = {
             0,1,2, 2,1,3,
@@ -187,7 +191,7 @@ namespace Bed
 
             //Vertex array object
             va = new Bed::VertexArray();
-            Bed::VertexBuffer vb(Verts, sizeof(Verts));
+            vb = new Bed::VertexBuffer(1000); // Store 1000 Bed::Vertex (pos, colour, texCoords, texID)
 
             VertexBufferLayout vertLayout;
             vertLayout.Push<float>(3); // Position: 3 Floats (x, y, z)
@@ -216,28 +220,21 @@ namespace Bed
 
             
 
-            worldOrigin = glm::vec3(0,0,0);
+            model = glm::translate(glm::mat4(1.0f), worldOrigin);
 
             //CAMERA
             proj = glm::ortho(-2.0f *2, 2.0f*2, -1.5f*2, 1.5f*2, -1.0f, 1.0f); // Camera Screen Size
             view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)); // Camera Pos
-            
-            //MODEL 1
-            {
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), worldOrigin); // Model Pos
-                mvp = proj * view * model;
 
-                shader->Bind(); //TODO: this is redundant, a cage would be used to catch if a shader is already bound
-                shader->SetUniformMat4f("u_MVP", mvp);
+            mvp = proj * view * model;
+            shader->SetUniformMat4f("u_MVP", mvp);
 
-                //Draw
-                renderer->Draw(va, ib, shader);
-            }
+            renderer->Draw(va, ib, shader);
 
             // Unbind everthing
             va->Unbind();
             shader->Unbind();
-            vb.Unbind();
+            vb->Unbind();
             ib->Unbind();
             //TEMP
 
@@ -249,20 +246,27 @@ namespace Bed
             /* Render here */
             renderer->Clear();
 
+            auto q0 = CreateQuad(Bed::Vector3(-1.0f, 0.0f, 0.0f), 1.0f, 0.0f);
+            auto q1 = CreateQuad(Bed::Vector3(1.0f, 0.0f, 0.0f), 1.0f, 1.0f);
+
+            Bed::Vertex verts[8];
+            memcpy(verts, q0.data(), q0.size() * sizeof(Bed::Vertex));
+            memcpy(verts + q0.size(), q1.data(), q1.size() * sizeof(Bed::Vertex));
+
+            unsigned int offset = 0;
+
+            std::cout << sizeof(verts) << std::endl;
+
+            vb->PopulateBuffer(verts, sizeof(verts), offset);
+
             texture->Bind(0);
             testTexture->Bind(1);
 
-            //MODEL 1
-            {
-                glm::mat4 model = glm::translate(glm::mat4(1.0f), worldOrigin); // Model Pos
-                mvp = proj * view * model;
+            shader->SetUniformMat4f("u_MVP", mvp);
 
-                shader->Bind(); //TODO: this is redundant, a cage would be used to catch if a shader is already bound
-                shader->SetUniformMat4f("u_MVP", mvp);
+            renderer->Draw(va, ib, shader);
 
-                //Draw
-                renderer->Draw(va, ib, shader);
-            }
+
             
             /* Swap front and back buffers */
             glfwSwapBuffers(window);

@@ -2,6 +2,7 @@
 
 #include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
+#include "Vertex.h"
 
 
 namespace Bed
@@ -12,7 +13,9 @@ namespace Bed
         VertexArray();
         ~VertexArray();
 
-        void AddBuffer(const Bed::VertexBuffer& vb, const Bed::VertexBufferLayout& layout);
+        void AddBuffer(const Bed::VertexBuffer* vb, const Bed::VertexBufferLayout& layout);
+
+        void PopulateBuffer(const void* verts, unsigned int offset);
 
         void Bind() const;
         void Unbind() const;

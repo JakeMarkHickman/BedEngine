@@ -1,23 +1,35 @@
 #include "VertexBuffer.h"
+#include "Vertex.h"
+#include <Graphics/OpenGL/OpenDebugger.h>
 
-Bed::VertexBuffer::VertexBuffer(const void* data, unsigned int size)
+Bed::VertexBuffer::VertexBuffer(unsigned int size)
 {
-    glGenBuffers(1, &m_RendererID);
-    glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    GLCall(glGenBuffers(1, &m_RendererID));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(Bed::Vertex) * size, nullptr, GL_DYNAMIC_DRAW));
 }
 
 Bed::VertexBuffer::~VertexBuffer()
 {
-    glDeleteBuffers(1, &m_RendererID);
+    GLCall(glDeleteBuffers(1, &m_RendererID));
 }
 
 void Bed::VertexBuffer::Bind() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
 }
 
 void Bed::VertexBuffer::Unbind() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+}
+
+void Bed::VertexBuffer::PopulateBuffer(const void* verts, unsigned int size, unsigned int offset)
+{
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
+    GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset, size, verts));
+    GLenum error = glGetError();
+    if (error != GL_NO_ERROR) {
+        std::cout << "OpenGL Error: " << error << std::endl;
+    }
 }
