@@ -26,10 +26,15 @@ namespace Bed
         void Bind() const;
         void Unbind() const;
 
+        unsigned int GetRendererID() { return m_RendererID; };
+
         // set uniforms
         void SetUniform4f(const std::string& name, Bed::Vector4 value);
         void SetUniform1i(const std::string& name, int value);
         void SetUniformMat4f(const std::string& name, const glm::mat4& Matrix);
+
+        // set array uniforms
+        void SetUniform1iv(const std::string& name, int count, int* value);
 
     private:
         unsigned int m_RendererID;

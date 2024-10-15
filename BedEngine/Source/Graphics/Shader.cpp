@@ -43,6 +43,11 @@ void Bed::Shader::SetUniformMat4f(const std::string& name, const glm::mat4& Matr
     glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &Matrix[0][0]);
 }
 
+void Bed::Shader::SetUniform1iv(const std::string& name, int count, int* value)
+{
+    glUniform1iv(GetUniformLocation(name), count, value);
+}
+
 int Bed::Shader::GetUniformLocation(const std::string& name)
 {
     if (m_UniformLocationCashe.find(name) != m_UniformLocationCashe.end())

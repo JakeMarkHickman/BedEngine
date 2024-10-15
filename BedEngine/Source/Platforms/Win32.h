@@ -126,6 +126,7 @@ namespace Bed
     private:
 
         Bed::Texture* texture;
+        Bed::Texture* testTexture;
 
         glm::mat4 mvp;
         glm::vec3 worldOrigin;
@@ -134,17 +135,17 @@ namespace Bed
 
         GLFWwindow* window;
 
-        float Verts[56] = {
-            //x     //y    //z    //r     //g    //b     //a
-            -1.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,
-            -0.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,
-            -1.5f, -0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,
-            -0.5f, -0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,
+        float Verts[80] = {
+            //x     //y    //z    //r     //g    //b     //a    //x    //y    //TexID
+            -1.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  0.0f,  1.0f,  0.0f,
+            -0.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  1.0f,  1.0f,  0.0f,
+            -1.5f, -0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  0.0f,  0.0f,  0.0f,
+            -0.5f, -0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  1.0f,  0.0f,  0.0f,
 
-             0.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,
-             1.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,
-             0.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,
-             1.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f
+             0.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  0.0f,  1.0f,  1.0f,
+             1.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  1.0f,  1.0f,  1.0f,
+             0.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  0.0f,  0.0f,  1.0f,
+             1.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  1.0f,  0.0f,  1.0f
         };
 
         uint32_t indices[12] = {
@@ -191,19 +192,29 @@ namespace Bed
             VertexBufferLayout vertLayout;
             vertLayout.Push<float>(3); // Position: 3 Floats (x, y, z)
             vertLayout.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
+            vertLayout.Push<float>(2); // TextureCoord: 2 Floats (x, y)
+            vertLayout.Push<float>(1); // Texture ID: 1 Float (ID)
             va->AddBuffer(vb, vertLayout);
 
             //Index Element buffer
-            ib = new Bed::IndexBuffer(indices, sizeof(indices)/ sizeof(uint32_t));
+            ib = new Bed::IndexBuffer(indices, sizeof(indices));
 
             //Shader
-            shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Colour.shader");
+            shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Texture.shader");
             shader->Bind();
 
             //Texture
+            //TODO: These need updating
             texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png");
-            texture->Bind();
-            shader->SetUniform1i("u_Texture", 0);
+            texture->Bind(1); //Bind to slot 0
+
+            testTexture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestImage.png");
+            testTexture->Bind(2); //Bind to slot 1
+
+            int samplers[2] = { 0, 1 };
+            shader->SetUniform1iv("u_Textures", sizeof(samplers), samplers);
+
+            
 
             worldOrigin = glm::vec3(0,0,0);
 
@@ -238,7 +249,8 @@ namespace Bed
             /* Render here */
             renderer->Clear();
 
-            texture->Bind();
+            texture->Bind(0);
+            testTexture->Bind(1);
 
             //MODEL 1
             {

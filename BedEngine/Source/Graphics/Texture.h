@@ -14,6 +14,9 @@ namespace Bed
 
         void Bind(unsigned int slot = 0) const;
         void Unbind() const;
+        
+        int GetWidth() { return m_Width; };
+        int GetHeight() { return m_Height; };
 
     private:
         unsigned int m_RendererID;
