@@ -21,17 +21,17 @@ namespace Bed
             //Entity 1
             uint64_t Player = ecs.CreateEntity();
             ecs.AttachComponents(Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.5f, 1.5f, 1.5f)),
-                                            Bed::Velocity(Bed::Vector3(0.005f, 0.005f, 0.005f)), 
-                                            Bed::TwoDimensionalRender(new Bed::Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png"), 0));
+                                         Bed::Velocity(Bed::Vector3(0.1f, 0.1f, 0.0f)), 
+                                         Bed::TwoDimensionalRender(new Bed::Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png"), 0));
 
             //Entity 2
             uint64_t newerEnt = ecs.CreateEntity();
-            ecs.AttachComponents(newerEnt, Bed::Transform(Bed::Vector3(-0.5f, 1.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.5f, 0.5f, 0.5f)),
-                                        Bed::TwoDimensionalRender(new Bed::Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png"), 0));
+            ecs.AttachComponents(newerEnt, Bed::Transform(Bed::Vector3(-2.0f, 1.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.5f, 0.5f, 0.5f)),
+                                           Bed::TwoDimensionalRender(new Bed::Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png"), 0));
 
             uint64_t GreatEntity = ecs.CreateEntity();
             ecs.AttachComponents(GreatEntity, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
-                                              Bed::Velocity(Bed::Vector3(-0.001f, -0.001f, -0.001f)),
+                                              Bed::Velocity(Bed::Vector3(-0.1f, 0.0f, 0.0f)),
                                               Bed::TwoDimensionalRender(new Bed::Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestImage.png"), 0));
 
             uint64_t Camera = ecs.CreateEntity();

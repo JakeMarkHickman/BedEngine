@@ -15,6 +15,24 @@ namespace Bed
         float x;
         float y;
         float z;
+
+        // Operator overload for scalar multiplication
+        Vector3 operator*(float scalar) const {
+            return Vector3(x * scalar, y * scalar, z * scalar);
+        }
+
+        // Operator overload for vector addition
+        Vector3 operator+(const Vector3& other) const {
+            return Vector3(x + other.x, y + other.y, z + other.z);
+        }
+
+        // Optional: For ease of use, you might want to implement this too
+        Vector3& operator+=(const Vector3& other) {
+            x += other.x;
+            y += other.y;
+            z += other.z;
+            return *this;
+        }
     };
 
     struct Vector4

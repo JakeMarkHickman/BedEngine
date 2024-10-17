@@ -16,7 +16,7 @@ namespace Bed
                 Bed::Transform transform = ecs.GetComponent<Bed::Transform>(i);
                 Bed::Velocity Vel = ecs.GetComponent<Bed::Velocity>(i);
 
-                transform.m_Position = Bed::Vector3(transform.m_Position.x + Vel.m_Velocity.x, transform.m_Position.y + Vel.m_Velocity.y, transform.m_Position.z + Vel.m_Velocity.z);
+                transform.m_Position += Vel.m_Velocity * deltaTime;
 
                 ecs.SetComponent<>(i, transform);
 
