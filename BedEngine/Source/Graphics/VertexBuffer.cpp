@@ -28,8 +28,4 @@ void Bed::VertexBuffer::PopulateBuffer(const void* verts, unsigned int size, uns
 {
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset, size, verts));
-    GLenum error = glGetError();
-    if (error != GL_NO_ERROR) {
-        std::cout << "OpenGL Error: " << error << std::endl;
-    }
 }

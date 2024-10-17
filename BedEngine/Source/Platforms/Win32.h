@@ -1,5 +1,7 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include "Platform.h"
 #include <Graphics/VertexBuffer.h>
 #include <Graphics/IndexBuffer.h>
@@ -8,6 +10,7 @@
 #include <Graphics/Vertex.h>
 #include <Bed/GameObjects/Mesh/Quad.h>
 #include <Graphics/Texture.h>
+#include <gtx/string_cast.hpp>
 #include <iostream>
 
 // TODO: replace GLM Includes
@@ -132,25 +135,16 @@ namespace Bed
         Bed::VertexBuffer* vb;
 
         glm::mat4 mvp;
-        glm::vec3 worldOrigin;
         glm::mat4 model;
         glm::mat4 proj;
         glm::mat4 view;
 
+        float Size1 = 0.5;
+        float Change1 = 0.01;
+        float Size2 = 2;
+        float Change2 = -0.01;
+
         GLFWwindow* window;
-
-        /*float Verts[80] = {
-            //x     //y    //z    //r     //g    //b     //a    //x    //y    //TexID
-            -1.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  0.0f,  1.0f,  0.0f,
-            -0.5f,  0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  1.0f,  1.0f,  0.0f,
-            -1.5f, -0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  0.0f,  0.0f,  0.0f,
-            -0.5f, -0.5f,  0.0f,  0.18f,  0.6f,  0.96f,  1.0f,  1.0f,  0.0f,  0.0f,
-
-             0.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  0.0f,  1.0f,  1.0f,
-             1.5f,  0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  1.0f,  1.0f,  1.0f,
-             0.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  0.0f,  0.0f,  1.0f,
-             1.5f, -0.5f,  0.0f,  1.0f,  0.6f,  0.96f,  1.0f,  1.0f,  0.0f,  1.0f
-        };*/
 
         uint32_t indices[12] = {
             0,1,2, 2,1,3,
@@ -184,10 +178,14 @@ namespace Bed
                 return false;
             }
 
+            glEnable(GL_DEBUG_OUTPUT);
+
             // TODO: From here needs to be moved else where as it not Windows Specific.
             
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glEnable(GL_BLEND);
+
+            //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
             //Vertex array object
             va = new Bed::VertexArray();
@@ -201,72 +199,86 @@ namespace Bed
             va->AddBuffer(vb, vertLayout);
 
             //Index Element buffer
-            ib = new Bed::IndexBuffer(indices, sizeof(indices));
+            ib = new Bed::IndexBuffer(indices, sizeof(indices) / sizeof(uint32_t));
+            std::cout << "Index Buffer Count: " << ib->GetCount() << std::endl;
 
             //Shader
             shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Texture.shader");
             shader->Bind();
 
             //Texture
-            //TODO: These need updating
             texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png");
             texture->Bind(1); //Bind to slot 0
 
-            testTexture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestImage.png");
+            testTexture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestPlayer.png");
             testTexture->Bind(2); //Bind to slot 1
 
             int samplers[2] = { 0, 1 };
-            shader->SetUniform1iv("u_Textures", sizeof(samplers), samplers);
-
-            
-
-            model = glm::translate(glm::mat4(1.0f), worldOrigin);
-
-            //CAMERA
-            proj = glm::ortho(-2.0f *2, 2.0f*2, -1.5f*2, 1.5f*2, -1.0f, 1.0f); // Camera Screen Size
-            view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)); // Camera Pos
-
-            mvp = proj * view * model;
-            shader->SetUniformMat4f("u_MVP", mvp);
-
-            renderer->Draw(va, ib, shader);
-
-            // Unbind everthing
-            va->Unbind();
-            shader->Unbind();
-            vb->Unbind();
-            ib->Unbind();
-            //TEMP
+            shader->SetUniform1iv("u_Textures", 2, samplers);
 
             return true;
         }
 
         void OpenGLUpdateWindow()
         {
+            //TODO: Sometimes nothing renderers
+
             /* Render here */
             renderer->Clear();
 
-            auto q0 = CreateQuad(Bed::Vector3(-1.0f, 0.0f, 0.0f), 1.0f, 0.0f);
-            auto q1 = CreateQuad(Bed::Vector3(1.0f, 0.0f, 0.0f), 1.0f, 1.0f);
+            //Bind Textures
+            texture->Bind(0);
+            testTexture->Bind(1);
 
+            //Bind Shader
+            shader->Bind();
+
+            //Set mvp
+            proj = glm::ortho(-2.0f *2, 2.0f*2, -1.5f*2, 1.5f*2, -1.0f, 1.0f); // Camera Screen Size
+            view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)); // Camera Pos
+            model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));// model Pos
+            mvp = proj * view * model;
+            shader->SetUniformMat4f("u_MVP", mvp);
+
+            if(Size1 > 2)
+            {
+                Change1 = -0.01;
+            }
+            if(Size1 < 0.5)
+            {
+                Change1 = 0.01;
+            }
+
+            if(Size2 > 2)
+            {
+                Change2 = -0.01;
+            }
+            if(Size2 < 0.5)
+            {
+                Change2 = 0.01;
+            }
+
+            Size1 += Change1;
+            Size2 += Change2;
+
+            //Create two quads and copy over the data to an array
+            auto q0 = CreateQuad(Bed::Vector3(-1.0f, 0.0f, 0.0f), Bed::Vector4(0.18f, 0.6f, 0.95f, 1.0f), Size1, 0.0f);
+            auto q1 = CreateQuad(Bed::Vector3(1.0f, 0.0f, 0.0f), Bed::Vector4(0.95f, 0.6f, 0.4f, 1.0f), Size2, 1.0f);
             Bed::Vertex verts[8];
             memcpy(verts, q0.data(), q0.size() * sizeof(Bed::Vertex));
             memcpy(verts + q0.size(), q1.data(), q1.size() * sizeof(Bed::Vertex));
 
-            unsigned int offset = 0;
+            //populate data with the newly created quads
+            vb->PopulateBuffer(verts, sizeof(verts), 0);
 
-            std::cout << sizeof(verts) << std::endl;
-
-            vb->PopulateBuffer(verts, sizeof(verts), offset);
-
-            texture->Bind(0);
-            testTexture->Bind(1);
-
-            shader->SetUniformMat4f("u_MVP", mvp);
-
+            //Render Everything
             renderer->Draw(va, ib, shader);
 
-
+            //Unbind Everything
+            va->Unbind();
+            shader->Unbind();
+            vb->Unbind();
+            ib->Unbind();
             
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
