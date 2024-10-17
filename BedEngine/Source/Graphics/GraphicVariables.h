@@ -9,4 +9,6 @@ namespace Bed
     Bed::Renderer* renderer;
     Bed::IndexBuffer* ib;
     Bed::VertexArray* va;
+    Bed::VertexBuffer* vb;
+    
 }

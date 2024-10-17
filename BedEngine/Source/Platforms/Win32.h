@@ -1,16 +1,10 @@
 #pragma once
 
-#define GLM_ENABLE_EXPERIMENTAL
-
 #include "Platform.h"
-#include <Graphics/VertexBuffer.h>
-#include <Graphics/IndexBuffer.h>
-#include <Graphics/VertexArray.h>
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
 #include <Bed/GameObjects/Mesh/Quad.h>
 #include <Graphics/Texture.h>
-#include <gtx/string_cast.hpp>
 #include <iostream>
 
 // TODO: replace GLM Includes
@@ -132,8 +126,6 @@ namespace Bed
         Bed::Texture* texture;
         Bed::Texture* testTexture;
 
-        Bed::VertexBuffer* vb;
-
         glm::mat4 mvp;
         glm::mat4 model;
         glm::mat4 proj;
@@ -232,53 +224,32 @@ namespace Bed
             mvp = proj * view * model;
             shader->SetUniformMat4f("u_MVP", mvp);
 
-            if(Size1 > 2)
-            {
-                Change1 = -0.01;
-            }
-            if(Size1 < 0.5)
-            {
-                Change1 = 0.01;
-            }
-
-            if(Size2 > 2)
-            {
-                Change2 = -0.001;
-            }
-            if(Size2 < 0.5)
-            {
-                Change2 = 0.001;
-            }
-
-            Size1 += Change1;
-            Size2 += Change2;
-
             //Create two quads and copy over the data to an array
-            auto q0 = CreateQuad(Bed::Vector3(-1.0f, 0.0f, 0.0f), Bed::Vector4(0.18f, 0.6f, 0.95f, 1.0f), Size1, 0.0f);
-            auto q1 = CreateQuad(Bed::Vector3(Size2, Size1, 0.0f), Bed::Vector4(0.95f, 0.6f, 0.4f, 1.0f), 1, 1.0f);
-            Bed::Vertex verts[8];
-            memcpy(verts, q0.data(), q0.size() * sizeof(Bed::Vertex));
-            memcpy(verts + q0.size(), q1.data(), q1.size() * sizeof(Bed::Vertex));
+            //auto q0 = CreateQuad(Bed::Vector3(-1.0f, 0.0f, 0.0f), Bed::Vector4(0.18f, 0.6f, 0.95f, 1.0f), Bed::Vector3(Size1, Size2, 0.0f), 0.0f);
+            //auto q1 = CreateQuad(Bed::Vector3(Size2, Size1, 0.0f), Bed::Vector4(0.95f, 0.6f, 0.4f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+            //Bed::Vertex verts[8];
+            //memcpy(verts, q0.data(), q0.size() * sizeof(Bed::Vertex));
+            //memcpy(verts + q0.size(), q1.data(), q1.size() * sizeof(Bed::Vertex));
 
-            unsigned int indices[12];
+            //unsigned int indices[12];
 
-            int indexCount = 0;
-            for (int i = 0; i < sizeof(verts) / sizeof(Bed::Vertex); i += 4) 
-            {
-                // First triangle (0, 1, 2)
-                indices[indexCount++] = i;
-                indices[indexCount++] = i + 1;
-                indices[indexCount++] = i + 2;
+            //int indexCount = 0;
+            //for (int i = 0; i < sizeof(verts) / sizeof(Bed::Vertex); i += 4) 
+            //{
+            //    // First triangle (0, 1, 2)
+            //    indices[indexCount++] = i;
+            //    indices[indexCount++] = i + 1;
+            //    indices[indexCount++] = i + 2;
 
-                // Second triangle (2, 1, 3)
-                indices[indexCount++] = i + 2;
-                indices[indexCount++] = i + 1;
-                indices[indexCount++] = i + 3;
-            }
+            //    // Second triangle (2, 1, 3)
+            //    indices[indexCount++] = i + 2;
+            //    indices[indexCount++] = i + 1;
+            //    indices[indexCount++] = i + 3;
+            //}
 
             //populate data with the newly created quads
-            vb->PopulateBuffer(verts, sizeof(verts), 0);
-            ib->PopulateBuffer(indices, sizeof(indices), 0);
+            //vb->PopulateBuffer(verts, sizeof(verts), 0);
+            //ib->PopulateBuffer(indices, sizeof(indices), 0);
 
             //Render Everything
             renderer->Draw(va, ib, shader);
