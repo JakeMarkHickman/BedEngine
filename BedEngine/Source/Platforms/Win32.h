@@ -142,14 +142,9 @@ namespace Bed
         float Size1 = 0.5;
         float Change1 = 0.01;
         float Size2 = 2;
-        float Change2 = -0.01;
+        float Change2 = -0.001;
 
         GLFWwindow* window;
-
-        uint32_t indices[12] = {
-            0,1,2, 2,1,3,
-            4,5,6, 6,5,7
-        };
 
         bool OpenGlCreateWindow(int width, int height, const char* title)
         {
@@ -190,6 +185,7 @@ namespace Bed
             //Vertex array object
             va = new Bed::VertexArray();
             vb = new Bed::VertexBuffer(1000); // Store 1000 Bed::Vertex (pos, colour, texCoords, texID)
+            ib = new Bed::IndexBuffer(3000);
 
             VertexBufferLayout vertLayout;
             vertLayout.Push<float>(3); // Position: 3 Floats (x, y, z)
@@ -197,10 +193,6 @@ namespace Bed
             vertLayout.Push<float>(2); // TextureCoord: 2 Floats (x, y)
             vertLayout.Push<float>(1); // Texture ID: 1 Float (ID)
             va->AddBuffer(vb, vertLayout);
-
-            //Index Element buffer
-            ib = new Bed::IndexBuffer(indices, sizeof(indices) / sizeof(uint32_t));
-            std::cout << "Index Buffer Count: " << ib->GetCount() << std::endl;
 
             //Shader
             shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Texture.shader");
@@ -251,11 +243,11 @@ namespace Bed
 
             if(Size2 > 2)
             {
-                Change2 = -0.01;
+                Change2 = -0.001;
             }
             if(Size2 < 0.5)
             {
-                Change2 = 0.01;
+                Change2 = 0.001;
             }
 
             Size1 += Change1;
@@ -263,13 +255,30 @@ namespace Bed
 
             //Create two quads and copy over the data to an array
             auto q0 = CreateQuad(Bed::Vector3(-1.0f, 0.0f, 0.0f), Bed::Vector4(0.18f, 0.6f, 0.95f, 1.0f), Size1, 0.0f);
-            auto q1 = CreateQuad(Bed::Vector3(1.0f, 0.0f, 0.0f), Bed::Vector4(0.95f, 0.6f, 0.4f, 1.0f), Size2, 1.0f);
+            auto q1 = CreateQuad(Bed::Vector3(Size2, Size1, 0.0f), Bed::Vector4(0.95f, 0.6f, 0.4f, 1.0f), 1, 1.0f);
             Bed::Vertex verts[8];
             memcpy(verts, q0.data(), q0.size() * sizeof(Bed::Vertex));
             memcpy(verts + q0.size(), q1.data(), q1.size() * sizeof(Bed::Vertex));
 
+            unsigned int indices[12];
+
+            int indexCount = 0;
+            for (int i = 0; i < sizeof(verts) / sizeof(Bed::Vertex); i += 4) 
+            {
+                // First triangle (0, 1, 2)
+                indices[indexCount++] = i;
+                indices[indexCount++] = i + 1;
+                indices[indexCount++] = i + 2;
+
+                // Second triangle (2, 1, 3)
+                indices[indexCount++] = i + 2;
+                indices[indexCount++] = i + 1;
+                indices[indexCount++] = i + 3;
+            }
+
             //populate data with the newly created quads
             vb->PopulateBuffer(verts, sizeof(verts), 0);
+            ib->PopulateBuffer(indices, sizeof(indices), 0);
 
             //Render Everything
             renderer->Draw(va, ib, shader);
@@ -279,7 +288,7 @@ namespace Bed
             shader->Unbind();
             vb->Unbind();
             ib->Unbind();
-            
+
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 
