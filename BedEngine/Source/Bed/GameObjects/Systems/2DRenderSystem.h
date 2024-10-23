@@ -6,7 +6,6 @@
 #include <Graphics/Vertex.h>
 #include <Bed/GameObjects/Mesh/Quad.h>
 #include <Bed/Core.h>
-#include <iostream>
 
 //TODO: Remove this
 #include <glm.hpp>

@@ -7,7 +7,6 @@
 #include <unordered_map>
 #include <Bed/Tools/SparseSet.h>
 #include <Bed/Core.h>
-#include <iostream>
 
 namespace Bed
 {
@@ -148,7 +147,6 @@ namespace Bed
 
         void AddSystem(SystemFunc System)
         {
-            std::cout << "Pushing System" << std::endl;
             m_Systems.push_back(System);
         }
 

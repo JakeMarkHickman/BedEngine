@@ -159,7 +159,7 @@ namespace Bed
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glEnable(GL_BLEND);
 
-            //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
             //Vertex array object
             va = new Bed::VertexArray();

@@ -3,7 +3,6 @@
 #include <Bed/GameObjects/Components/CameraComponent.h>
 #include <Bed/GameObjects/Components/TransformComponent.h>
 #include <Graphics/GraphicVariables.h>
-#include <iostream>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>

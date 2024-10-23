@@ -27,9 +27,6 @@ void Bed::VertexArray::AddBuffer(const Bed::VertexBuffer* vb, const Bed::VertexB
         const Bed::VertexBufferLayoutElement element = elements[i];
 
         GLCall(glEnableVertexAttribArray(i));
-
-        std::cout << "Element " << i << ": type=" << element.type << ", count=" << element.count << ", offset=" << offset << std::endl;
-
         GLCall(glVertexAttribPointer(
             i,
             element.count,
