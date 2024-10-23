@@ -1,11 +1,13 @@
 #pragma once
 
+#include <Bed/Core.h>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 namespace Bed
 {
-    class VertexBuffer
+    class BED_API VertexBuffer
     {
     public:
         VertexBuffer(unsigned int size);

@@ -1,15 +1,16 @@
 #pragma once
 
 #include <Bed/Math/Vector.h>
+#include <Bed/Core.h>
 
 namespace Bed
 {
-    struct Transform
+    struct BED_API Transform
     {
-        Transform(Bed::Vector3 position, Bed::Vector3 rotation, Bed::Vector3 scale) : m_Position(position), m_Rotation(rotation), m_Scale(scale) {};
+        Transform(Bed::Vector3 position, Bed::Vector3 rotation, Bed::Vector3 scale);
 
-        Bed::Vector3 m_Position;
-        Bed::Vector3 m_Rotation;
-        Bed::Vector3 m_Scale;
+        Bed::Vector3 m_Position {0.0f, 0.0f, 0.0f};
+        Bed::Vector3 m_Rotation {0.0f, 0.0f, 0.0f};
+        Bed::Vector3 m_Scale {0.0f, 0.0f, 0.0f};
     };
 }

@@ -1,8 +1,10 @@
 #pragma once
 
+#include <Bed/Core.h>
+
 namespace Bed
 {
-    class IndexBuffer
+    class BED_API IndexBuffer
     {  
     public:
         IndexBuffer(unsigned int size);

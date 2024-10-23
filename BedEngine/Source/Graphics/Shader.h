@@ -1,23 +1,12 @@
 #pragma once
 
-#include <string>
-#include <Bed/Math/Vector.h>
-#include <unordered_map>
-
-// TODO: replace GLM Includes
-#include <glm.hpp>
+#include "OpenGL/OpenShader.h"
 
 // TODO: Make this file able to be used with diffrent Renderers
 
 namespace Bed
 {
-    struct ShaderProgramSource
-    {
-        std::string VertexSource;
-        std::string FragmentSource;
-    };
-
-    class Shader
+    class BED_API Shader
     {
     public:
         Shader(const std::string& filepath);
@@ -26,7 +15,7 @@ namespace Bed
         void Bind() const;
         void Unbind() const;
 
-        unsigned int GetRendererID() { return m_RendererID; };
+        unsigned int GetRendererID() { return m_OpenShader->GetRendererID(); };
 
         // set uniforms
         void SetUniform4f(const std::string& name, Bed::Vector4 value);
@@ -37,15 +26,6 @@ namespace Bed
         void SetUniform1iv(const std::string& name, int count, int* value);
 
     private:
-        unsigned int m_RendererID;
-        std::string m_FilePath;
-        std::unordered_map<std::string, int> m_UniformLocationCashe;
-
-
-        int GetUniformLocation(const std::string& name);
-
-        unsigned int CompileShader(unsigned int type, const std::string& source);
-        unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
-        ShaderProgramSource ParseShader();
+        OpenShader* m_OpenShader;
     };
 }

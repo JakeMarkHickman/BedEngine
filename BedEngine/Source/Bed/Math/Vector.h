@@ -1,15 +1,17 @@
 #pragma once
 
+#include <Bed/Core.h>
+
 namespace Bed
 {
-    struct Vector2
+    struct BED_API Vector2
     {
         Vector2(float x, float y) : x(x), y(y) {};
         float x;
         float y;
     };
 
-    struct Vector3
+    struct BED_API Vector3
     {
         Vector3(float x, float y, float z) : x(x), y(y), z(z) {};
         float x;
@@ -35,7 +37,7 @@ namespace Bed
         }
     };
 
-    struct Vector4
+    struct BED_API Vector4
     {
         Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {};
         float x;

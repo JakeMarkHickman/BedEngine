@@ -3,6 +3,8 @@
 #include <Bed/GameObjects/Components/TransformComponent.h>
 #include <Bed/GameObjects/Components/VelocityComponent.h>
 
+#include <iostream>
+
 namespace Bed
 {
     void MoveSystem(Bed::ECS& ecs, float deltaTime)
@@ -15,12 +17,10 @@ namespace Bed
             {
                 Bed::Transform transform = ecs.GetComponent<Bed::Transform>(i);
                 Bed::Velocity Vel = ecs.GetComponent<Bed::Velocity>(i);
-
                 transform.m_Position += Vel.m_Velocity * deltaTime;
-
                 ecs.SetComponent<>(i, transform);
 
-                std::cout << "~~~~ Entity: " << i << " position is: x: " << transform.m_Position.x << " y: " << transform.m_Position.y << " z: " << transform.m_Position.z << std::endl; 
+                std::cout << "Entity[" << i << "] Position is: " << transform.m_Position.x << " / " << transform.m_Position.y << " / " << transform.m_Position.z << std::endl;
             }
         }
     }

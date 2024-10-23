@@ -6,14 +6,16 @@
 #include <any>
 #include <unordered_map>
 #include <Bed/Tools/SparseSet.h>
+#include <Bed/Core.h>
+#include <iostream>
 
 namespace Bed
 {
-    class ECS;
+    class BED_API ECS;
 
     using SystemFunc = void (*)(ECS&, float);
 
-    class ECS
+    class BED_API ECS
     {
     public:
         ECS() {};
@@ -46,10 +48,8 @@ namespace Bed
                 uint64_t typeHash = typeid(comp).hash_code(); // Gets the Hash code of the data parsed for the sparse set
                 uint64_t CompID;
 
-                if(!IsRegisteredComponent(typeHash))
+                if(!IsRegisteredComponent(typeHash)) // Checks if Hash code is registered
                 {
-                    std::cout << "Hash code: " << typeHash << " is not yet registered" << std::endl;
-
                     CompID = RegisterComponent(typeHash); // Register the component
 
                     Bed::SparseSet<std::any> newCompSet; // Create a new sparse set
@@ -59,11 +59,9 @@ namespace Bed
                 }
                 else
                 {
-                    std::cout << "Hash code: " << typeHash << " is registered" << std::endl;
+                    CompID = GetComponentIndex(typeHash); // Get Compindex from Hash Code
 
-                    CompID = GetComponentIndex(typeHash);
-
-                    m_EntityComponents.GetData(CompID).Insert(entity, std::any(comp));
+                    m_EntityComponents.GetData(CompID).Insert(entity, std::any(comp)); // Get data
                 }
             }(), ...);
         }
@@ -150,6 +148,7 @@ namespace Bed
 
         void AddSystem(SystemFunc System)
         {
+            std::cout << "Pushing System" << std::endl;
             m_Systems.push_back(System);
         }
 

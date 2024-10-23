@@ -23,14 +23,18 @@ namespace Bed
         //Game Loop
 
         //TODO: Remove this
-        Map* GameMap = new Map();
         
         while (IsWindowOpen())
         {
             UpdateWindow(); // Update the platform App
 
             //TODO: Remove this
-            GameMap->Update( 0.016f );
+            if(m_Map == nullptr)
+            {
+                break;
+            }
+            
+            m_Map->Update( 0.016f );
             
             // TODO: Create an update event that fires to everything that uses it.
         }

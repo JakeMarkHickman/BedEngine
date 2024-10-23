@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Bed/Core.h>
+#include <Bed/GameObjects/Map.h>
 
 namespace Bed
 {
@@ -18,6 +19,11 @@ namespace Bed
             }
         };
 
+        void SetMap(Bed::Map* map)
+        {
+            m_Map = map;
+        }
+
         const char* GetApplicationName()
         {
             return m_ApplicationName;
@@ -26,6 +32,7 @@ namespace Bed
     protected:
         // TODO: Add variables that are able to be modified to 
         const char* m_ApplicationName = "Bed Engine";
+        Bed::Map* m_Map;
 
     private:
         void Update();

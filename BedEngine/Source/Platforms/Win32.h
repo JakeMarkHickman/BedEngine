@@ -126,20 +126,12 @@ namespace Bed
         Bed::Texture* texture;
         Bed::Texture* testTexture;
 
-        glm::mat4 mvp;
-        glm::mat4 model;
-        glm::mat4 proj;
-        glm::mat4 view;
-
-        float Size1 = 0.5;
-        float Change1 = 0.01;
-        float Size2 = 2;
-        float Change2 = -0.001;
-
         GLFWwindow* window;
 
         bool OpenGlCreateWindow(int width, int height, const char* title)
         {
+            std::cout << "Here" << std::endl;
+
             if(!glfwInit())
             {
                 return false;
@@ -213,43 +205,6 @@ namespace Bed
             //Bind Textures
             texture->Bind(0);
             testTexture->Bind(1);
-
-            //Bind Shader
-            shader->Bind();
-
-            //Set mvp
-            proj = glm::ortho(-2.0f *2, 2.0f*2, -1.5f*2, 1.5f*2, -1.0f, 1.0f); // Camera Screen Size
-            view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)); // Camera Pos
-            model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));// model Pos
-            mvp = proj * view * model;
-            shader->SetUniformMat4f("u_MVP", mvp);
-
-            //Create two quads and copy over the data to an array
-            //auto q0 = CreateQuad(Bed::Vector3(-1.0f, 0.0f, 0.0f), Bed::Vector4(0.18f, 0.6f, 0.95f, 1.0f), Bed::Vector3(Size1, Size2, 0.0f), 0.0f);
-            //auto q1 = CreateQuad(Bed::Vector3(Size2, Size1, 0.0f), Bed::Vector4(0.95f, 0.6f, 0.4f, 1.0f), Bed::Vector3(1.0f, 1.0f, 1.0f), 1.0f);
-            //Bed::Vertex verts[8];
-            //memcpy(verts, q0.data(), q0.size() * sizeof(Bed::Vertex));
-            //memcpy(verts + q0.size(), q1.data(), q1.size() * sizeof(Bed::Vertex));
-
-            //unsigned int indices[12];
-
-            //int indexCount = 0;
-            //for (int i = 0; i < sizeof(verts) / sizeof(Bed::Vertex); i += 4) 
-            //{
-            //    // First triangle (0, 1, 2)
-            //    indices[indexCount++] = i;
-            //    indices[indexCount++] = i + 1;
-            //    indices[indexCount++] = i + 2;
-
-            //    // Second triangle (2, 1, 3)
-            //    indices[indexCount++] = i + 2;
-            //    indices[indexCount++] = i + 1;
-            //    indices[indexCount++] = i + 3;
-            //}
-
-            //populate data with the newly created quads
-            //vb->PopulateBuffer(verts, sizeof(verts), 0);
-            //ib->PopulateBuffer(indices, sizeof(indices), 0);
 
             //Render Everything
             renderer->Draw(va, ib, shader);

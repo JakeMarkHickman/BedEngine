@@ -9,19 +9,19 @@ outputFile="Playground"                     # No extention as we will set it aft
 engineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
 
 #Includes
-includes="-IBedEngine/Source"
+includes="-IBedEngine/Source -IBedEngine/Dependencies/glm -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image -IBedEngine/Dependencies/GLFW/include"
 engineIncludes="-IBedEngine/Source -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image -IBedEngine/Dependencies/glm"
 
 #Libarys
-libs="$buildPath/BedEngine.lib"                     # Libs for the game
-engineLibs=""  # Libs for the engine
+libs="$buildPath/BedEngine.lib"             # Libs for the game
+engineLibs=""                               # Libs for the engine
 
 #flags
 flags="-fuse-ld=lld-link"                   # Flags for the game
 engineFlags=""                              # Flags for the engine
 
 #Preprocessor Definitions
-predef=""                                   # Definitions for the game
+predef="-std=c++17"                         # Definitions for the game
 enginePredef="-DBED_BUILD_DLL"              # Definitions for the engine
 
 #BuildEntry
@@ -32,8 +32,10 @@ engineEntry="BedEngine/Source/Bed/App/Application.cpp"
 cpp=""
 enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp
             BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp
-            BedEngine/Source/Graphics/OpenGL/OpenRenderer.cpp
-            BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp BedEngine/Source/Bed/GameObjects/ECS/ECS.cpp"
+            BedEngine/Source/Graphics/OpenGL/OpenRenderer.cpp BedEngine/Source/Graphics/OpenGL/OpenShader.cpp
+            BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp BedEngine/Source/Bed/GameObjects/ECS/ECS.cpp
+            BedEngine/Source/Bed/GameObjects/Components/TransformComponent.cpp BedEngine/Source/Bed/GameObjects/Components/CameraComponent.cpp
+            BedEngine/Source/Bed/GameObjects/Components/2DRenderComponent.cpp BedEngine/Source/Bed/GameObjects/Components/VelocityComponent.cpp"
 
 
 #Check what system is being used
@@ -60,10 +62,10 @@ else
     echo Building for Windows...
 
     # Set Variables
-    engineLibs="$engineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
+    engineLibs="$engineLibs -lUser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
     predef="$predef -DBED_WINDOWS_PLATFORM"
     
-    enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM -DGLEW_STATIC"
+    enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM"
     outputFile="$outputFile.exe"
 
 fi

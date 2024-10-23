@@ -1,10 +1,11 @@
 #pragma once
 
 #include <string>
+#include <Bed/Core.h>
 
 namespace Bed
 {
-    class Texture
+    class BED_API Texture
     {
     public:
         Texture(const std::string& path);
