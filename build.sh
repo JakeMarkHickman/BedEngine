@@ -62,10 +62,10 @@ else
     echo Building for Windows...
 
     # Set Variables
-    engineLibs="$engineLibs -lUser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
+    engineLibs="$engineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
     predef="$predef -DBED_WINDOWS_PLATFORM"
     
-    enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM"
+    enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM -DGLEW_STATIC"
     outputFile="$outputFile.exe"
 
 fi

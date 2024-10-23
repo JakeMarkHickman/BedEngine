@@ -123,15 +123,10 @@ namespace Bed
 
     private:
 
-        Bed::Texture* texture;
-        Bed::Texture* testTexture;
-
         GLFWwindow* window;
 
         bool OpenGlCreateWindow(int width, int height, const char* title)
         {
-            std::cout << "Here" << std::endl;
-
             if(!glfwInit())
             {
                 return false;
@@ -184,10 +179,8 @@ namespace Bed
 
             //Texture
             texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png");
-            texture->Bind(1); //Bind to slot 0
+            texture->Bind(0); //Bind to slot 0
 
-            testTexture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestPlayer.png");
-            testTexture->Bind(2); //Bind to slot 1
 
             int samplers[2] = { 0, 1 };
             shader->SetUniform1iv("u_Textures", 2, samplers);
@@ -204,7 +197,6 @@ namespace Bed
 
             //Bind Textures
             texture->Bind(0);
-            testTexture->Bind(1);
 
             //Render Everything
             renderer->Draw(va, ib, shader);

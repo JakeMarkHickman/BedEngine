@@ -21,7 +21,6 @@ Bed::OpenShader::~OpenShader()
 
 void Bed::OpenShader::Bind()
 {
-    std::cout << "Binding shader to OpenShader" << std::endl;
     GLCall(glUseProgram(m_RendererID));
 }
 

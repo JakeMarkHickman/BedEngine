@@ -2,13 +2,16 @@
 
 #include "Shader.h"
 #include "Renderer.h"
+#include "Texture.h"
+
+#include <Bed/Core.h>
 
 namespace Bed
 {
-    Bed::Shader* shader;
-    Bed::Renderer* renderer;
-    Bed::IndexBuffer* ib;
-    Bed::VertexArray* va;
-    Bed::VertexBuffer* vb;
-    
+    BED_API Bed::Shader* shader;
+    BED_API Bed::Renderer* renderer;
+    BED_API Bed::IndexBuffer* ib;
+    BED_API Bed::VertexArray* va;
+    BED_API Bed::VertexBuffer* vb;
+    BED_API Bed::Texture* texture;
 }

@@ -23,7 +23,6 @@ namespace Bed
             //TODO: Change this as i should be used to check index of a value as
             if (ecs.HasComponents<Bed::TwoDimensionalRender>(i))
             {
-                std::cout << "Component found" << std::endl;
                 index++;
                 Bed::Transform transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f));
 
@@ -34,20 +33,14 @@ namespace Bed
                     transform = ecs.GetComponent<Bed::Transform>(i);
                 }
 
-                std::cout << "Transform gotten" << std::endl;
-
                 Bed::Vertex verts[4];
                 unsigned int indices[6];
                 size_t vertexOffset = (sizeof(verts) / sizeof(Bed::Vertex)) * (index - 1) * sizeof(Bed::Vertex);
                 size_t indexOffset = sizeof(indices) * (index - 1) * sizeof(unsigned int);
 
-                std::cout << "arrays created" << std::endl;
-
                 //TODO: Do rendering stuffs
-                auto q0 = CreateQuad(transform.m_Position, Bed::Vector4(0.18f, 0.6f, 0.95f, 1.0f), transform.m_Scale, 1.0f);
+                auto q0 = CreateQuad(transform.m_Position, Bed::Vector4(0.18f, 0.6f, 0.95f, 1.0f), transform.m_Scale, 0.0f);
                 memcpy(verts, q0.data(), q0.size() * sizeof(Bed::Vertex));
-
-                std::cout << "Quad array coppied" << std::endl;
 
                 unsigned int baseIndex = 4 * (index - 1);
                 unsigned int indexCount = 0;
@@ -66,7 +59,6 @@ namespace Bed
 
                 vb->PopulateBuffer(verts, sizeof(verts), vertexOffset);
                 ib->PopulateBuffer(indices, sizeof(indices), indexOffset);
-                
             }
         }
     }

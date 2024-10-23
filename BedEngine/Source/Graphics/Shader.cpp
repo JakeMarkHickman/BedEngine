@@ -19,7 +19,6 @@ void Bed::Shader::Bind() const
 {
     if(m_OpenShader)
     {
-        std::cout << "Shader Bind Function" << std::endl;
         m_OpenShader->Bind();
     }
 }

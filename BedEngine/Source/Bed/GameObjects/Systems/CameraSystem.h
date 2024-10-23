@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <Bed/GameObjects/Components/CameraComponent.h>
 #include <Bed/GameObjects/Components/TransformComponent.h>
 #include <Graphics/GraphicVariables.h>
@@ -30,12 +29,8 @@ namespace Bed
                     transform = ecs.GetComponent<Bed::Transform>(i);
                 }
 
-                std::cout << "Shader Bind" << std::endl;
-
                 //Bind Shader
                 shader->Bind();
-
-                std::cout << "Shader Bound" << std::endl;
 
                 switch(cam.m_RenderType)
                 {
