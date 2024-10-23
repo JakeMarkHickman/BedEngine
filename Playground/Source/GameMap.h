@@ -20,23 +20,22 @@ namespace Game
     public:
         GameMap() {
             uint64_t cam = ecs.CreateEntity();
-            ecs.AttachComponents(cam, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f)),
-                                      Bed::Camera(Bed::RenderType::Orthographic));
+            ecs.AttachComponents(cam, Bed::Transform(Bed::Vector3(0.0f, 0.0f, -1.5f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f)),
+                                      Bed::Camera(Bed::RenderType::Projection));
 
             uint64_t ent1 = ecs.CreateEntity();
-            ecs.AttachComponents(ent1, Bed::Transform(Bed::Vector3(1.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
-                                       Bed::Velocity(Bed::Vector3(0.0f, 1.0f, 0.0f)),
+            ecs.AttachComponents(ent1, Bed::Transform(Bed::Vector3(1.0f, 0.0f, 1.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
+                                       Bed::Velocity(Bed::Vector3(0.0f, 0.5f, 0.0f)),
                                        Bed::TwoDimensionalRender(Bed::texture, 0));
 
             uint64_t ent2 = ecs.CreateEntity();
-            ecs.AttachComponents(ent2, Bed::Transform(Bed::Vector3(-1.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
-                                       Bed::Velocity(Bed::Vector3(0.0f, -1.0f, 0.0f)),
+            ecs.AttachComponents(ent2, Bed::Transform(Bed::Vector3(-1.0f, 0.0f, -1.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(1.0f, 1.0f, 1.0f)),
+                                       Bed::Velocity(Bed::Vector3(0.0f, -0.5f, 0.0f)),
                                        Bed::TwoDimensionalRender(Bed::texture, 0));
 
             ecs.AddSystem(Bed::MoveSystem);
             ecs.AddSystem(Bed::TwoDimensionalRenderSystem);
             ecs.AddSystem(Bed::CameraSystem);
-
         };
     };
 }
