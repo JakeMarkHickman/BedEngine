@@ -38,6 +38,7 @@ namespace Bed
                         break;
                     case Bed::RenderType::Projection:
                         proj = glm::perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+                        //TODO: This may need to change when using other renderers
                         proj[1][1] *= -1;
                         break;
                     default:
