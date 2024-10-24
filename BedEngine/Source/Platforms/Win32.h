@@ -178,7 +178,7 @@ namespace Bed
             shader->Bind();
 
             //Texture
-            texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/TestBedEngineIcon.png");
+            texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/256xMissingTexture.png");
             texture->Bind(0); //Bind to slot 0
 
 
