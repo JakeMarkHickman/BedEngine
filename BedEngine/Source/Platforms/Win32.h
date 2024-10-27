@@ -5,6 +5,7 @@
 #include <Graphics/Vertex.h>
 #include <Bed/GameObjects/Mesh/Quad.h>
 #include <Graphics/Texture.h>
+#include <Bed/GameObjects/Mesh/Mesh.h>
 #include <iostream>
 
 // TODO: replace GLM Includes
@@ -161,6 +162,8 @@ namespace Bed
 
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
+            new Bed::Mesh("Assets/Resources/Meshes/untitled.obj");
+
             //Vertex array object
             va = new Bed::VertexArray();
             vb = new Bed::VertexBuffer(1000); // Store 1000 Bed::Vertex (pos, colour, texCoords, texID)
@@ -174,11 +177,11 @@ namespace Bed
             va->AddBuffer(vb, vertLayout);
 
             //Shader
-            shader = new Bed::Shader("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Shaders/Texture.shader");
+            shader = new Bed::Shader("Assets/Resources/Shaders/Texture.shader");
             shader->Bind();
 
             //Texture
-            texture = new Texture("C:/Users/Jake/Documents/GitHub/BedEngine/BedEngine/Resources/Textures/256xMissingTexture.png");
+            texture = new Texture("Assets/Resources/Textures/256xMissingTexture.png");
             texture->Bind(0); //Bind to slot 0
 
 

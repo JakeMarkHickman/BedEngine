@@ -62,7 +62,11 @@
         "list": "cpp",
         "typeindex": "cpp",
         "any": "cpp",
-        "array": "cpp"
+        "array": "cpp",
+        "chrono": "cpp",
+        "filesystem": "cpp",
+        "forward_list": "cpp",
+        "ratio": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

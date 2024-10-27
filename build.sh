@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 #Build Path
@@ -21,8 +20,8 @@ flags="-fuse-ld=lld-link"                   # Flags for the game
 engineFlags=""                              # Flags for the engine
 
 #Preprocessor Definitions
-predef="-std=c++17"                         # Definitions for the game
-enginePredef="-DBED_BUILD_DLL"              # Definitions for the engine
+predef="-std=c++17 -Wno-c++17-extensions"                                   # Definitions for the game
+enginePredef="-std=c++17 -Wno-c++17-extensions -DBED_BUILD_DLL"             # Definitions for the engine
 
 #BuildEntry
 entry="Playground/Source/App.cpp"
@@ -33,9 +32,11 @@ cpp=""
 enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp
             BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp
             BedEngine/Source/Graphics/OpenGL/OpenRenderer.cpp BedEngine/Source/Graphics/OpenGL/OpenShader.cpp
-            BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp BedEngine/Source/Bed/GameObjects/ECS/ECS.cpp
+            BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp 
+            BedEngine/Source/Bed/Tools/FileLoader.cpp BedEngine/Source/Bed/GameObjects/ECS/ECS.cpp
             BedEngine/Source/Bed/GameObjects/Components/TransformComponent.cpp BedEngine/Source/Bed/GameObjects/Components/CameraComponent.cpp
-            BedEngine/Source/Bed/GameObjects/Components/2DRenderComponent.cpp BedEngine/Source/Bed/GameObjects/Components/VelocityComponent.cpp"
+            BedEngine/Source/Bed/GameObjects/Components/2DRenderComponent.cpp BedEngine/Source/Bed/GameObjects/Components/VelocityComponent.cpp
+            BedEngine/Source/Bed/GameObjects/Mesh/Mesh.cpp"
 
 
 #Check what system is being used
@@ -72,7 +73,7 @@ fi
 
 # Build the Engine 
 echo Building Engine DLL...
-clang++ -shared $engineIncludes $engineLibs $engineFlags $enginePredef -o"$buildPath/$engineOutputFile" $engineEntry $enginecpp -std=c++17 -Wno-c++17-extensions
+clang++ -shared $engineIncludes $engineLibs $engineFlags $enginePredef -o"$buildPath/$engineOutputFile" $engineEntry $enginecpp
 
 # Build the Game
 echo Building Game...

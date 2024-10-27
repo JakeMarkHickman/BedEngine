@@ -8,7 +8,7 @@
             "request": "launch",
             "program": "${workspaceRoot}/build/Playground",
             "args": [],
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/build",
             "console": "integratedTerminal"
         }
     ]
