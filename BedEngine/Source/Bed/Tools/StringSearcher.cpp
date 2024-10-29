@@ -1,6 +1,12 @@
 #include "StringSearcher.h"
 
-std::string Bed::StringSearcher::LookForString(std::string... string)
-{
+#include <iostream>
 
+std::string Bed::StringSearcher::LookForString(std::string string[])
+{
+    for(int i = 0; i < string->size(); i++)
+    {
+        std::cout << string[i] << std::endl;
+        //TODO: Crashes
+    }
 }

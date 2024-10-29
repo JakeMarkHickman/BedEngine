@@ -7,6 +7,6 @@ namespace Bed
     class StringSearcher
     {
     public:
-        static std::string LookForString(std::string... string);
+        static std::string LookForString(std::string string[]);
     };
 }

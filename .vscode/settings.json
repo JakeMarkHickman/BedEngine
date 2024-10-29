@@ -66,7 +66,8 @@
         "chrono": "cpp",
         "filesystem": "cpp",
         "forward_list": "cpp",
-        "ratio": "cpp"
+        "ratio": "cpp",
+        "regex": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
