@@ -162,7 +162,7 @@ namespace Bed
 
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
-            new Bed::Mesh("Assets/Resources/Meshes/untitled.obj");
+            new Bed::Mesh("Assets/Resources/Meshes/Tri.obj");
 
             //Vertex array object
             va = new Bed::VertexArray();

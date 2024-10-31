@@ -1,14 +1,23 @@
 #include "Mesh.h"
 
+#include <iostream>
+#include <fstream>
 #include <string>
 #include <Bed/Tools/StringSearcher.h>
+#include <regex>
 
 Bed::Mesh::Mesh(std::string path)
 {
-    m_Data = Bed::FileLoader::GetFileContents(path);
+    std::string line;
+    int positionCount = 0;
 
-    std::string data[] = { "v", "vt", "vn", "f"};
-    std::string disjunction = Bed::StringSearcher::Disjunction(data, std::size(data));
-
-    std::cout << disjunction << std::endl;
+    std::ifstream file(path);
+    // Loop through each line in the file
+    while (std::getline(file, line)) {
+        // Check if the line starts with "v "
+        if (line.rfind("v ", 0) == 0) {
+            ++positionCount;
+        }
+    }
+    std::cout << positionCount << std::endl;
 }
