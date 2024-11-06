@@ -3,6 +3,9 @@
 #include <Graphics/Vertex.h>
 #include <Bed/Tools/FileLoader.h>
 #include <iostream>
+#include <vector>
+
+#include "MeshFace.h"
 
 namespace Bed
 {
@@ -12,7 +15,13 @@ namespace Bed
         Mesh(std::string path);
         
     private:
-        std::string m_Data;
-        uint64_t m_Count;
+
+        void LoadVertices();
+        void LoadUVWs();
+        void LoadVertexNormals();
+        void LoadFaces();
+
+        std::vector<Bed::MeshFace> m_Faces;
+        
     };
 }

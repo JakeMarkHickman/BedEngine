@@ -9,15 +9,16 @@
 Bed::Mesh::Mesh(std::string path)
 {
     std::string line;
-    int positionCount = 0;
+    int faceCount = 0;
 
     std::ifstream file(path);
     // Loop through each line in the file
     while (std::getline(file, line)) {
         // Check if the line starts with "v "
-        if (line.rfind("v ", 0) == 0) {
-            ++positionCount;
+        if (line.rfind("f ", 0) == 0) {
+            ++faceCount;
         }
     }
-    std::cout << positionCount << std::endl;
+
+    m_Faces.resize(faceCount);
 }
