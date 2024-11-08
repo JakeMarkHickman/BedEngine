@@ -2,6 +2,8 @@
 
 #include <Bed/Core.h>
 
+//TODO: OPERATORS FOR VECTORS!!!
+
 namespace Bed
 {
     struct BED_API Vector2
@@ -9,6 +11,11 @@ namespace Bed
         Vector2(float x, float y) : x(x), y(y) {};
         float x;
         float y;
+
+        bool operator==(const Vector2& other) const {
+            return x == other.x &&
+                   y == other.y;
+        }
     };
 
     struct BED_API Vector3
@@ -35,6 +42,12 @@ namespace Bed
             z += other.z;
             return *this;
         }
+
+        bool operator==(const Vector3& other) const {
+            return x == other.x &&
+                   y == other.y &&
+                   z == other.z;
+        }
     };
 
     struct BED_API Vector4
@@ -44,5 +57,12 @@ namespace Bed
         float y;
         float z;
         float w;
+
+        bool operator==(const Vector4& other) const {
+            return x == other.x &&
+                   y == other.y &&
+                   z == other.z &&
+                   w == other.w;
+        }
     };
 }

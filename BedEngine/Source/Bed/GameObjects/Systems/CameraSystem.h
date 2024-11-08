@@ -37,7 +37,7 @@ namespace Bed
                         proj = glm::ortho(-2.0f *2, 2.0f*2, -1.5f*2, 1.5f*2, -1.0f, 1.0f); // Camera Screen Size
                         break;
                     case Bed::RenderType::Projection:
-                        proj = glm::perspective(60.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+                        proj = glm::perspective(35.0f, 4.0f / 3.0f, 0.1f, 100.0f);
                         //TODO: This may need to change when using other renderers
                         proj[1][1] *= -1;
                         break;
