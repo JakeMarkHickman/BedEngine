@@ -2,8 +2,10 @@
 
 #include <Graphics/Vertex.h>
 #include <Bed/Tools/FileLoader.h>
-#include <iostream>
 #include <Bed/Math/Vector.h>
+#include <Bed/GameObjects/Components/TransformComponent.h>
+
+#include <iostream>
 #include <vector>
 
 namespace Bed

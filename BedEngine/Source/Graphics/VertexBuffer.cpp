@@ -6,7 +6,7 @@ Bed::VertexBuffer::VertexBuffer(unsigned int size)
 {
     GLCall(glGenBuffers(1, &m_RendererID));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(Bed::Vertex) * size, nullptr, GL_DYNAMIC_DRAW));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, size * sizeof(Bed::Vertex), nullptr, GL_DYNAMIC_DRAW));
 }
 
 Bed::VertexBuffer::~VertexBuffer()

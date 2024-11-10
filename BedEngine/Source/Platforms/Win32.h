@@ -166,8 +166,8 @@ namespace Bed
 
             //Vertex array object
             va = new Bed::VertexArray();
-            vb = new Bed::VertexBuffer(1000); // Store 1000 Bed::Vertex (pos, colour, texCoords, texID)
-            ib = new Bed::IndexBuffer(3000);
+            vb = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
+            ib = new Bed::IndexBuffer(4000);
 
             VertexBufferLayout vertLayout;
             vertLayout.Push<float>(3); // Position: 3 Floats (x, y, z)
@@ -181,7 +181,7 @@ namespace Bed
             shader->Bind();
 
             //Texture
-            texture = new Texture("Assets/Resources/Textures/256xMissingTexture.png");
+            texture = new Texture("Assets/Resources/Textures/256xWhite.png");
             texture->Bind(0); //Bind to slot 0
 
 
