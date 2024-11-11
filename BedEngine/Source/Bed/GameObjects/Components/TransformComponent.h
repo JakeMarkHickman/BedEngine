@@ -15,9 +15,9 @@ namespace Bed
     {
         Transform(Bed::Vector3 position, Bed::Vector3 rotation, Bed::Vector3 scale);
 
-        Bed::Vector3 m_Position {0.0f, 0.0f, 0.0f};
-        Bed::Vector3 m_Rotation {0.0f, 0.0f, 0.0f};
-        Bed::Vector3 m_Scale {0.0f, 0.0f, 0.0f};
+        Bed::Vector3 m_Position;
+        Bed::Vector3 m_Rotation;
+        Bed::Vector3 m_Scale;
 
         glm::mat4 GetMatrix() const
         {

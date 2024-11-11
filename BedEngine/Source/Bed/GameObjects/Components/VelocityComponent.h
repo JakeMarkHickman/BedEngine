@@ -9,6 +9,6 @@ namespace Bed
     {
         Velocity(Bed::Vector3 velocity);
 
-        Bed::Vector3 m_Velocity {0.0f, 0.0f, 0.0f};
+        Bed::Vector3 m_Velocity;
     };
 }
