@@ -11,6 +11,7 @@ namespace Bed
         Vector2() {};
         Vector2(float value) : x(value), y(value) {};
         Vector2(float x, float y) : x(x), y(y) {};
+        Vector2(const Vector2& vector) : x(vector.x), y(vector.y) {};
 
         float x = 0.0f;
         float y = 0.0f;
@@ -41,6 +42,7 @@ namespace Bed
         Vector3() {};
         Vector3(float value) : x(value), y(value), z(value) {};
         Vector3(float x, float y, float z) : x(x), y(y), z(z) {};
+        Vector3(const Vector3& vector) : x(vector.x), y(vector.y), z(vector.z) {};
 
         float x = 0.0f;
         float y = 0.0f;
@@ -98,6 +100,7 @@ namespace Bed
         Vector4() {};
         Vector4(float value) : x(value), y(value), z(value), w(value) {};
         Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {};
+        Vector4(const Vector4& vector) : x(vector.x), y(vector.y), z(vector.z), w(vector.w) {};
 
         float x = 0.0f;
         float y = 0.0f;

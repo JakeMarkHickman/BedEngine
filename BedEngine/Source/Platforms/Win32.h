@@ -181,7 +181,7 @@ namespace Bed
             shader->Bind();
 
             //Texture
-            texture = new Texture("Assets/Resources/Textures/256xWhite.png");
+            texture = new Texture("Assets/Resources/Textures/256xMissingTexture.png");
             texture->Bind(0); //Bind to slot 0
 
 
