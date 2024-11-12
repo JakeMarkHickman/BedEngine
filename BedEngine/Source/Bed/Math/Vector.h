@@ -68,6 +68,78 @@ namespace Bed
             return x != other.x && y != other.y && z != other.z;
         }
 
+        // Is Greater than or Equal
+        bool operator>=(float scalar) const
+        {
+            return x >= scalar && y >= scalar && z >= scalar;
+        }
+        bool operator>=(const Vector3& other) const
+        {
+            return x >= other.x && y >= other.y && z >= other.z;
+        }
+
+        // Is Less than or Equal
+        bool operator<=(float scalar) const
+        {
+            return x <= scalar && y <= scalar && z <= scalar;
+        }
+        bool operator<=(const Vector3& other) const
+        {
+            return x <= other.x && y <= other.y && z <= other.z;
+        }
+
+        // Is Greater than
+        bool operator>(float scalar) const
+        {
+            return x > scalar && y > scalar && z > scalar;
+        }
+        bool operator>(const Vector3& other) const
+        {
+            return x > other.x && y > other.y && z > other.z;
+        }
+
+        // Is Less than
+        bool operator<(float scalar) const
+        {
+            return x < scalar && y < scalar && z < scalar;
+        }
+        bool operator<(const Vector3& other) const
+        {
+            return x < other.x && y < other.y && z < other.z;
+        }
+
+        // Multiply and Equal
+        Vector3& operator*=(float scalar)
+        {
+            x *= scalar;
+            y *= scalar;
+            z *= scalar;
+            return *this;
+        }
+        Vector3& operator*=(const Vector3& other)
+        {
+            x *= other.x;
+            y *= other.y;
+            z *= other.z;
+            return *this;
+        }
+
+        // Divide and Equal
+        Vector3& operator/=(float scalar)
+        {
+            x /= scalar;
+            y /= scalar;
+            z /= scalar;
+            return *this;
+        }
+        Vector3& operator/=(const Vector3& other)
+        {
+            x /= other.x;
+            y /= other.y;
+            z /= other.z;
+            return *this;
+        }
+
         // Plus and Equal
         Vector3& operator+=(float scalar)
         {
@@ -84,6 +156,22 @@ namespace Bed
             return *this;
         }
 
+        // Subtract and Equal
+        Vector3& operator-=(float scalar)
+        {
+            x -= scalar;
+            y -= scalar;
+            z -= scalar;
+            return *this;
+        }
+        Vector3& operator-=(const Vector3& other)
+        {
+            x -= other.x;
+            y -= other.y;
+            z -= other.z;
+            return *this;
+        }
+
         // Multiplication
         Vector3 operator*(float scalar) const
         {
@@ -92,6 +180,36 @@ namespace Bed
         Vector3 operator*(const Vector3& other) const
         {
             return Vector3(x * other.x, y * other.y, z * other.z);
+        }
+
+        //Division
+        Vector3 operator/(float scalar) const 
+        {
+            return Vector3(x / scalar, y / scalar, z / scalar);
+        }
+        Vector3 operator/(const Vector3& other) const
+        {
+            return Vector3(x / other.x, y / other.y, z / other.z);
+        }
+
+        // Addition
+        Vector3 operator+(float scalar) const
+        {
+            return Vector3(x + scalar, y + scalar, z + scalar);
+        }
+        Vector3 operator+(const Vector3& other) const
+        {
+            return Vector3(x + other.x, y + other.y, z + other.z);
+        }
+
+        // Subtraction
+        Vector3 operator-(float scalar) const 
+        {
+            return Vector3(x - scalar, y - scalar, z - scalar);
+        }
+        Vector3 operator-(const Vector3& other) const
+        {
+            return Vector3(x - other.x, y - other.y, z - other.z);
         }
     };
 
