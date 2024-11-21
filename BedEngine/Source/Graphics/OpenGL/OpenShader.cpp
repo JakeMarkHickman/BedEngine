@@ -10,7 +10,7 @@
 
 Bed::OpenShader::OpenShader(const std::string& filepath) : m_FilePath(filepath), m_RendererID(0)
 {
-    ShaderProgramSource source = ParseShader(); //TODO: Change this to install Dir
+    ShaderProgramSource source = ParseShader();
     m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
 }
 

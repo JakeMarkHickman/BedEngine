@@ -193,8 +193,6 @@ namespace Bed
 
         void OpenGLUpdateWindow()
         {
-            //TODO: Sometimes nothing renderers
-
             /* Render here */
             renderer->Clear();
 

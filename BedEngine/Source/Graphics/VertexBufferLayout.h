@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <GL/glew.h>
-//#include "OpenGL/OpenGl.h" // TODO: dont include this
 
 namespace Bed
 {

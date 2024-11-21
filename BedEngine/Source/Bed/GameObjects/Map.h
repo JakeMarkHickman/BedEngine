@@ -3,8 +3,6 @@
 #include <Bed/Core.h>
 #include "ECS/ECS.h"
 
-
-// TODO: BED_API
 namespace Bed
 {
     class BED_API Map
