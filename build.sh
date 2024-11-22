@@ -8,8 +8,8 @@ outputFile="Playground"                     # No extention as we will set it aft
 engineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
 
 #Includes
-includes="-IBedEngine/Source -IBedEngine/Dependencies/glm -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image -IBedEngine/Dependencies/GLFW/include"
-engineIncludes="-IBedEngine/Source -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image -IBedEngine/Dependencies/glm"
+includes="-IBedEngine/Source -IBedEngine/Source/Inclusions"
+engineIncludes="-IBedEngine/Source -IBedEngine/Source/Inclusions -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image -IBedEngine/Dependencies/glm"
 
 #Libarys
 libs="$buildPath/BedEngine.lib"             # Libs for the game
@@ -34,9 +34,9 @@ enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics
             BedEngine/Source/Graphics/OpenGL/OpenRenderer.cpp BedEngine/Source/Graphics/OpenGL/OpenShader.cpp
             BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp 
             BedEngine/Source/Bed/Tools/FileLoader.cpp BedEngine/Source/Bed/Tools/StringSearcher.cpp
-            BedEngine/Source/Bed/GameObjects/ECS/ECS.cpp BedEngine/Source/Bed/GameObjects/Mesh/Mesh.cpp
-            BedEngine/Source/Bed/GameObjects/Components/TransformComponent.cpp BedEngine/Source/Bed/GameObjects/Components/CameraComponent.cpp
-            BedEngine/Source/Bed/GameObjects/Components/RenderComponent.cpp BedEngine/Source/Bed/GameObjects/Components/VelocityComponent.cpp
+            BedEngine/Source/Bed/Game/World/GameObjects/ECS/ECS.cpp BedEngine/Source/Bed/Game/World/GameObjects/Mesh/Mesh.cpp
+            BedEngine/Source/Bed/Game/World/GameObjects/Components/CameraComponent.cpp
+            BedEngine/Source/Bed/Game/World/GameObjects/Components/RenderComponent.cpp BedEngine/Source/Bed/Game/World/GameObjects/Components/VelocityComponent.cpp
             BedEngine/Source/Bed/Math/Matrix/Matrix3x3.cpp"
 
 

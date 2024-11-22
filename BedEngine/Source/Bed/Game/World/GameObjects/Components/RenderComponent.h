@@ -1,7 +1,8 @@
 #pragma once
 
 #include <Graphics/Texture.h>
-#include <Bed/GameObjects/Mesh/Mesh.h>
+//TODO: Shorten this with inclusion file
+#include <Bed/Game/World/GameObjects/Mesh/Mesh.h>
 #include <Bed/Core.h>
 
 namespace Bed

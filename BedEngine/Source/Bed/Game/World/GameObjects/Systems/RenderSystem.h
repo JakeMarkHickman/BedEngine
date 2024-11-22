@@ -1,8 +1,7 @@
 #pragma once
 
 #include <Bed/GameObjects/Components/RenderComponent.h>
-#include <Bed/GameObjects/Components/TransformComponent.h>
-#include <Bed/GameObjects/Mesh/Quad.h>
+#include <Math/Transform.h>
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
 #include <Bed/Core.h>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Bed/Math/Vector.h>
+#include <Math/Vector.h>
 #include <Bed/Core.h>
 
 namespace Bed

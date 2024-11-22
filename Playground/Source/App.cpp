@@ -1,7 +1,5 @@
 
-#include <BedEngineApplication.h>
-
-#include "GameMap.h"
+#include <App/BedEngineApplication.h>
 
 // TODO: Make this able to be editied by the editor when creating project
 
@@ -14,9 +12,9 @@ Bed::Application* CreateApplication()
 {
     Bed::Application* App = new TesterGame;
     const char* Name = "Playground";
-    Bed::Map* map = new Game::GameMap();
+    //Bed::GameSession* session = new Game::GameMap();
     App->SetApplicationName(Name);
-    App->SetMap(map);
+    //App->SetMap(map);
 
     return App;
 }

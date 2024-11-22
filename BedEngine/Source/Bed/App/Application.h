@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Bed/Core.h>
-#include <Bed/GameObjects/Map.h>
+#include <Bed/Game/Game.h>
 
 namespace Bed
 {
@@ -19,11 +19,6 @@ namespace Bed
             }
         };
 
-        void SetMap(Bed::Map* map)
-        {
-            m_Map = map;
-        }
-
         const char* GetApplicationName()
         {
             return m_ApplicationName;
@@ -35,18 +30,20 @@ namespace Bed
 
         /*TODO: Game Hierarchy
             App
-                Game Instance [Can be Edited] (handles loading of levels and data persistance)
+                Game
+                    Game Session [Can be Edited] (data persistance, current session of game)
                     Level [Can be Edited] (the game world, also uses level streaming)
                         Level Manager [Can be Edited] (controls spawning, Data loading, basic level stuff)
         */
-        Bed::Map* m_Map;
 
     private:
         void Update();
+
+        Bed::Game m_Game;
 
     }; 
 
     Application* CreateApplication();
     
 
-} // namespace Bed
+}

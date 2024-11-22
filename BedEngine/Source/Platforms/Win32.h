@@ -2,15 +2,7 @@
 
 #include "Platform.h"
 #include <Graphics/GraphicVariables.h>
-#include <Graphics/Vertex.h>
-#include <Bed/GameObjects/Mesh/Quad.h>
-#include <Graphics/Texture.h>
-#include <Bed/GameObjects/Mesh/Mesh.h>
 #include <iostream>
-
-// TODO: replace GLM Includes
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
 
 namespace Bed
 {

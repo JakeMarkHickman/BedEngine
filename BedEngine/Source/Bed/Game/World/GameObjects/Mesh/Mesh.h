@@ -2,8 +2,8 @@
 
 #include <Graphics/Vertex.h>
 #include <Bed/Tools/FileLoader.h>
-#include <Bed/Math/Vector.h>
-#include <Bed/GameObjects/Components/TransformComponent.h>
+#include <Math/Vector.h>
+#include <Math/Transform.h>
 
 #include <iostream>
 #include <vector>

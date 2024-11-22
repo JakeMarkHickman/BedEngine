@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <Bed/Math/Vector.h>
+#include <Math/Vector.h>
 #include <unordered_map>
 #include <Bed/Core.h>
 
