@@ -24,6 +24,8 @@ namespace Bed
 
         //TODO: Remove this
         
+        m_Map->BeginPlay();
+
         while (IsWindowOpen())
         {
             UpdateWindow(); // Update the platform App

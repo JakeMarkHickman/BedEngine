@@ -32,6 +32,13 @@ namespace Bed
     protected:
         // TODO: Add variables that are able to be modified to 
         const char* m_ApplicationName = "Bed Engine";
+
+        /*TODO: Game Hierarchy
+            App
+                Game Instance [Can be Edited] (handles loading of levels and data persistance)
+                    Level [Can be Edited] (the game world, also uses level streaming)
+                        Level Manager [Can be Edited] (controls spawning, Data loading, basic level stuff)
+        */
         Bed::Map* m_Map;
 
     private:

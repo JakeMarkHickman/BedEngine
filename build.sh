@@ -36,7 +36,8 @@ enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics
             BedEngine/Source/Bed/Tools/FileLoader.cpp BedEngine/Source/Bed/Tools/StringSearcher.cpp
             BedEngine/Source/Bed/GameObjects/ECS/ECS.cpp BedEngine/Source/Bed/GameObjects/Mesh/Mesh.cpp
             BedEngine/Source/Bed/GameObjects/Components/TransformComponent.cpp BedEngine/Source/Bed/GameObjects/Components/CameraComponent.cpp
-            BedEngine/Source/Bed/GameObjects/Components/RenderComponent.cpp BedEngine/Source/Bed/GameObjects/Components/VelocityComponent.cpp"
+            BedEngine/Source/Bed/GameObjects/Components/RenderComponent.cpp BedEngine/Source/Bed/GameObjects/Components/VelocityComponent.cpp
+            BedEngine/Source/Bed/Math/Matrix/Matrix3x3.cpp"
 
 
 #Check what system is being used

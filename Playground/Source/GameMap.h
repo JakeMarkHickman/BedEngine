@@ -12,6 +12,8 @@
 #include <Bed/GameObjects/Systems/CameraSystem.h>
 #include <Bed/GameObjects/Systems/RenderSystem.h>
 
+#include <Bed/Math/Matrix.h>
+
 
 namespace Game
 {
@@ -41,5 +43,21 @@ namespace Game
             ecs.AddSystem(Bed::RenderSystem);
             ecs.AddSystem(Bed::CameraSystem);
         };
+
+        void BeginPlay() override
+        {
+            Bed::Matrix3x3 V1;
+            
+            Bed::Matrix3x3 V2 = V1 - V1;
+
+            for(int i = 0; i < 3; i++)
+            {
+                for(int j = 0; j < 3; j++)
+                {
+                    std::cout << "V2.element[" << i << "][" << j << "] = " << V2.element[i][j] << std::endl;
+                    
+                }
+            }
+        }
     };
 }
