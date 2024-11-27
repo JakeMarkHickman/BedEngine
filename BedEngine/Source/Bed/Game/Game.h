@@ -3,7 +3,7 @@
 #include "GameSession/GameSession.h"
 #include "World/World.h"
 
-//This file will not be able to be edited. This is what will be used to deal with levels and the game session.
+//This file will not be able to be edited. This is an overhead for worlds and events can be sent between game session and world
 namespace Bed
 {
     class Game
@@ -12,13 +12,13 @@ namespace Bed
         Game() {};
         ~Game() {};
 
-        void LoadWorld(Bed::World* worldToLoad) { m_World = worldToLoad; };
-        Bed::World* GetCurrentWorld() { return m_World; }
+        Bed::World GetCurrentWorld() { return m_World; };
+        Bed::GameSession GetGameSession() { return m_GameSession; };
 
-        void Update(float deltaTime) { m_World->Update(deltaTime); };
+        void Update(float deltaTime) { m_World.Update(deltaTime); };
 
     private:
-        Bed::GameSession* m_GameSession;
-        Bed::World* m_World;
+        Bed::GameSession m_GameSession;
+        Bed::World m_World;
     };
 }

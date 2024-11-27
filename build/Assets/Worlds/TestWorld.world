@@ -1,0 +1,30 @@
+{
+ 	"World" : {
+		"WorldName" : "TestWorld",
+		"Entities" : [
+			{
+				"Name" : "Player",
+				"Bed::Transform" : {
+					"Position" : [0.0, 0.0, 0.0],
+					"Rotation" : [0.0, 0.0, 0.0],
+					"Scale" : [1.0, 1.0, 1.0]
+				},
+				"Bed::Render" : {
+					"Mesh" : "Assets/Resources/Meshes/Cube.obj"
+				}
+			},
+			{
+				"Name" : "Camera",
+				"Parent" : "Player",
+				"Bed::Transform" : {
+					"Position" : [0.0, 1.0, 1.0],
+					"Rotation" : [0.0, 0.0, 0.0],
+					"Scale" : [1.0, 1.0, 1.0]
+				},
+				"Bed::Camera" : {
+					"Perspective" : "Bed::RenderType::Projection"
+				}
+			}
+		]
+ 	}
+}

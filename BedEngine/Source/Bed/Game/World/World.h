@@ -1,19 +1,17 @@
 #pragma once
 
-#include <Bed/Core.h>
-#include <iostream>
-
+//This will load a level from a file (JSON for now but binary later)
 namespace Bed
 {
-    class BED_API World
+    class World
     {
     public:
         World() {};
-        virtual ~World() {};
+        ~World() {};
 
-        virtual void BeginPlay() {};
-        virtual void Update(float deltaTime) {};
-    
-    protected:
+        void LoadWorld(std::string path);
+
+        void BeginPlay() {};
+        void Update(float deltaTime) {};
     };
 }
