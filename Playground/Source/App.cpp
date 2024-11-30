@@ -12,9 +12,7 @@ Bed::Application* CreateApplication()
 {
     Bed::Application* App = new TesterGame;
     const char* Name = "Playground";
-    //Bed::GameSession* session = new Game::GameMap();
     App->SetApplicationName(Name);
-    //App->SetMap(map);
 
     return App;
 }

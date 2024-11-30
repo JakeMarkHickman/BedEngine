@@ -1,5 +1,7 @@
 #pragma once
 
+//TODO: Completely restructure this, no gobal variables!!
+
 #include "Shader.h"
 #include "Renderer.h"
 #include "Texture.h"
@@ -8,10 +10,10 @@
 
 namespace Bed
 {
-    BED_API Bed::Shader* shader;
-    BED_API Bed::Renderer* renderer;
-    BED_API Bed::IndexBuffer* ib;
-    BED_API Bed::VertexArray* va;
-    BED_API Bed::VertexBuffer* vb;
-    BED_API Bed::Texture* texture;
+    extern Bed::Shader* shader;
+    extern Bed::Renderer* renderer;
+    extern Bed::IndexBuffer* ib;
+    extern Bed::VertexArray* va;
+    extern Bed::VertexBuffer* vb;
+    extern Bed::Texture* texture;
 }

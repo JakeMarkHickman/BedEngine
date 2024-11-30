@@ -12,7 +12,7 @@ namespace Bed
 
     struct BED_API Camera
     {
-        Camera(Bed::RenderType renderType);
+        Camera(Bed::RenderType renderType) : m_RenderType(renderType) {};
 
         Bed::RenderType m_RenderType = Bed::RenderType::Orthographic;
     };

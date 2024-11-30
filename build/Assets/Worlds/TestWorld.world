@@ -4,27 +4,68 @@
 		"Entities" : [
 			{
 				"Name" : "Player",
-				"Bed::Transform" : {
-					"Position" : [0.0, 0.0, 0.0],
-					"Rotation" : [0.0, 0.0, 0.0],
-					"Scale" : [1.0, 1.0, 1.0]
-				},
-				"Bed::Render" : {
-					"Mesh" : "Assets/Resources/Meshes/Cube.obj"
+				"Components" : {
+					"Bed::Transform" : {
+						"Position" : [0.0, 0.0, 0.0],
+						"Rotation" : [0.0, 0.0, 0.0],
+						"Scale" : [1.0, 1.0, 1.0]
+					},
+					"Bed::Render" : {
+						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
+					}
 				}
 			},
 			{
 				"Name" : "Camera",
 				"Parent" : "Player",
-				"Bed::Transform" : {
-					"Position" : [0.0, 1.0, 1.0],
-					"Rotation" : [0.0, 0.0, 0.0],
-					"Scale" : [1.0, 1.0, 1.0]
-				},
-				"Bed::Camera" : {
-					"Perspective" : "Bed::RenderType::Projection"
+				"Components" : {
+					"Bed::Transform" : {
+						"Position" : [0.0, 1.0, 1.0],
+						"Rotation" : [0.0, 0.0, 0.0],
+						"Scale" : [1.0, 1.0, 1.0]
+					},
+					"Bed::Camera" : {
+						"Perspective" : "Bed::RenderType::Projection"
+					}
+				}
+			},
+			{
+				"Name" : "ent1",
+				"Components" : {
+					"Bed::Transform" : {
+						"Position" : [3.0, 0.0, -2.0],
+						"Rotation" : [0.0, 0.0, 0.0],
+						"Scale" : [1.0, 1.0, 1.0]
+					},
+					"Bed::Velocity" : {
+						"value" : [0.0, 0.5, 0.0]
+					},
+					"Bed::Render" : {
+						"Mesh" : "Assets/Resources/Meshes/Tri.obj"
+					}
+				}
+			},
+			{
+				"Name" : "ent2",
+				"Components" : {
+					"Bed::Transform" : {
+						"Position" : [-3.0, 0.0, -2.0],
+						"Rotation" : [0.0, 0.0, 0.0],
+						"Scale" : [1.0, 1.0, 1.0]
+					},
+					"Bed::Velocity" : {
+						"value" : [0.0, -0.5, 0.0]
+					},
+					"Bed::Render" : {
+						"Mesh" : "Assets/Resources/Meshes/Untitled.obj"
+					}
 				}
 			}
+		]
+		"Systems" : [
+			"MoveSystem",
+			"RenderSystem",
+			"CameraSystem"
 		]
  	}
 }

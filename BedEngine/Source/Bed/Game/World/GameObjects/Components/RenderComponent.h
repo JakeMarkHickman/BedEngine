@@ -9,7 +9,7 @@ namespace Bed
 {
     struct BED_API Render
     {
-        Render(const std::string& meshPath);
+        Render(const std::string& meshPath) : m_Mesh(meshPath) {};
 
         Bed::Mesh m_Mesh;
     };

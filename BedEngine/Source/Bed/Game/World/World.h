@@ -1,17 +1,23 @@
 #pragma once
 
+#include <iostream>
+#include "GameObjects/ECS/ECS.h"
+
 //This will load a level from a file (JSON for now but binary later)
 namespace Bed
 {
     class World
     {
     public:
-        World() {};
-        ~World() {};
+        World();
+        ~World();
 
-        void LoadWorld(std::string path);
+        bool LoadWorld(std::string path);
 
-        void BeginPlay() {};
-        void Update(float deltaTime) {};
+        void BeginPlay();
+        void Update(float deltaTime);
+
+    private:
+        Bed::ECS ecs;
     };
 }

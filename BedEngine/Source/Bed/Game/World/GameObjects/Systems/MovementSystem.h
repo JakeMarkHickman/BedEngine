@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Bed/GameObjects/Components/TransformComponent.h>
-#include <Bed/GameObjects/Components/VelocityComponent.h>
+#include <Math/Transform.h>
+#include <Bed/Game/World/GameObjects/Components/VelocityComponent.h>
 
 namespace Bed
 {
@@ -15,7 +15,7 @@ namespace Bed
             {
                 Bed::Transform transform = ecs.GetComponent<Bed::Transform>(i);
                 Bed::Velocity Vel = ecs.GetComponent<Bed::Velocity>(i);
-                transform.m_Position += Vel.m_Velocity * deltaTime;
+                transform.Position += Vel.m_Velocity * deltaTime;
                 ecs.SetComponent<>(i, transform);
             }
         }

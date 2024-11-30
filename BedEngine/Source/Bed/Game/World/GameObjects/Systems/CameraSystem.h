@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Bed/GameObjects/Components/CameraComponent.h>
-#include <Bed/GameObjects/Components/TransformComponent.h>
+#include <GameObjects/Components/CameraComponent.h>
+#include <Math/Transform.h>
 #include <Graphics/GraphicVariables.h>
 
 #include <glm.hpp>
@@ -21,7 +21,7 @@ namespace Bed
             {
                 Bed::Camera cam = ecs.GetComponent<Bed::Camera>(i);
 
-                Bed::Transform transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f));
+                Bed::Transform transform(0.0f);
 
                 if(ecs.HasComponents<Bed::Transform>(i))
                 {
@@ -47,7 +47,7 @@ namespace Bed
                 }
 
                 //Set mvp
-                view = glm::translate(glm::mat4(1.0f), glm::vec3(transform.m_Position.x, transform.m_Position.y, transform.m_Position.z)); // Camera Pos
+                view = glm::translate(glm::mat4(1.0f), glm::vec3(transform.Position.x, transform.Position.y, transform.Position.z)); // Camera Pos
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));// model Pos
                 mvp = proj * view * model;
                 shader->SetUniformMat4f("u_MVP", mvp);

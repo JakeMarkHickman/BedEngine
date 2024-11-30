@@ -32,11 +32,11 @@ cpp=""
 enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp
             BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp
             BedEngine/Source/Graphics/OpenGL/OpenRenderer.cpp BedEngine/Source/Graphics/OpenGL/OpenShader.cpp
+            BedEngine/Source/Graphics/GraphicVariables.cpp
             BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp 
             BedEngine/Source/Bed/Tools/FileLoader.cpp BedEngine/Source/Bed/Tools/StringSearcher.cpp
             BedEngine/Source/Bed/Game/World/GameObjects/ECS/ECS.cpp BedEngine/Source/Bed/Game/World/GameObjects/Mesh/Mesh.cpp
-            BedEngine/Source/Bed/Game/World/GameObjects/Components/CameraComponent.cpp
-            BedEngine/Source/Bed/Game/World/GameObjects/Components/RenderComponent.cpp BedEngine/Source/Bed/Game/World/GameObjects/Components/VelocityComponent.cpp
+            BedEngine/Source/Bed/Game/World/World.cpp
             BedEngine/Source/Bed/Math/Matrix/Matrix3x3.cpp"
 
 

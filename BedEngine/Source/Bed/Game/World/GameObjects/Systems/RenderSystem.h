@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Bed/GameObjects/Components/RenderComponent.h>
+#include <GameObjects/Components/RenderComponent.h>
 #include <Math/Transform.h>
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
-#include <Bed/Core.h>
 
 //TODO: Remove this
 #include <glm.hpp>
