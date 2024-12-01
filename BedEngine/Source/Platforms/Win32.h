@@ -169,7 +169,7 @@ namespace Bed
             va->AddBuffer(vb, vertLayout);
 
             //Shader
-            shader = new Bed::Shader("Assets/Resources/Shaders/Texture.shader");
+            shader = new Bed::Shader("Assets/Resources/Shaders/Bed.shader");
             shader->Bind();
 
             //Texture

@@ -1,5 +1,5 @@
 #pragma once
 
-#include <Bed/Math/Vector/Vector2.h>
-#include <Bed/Math/Vector/Vector3.h>
-#include <Bed/Math/Vector/Vector4.h>
+#include "Vector/Vector2.h"
+#include "Vector/Vector3.h"
+#include "Vector/Vector4.h"

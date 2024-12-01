@@ -29,6 +29,16 @@ void Bed::OpenShader::Unbind()
     GLCall(glUseProgram(0));
 }
 
+void Bed::OpenShader::SetUniform1f(const std::string& name, float value)
+{
+    GLCall(glUniform1f(GetUniformLocation(name), value));
+}
+
+void Bed::OpenShader::SetUniform3f(const std::string& name, Bed::Vector3 value)
+{
+    GLCall(glUniform3f(GetUniformLocation(name), value.x, value.y, value.z));
+}
+
 void Bed::OpenShader::SetUniform4f(const std::string& name, Bed::Vector4 value)
 {
     GLCall(glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w));

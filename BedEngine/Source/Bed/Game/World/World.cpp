@@ -4,10 +4,12 @@
 #include <Math/Transform.h>
 #include <GameObjects/Components/CameraComponent.h>
 #include <GameObjects/Components/RenderComponent.h>
+#include <GameObjects/Components/AmbientLightComponent.h>
 #include <Bed/Game/World/GameObjects/Components/VelocityComponent.h>
 
 #include <GameObjects/Systems/CameraSystem.h>
 #include <GameObjects/Systems/RenderSystem.h>
+#include <GameObjects/Systems/LightingSystem.h>
 #include <Bed/Game/World/GameObjects/Systems/MovementSystem.h>
 
 Bed::World::World()
@@ -31,9 +33,13 @@ Bed::World::World()
     ecs.AttachComponents(player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, -2.0f), Bed::Vector3(), Bed::Vector3(1.0f)),
                                Bed::Render("Assets/Resources/Meshes/Cube.obj"));
 
+    uint64_t ambientLight = ecs.CreateEntity();
+    ecs.AttachComponents(ambientLight, Bed::AmbientLight(0.1f, Bed::Vector3(1.0f, 1.0f, 1.0f)));
+
     ecs.AddSystem(Bed::MoveSystem);
     ecs.AddSystem(Bed::RenderSystem);
     ecs.AddSystem(Bed::CameraSystem);
+    ecs.AddSystem(Bed::LightingSystem);
 }
 
 Bed::World::~World()

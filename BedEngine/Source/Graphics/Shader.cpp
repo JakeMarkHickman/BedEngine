@@ -28,6 +28,16 @@ void Bed::Shader::Unbind() const
     m_OpenShader->Unbind();
 }
 
+void Bed::Shader::SetUniform1f(const std::string& name, float value)
+{
+    m_OpenShader->SetUniform1f(name, value);
+}
+
+void Bed::Shader::SetUniform3f(const std::string& name, Bed::Vector3 value)
+{
+    m_OpenShader->SetUniform3f(name, value);
+}
+
 void Bed::Shader::SetUniform4f(const std::string& name, Bed::Vector4 value)
 {
     m_OpenShader->SetUniform4f(name, value);
