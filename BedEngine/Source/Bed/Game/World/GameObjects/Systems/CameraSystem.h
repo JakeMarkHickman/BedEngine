@@ -11,7 +11,7 @@ namespace Bed
 {
     void CameraSystem(Bed::ECS& ecs, float deltaTime)
     {
-        glm::mat4 mvp;
+        glm::mat4 vp;
         glm::mat4 model;
         glm::mat4 proj;
         glm::mat4 view;
@@ -49,8 +49,9 @@ namespace Bed
                 //Set mvp
                 view = glm::translate(glm::mat4(1.0f), glm::vec3(transform.Position.x, transform.Position.y, transform.Position.z)); // Camera Pos
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));// model Pos
-                mvp = proj * view * model;
-                shader->SetUniformMat4f("u_MVP", mvp);
+                vp = proj * view;
+                shader->SetUniformMat4f("u_ViewProjection", vp);
+                shader->SetUniformMat4f("u_Model", model);
             }
         }
     }

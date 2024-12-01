@@ -3,23 +3,29 @@
 
 //Vector
 layout(location = 0) in vec4 a_Position;
-layout(location = 1) in vec4 a_Colour;
-layout(location = 2) in vec2 a_TexCoord;
-layout(location = 3) in float a_TexID;
+layout(location = 1) in vec3 a_Normal;
+layout(location = 2) in vec4 a_Colour;
+layout(location = 3) in vec2 a_TexCoord;
+layout(location = 4) in float a_TexID;
 
 //Model view Projection Matrix
-uniform mat4 u_MVP;
+uniform mat4 u_Model;
+uniform mat4 u_ViewProjection;
 
+out vec4 v_Pos;
+out vec3 v_Normal;
 out vec4 v_Colour;
 out vec2 v_TexCoord;
 out float v_TexID;
 
 void main()
 {
+    v_Pos = u_Model * a_Position;
+    v_Normal = a_Normal;
     v_Colour = a_Colour;
     v_TexCoord = a_TexCoord;
     v_TexID = a_TexID;
-    gl_Position = u_MVP * a_Position;
+    gl_Position = u_ViewProjection * u_Model * a_Position;
 }
 
 
@@ -29,6 +35,8 @@ void main()
 layout(location = 0) out vec4 o_FragColour;
 
 //Vector
+in vec4 v_Pos;
+in vec3 v_Normal;
 in vec4 v_Colour;
 in vec2 v_TexCoord;
 in float v_TexID;
@@ -44,11 +52,20 @@ void main()
 {
     //Unlit
     int index = int(v_TexID);
-    vec4 unlitResult = texture(u_Textures[index], v_TexCoord) * v_Colour;
+    vec3 unlitResult = vec3(texture(u_Textures[index], v_TexCoord) * v_Colour);
 
     //Ambient Lighting
     vec3 ambientLight = u_ambientLightStrenght * u_ambientLightColour;
-    vec4 ambientResult = unlitResult * vec4(ambientLight, 1.0);
 
-    o_FragColour = ambientResult;
+    //Diffuse Lighting
+    vec3 lightPos = vec3(0.0, 0.0, 10.0);
+    vec3 lightColour = vec3(1.0, 1.0, 1.0);
+    vec3 norm = normalize(v_Normal);
+    vec3 lightDir = normalize(lightPos - v_Pos.xyz);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * lightColour;
+
+    vec3 result = (ambientLight + diffuse) * unlitResult;
+
+    o_FragColour = vec4(result, 1.0);
 }

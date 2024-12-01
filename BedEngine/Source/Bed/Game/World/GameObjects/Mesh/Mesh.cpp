@@ -79,6 +79,7 @@ void Bed::Mesh::LoadFaces(std::string line)
 
         Bed::Vertex vert;
         vert.m_Position = m_Positions[vi - 1];
+        vert.m_Normal = m_Normals[ni - 1];
         vert.m_Colour = Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         vert.m_TexCoords = (ti > 0) ? m_UVs[ti - 1] : Bed::Vector2(0.0f, 0.0f);
         vert.m_TexID = 0.0f;

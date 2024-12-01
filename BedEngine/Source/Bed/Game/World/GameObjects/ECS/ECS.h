@@ -85,15 +85,16 @@ namespace Bed
                 {
                     result = false;
                 }
-
-                //TODO: Check for component on entity
-                uint64_t compID = GetComponentIndex(typeHash);
-
-                if(!m_EntityComponents.GetData(compID).HasIndex(entity))
+                else
                 {
-                    result = false;
-                }
+                    //TODO: Check for component on entity
+                    uint64_t compID = GetComponentIndex(typeHash);
 
+                    if(!m_EntityComponents.GetData(compID).HasIndex(entity))
+                    {
+                        result = false;
+                    }
+                }
             }(), ...);
             return result;
         }

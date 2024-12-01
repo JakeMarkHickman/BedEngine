@@ -163,6 +163,7 @@ namespace Bed
 
             VertexBufferLayout vertLayout;
             vertLayout.Push<float>(3); // Position: 3 Floats (x, y, z)
+            vertLayout.Push<float>(3); // Normal: 3 Floats (x, y, z)
             vertLayout.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
             vertLayout.Push<float>(2); // TextureCoord: 2 Floats (x, y)
             vertLayout.Push<float>(1); // Texture ID: 1 Float (ID)
