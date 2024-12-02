@@ -45,6 +45,10 @@ in float v_TexID;
 uniform float u_ambientLightStrenght;
 uniform vec3 u_ambientLightColour;
 
+//Diffuse Light
+uniform vec3 u_DiffuseLightPos;
+uniform vec3 u_DiffuseLightColour;
+
 //Texture
 uniform sampler2D u_Textures[2];
 
@@ -58,14 +62,14 @@ void main()
     vec3 ambientLight = u_ambientLightStrenght * u_ambientLightColour;
 
     //Diffuse Lighting
-    vec3 lightPos = vec3(0.0, 0.0, 10.0);
-    vec3 lightColour = vec3(1.0, 1.0, 1.0);
     vec3 norm = normalize(v_Normal);
-    vec3 lightDir = normalize(lightPos - v_Pos.xyz);
+    vec3 lightDir = normalize(u_DiffuseLightPos - v_Pos.xyz);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColour;
+    vec3 diffuse = diff * u_DiffuseLightColour;
 
+    //Final Colour Calculation
     vec3 result = (ambientLight + diffuse) * unlitResult;
 
+    //Output
     o_FragColour = vec4(result, 1.0);
 }

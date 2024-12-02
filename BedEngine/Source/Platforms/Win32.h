@@ -129,6 +129,7 @@ namespace Bed
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+            //TODO: This sets the window size, this needs to be dynamic
             window = glfwCreateWindow(width, height, title, NULL, NULL);
             if (!window)
             {

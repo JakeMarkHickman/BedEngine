@@ -41,7 +41,7 @@
 						"value" : [0.0, 0.5, 0.0]
 					},
 					"Bed::Render" : {
-						"Mesh" : "Assets/Resources/Meshes/Tri.obj"
+						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
 					}
 				}
 			},
@@ -57,7 +57,24 @@
 						"value" : [0.0, -0.5, 0.0]
 					},
 					"Bed::Render" : {
-						"Mesh" : "Assets/Resources/Meshes/Untitled.obj"
+						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
+					}
+				}
+			},
+			{
+				"Name" : "ambientLight",
+				"Components" : {
+					"Bed::AmbientLight" : {
+						"Strength" : 0.1,
+						"Colour" : [1.0, 1.0, 1.0]
+					}
+				}
+			},
+			{
+				"Name" : "pointLight",
+				"Components" : {
+					"Bed::DiffuseLight" : {
+						"Colour" : [1.0, 0.0, 0.6]
 					}
 				}
 			}
@@ -65,7 +82,8 @@
 		"Systems" : [
 			"MoveSystem",
 			"RenderSystem",
-			"CameraSystem"
+			"CameraSystem",
+			"LightingSystem"
 		]
  	}
 }

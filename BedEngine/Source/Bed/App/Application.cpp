@@ -6,6 +6,7 @@ namespace Bed
 {
     void Application::Run()
     {
+        //TODO: make a system to automatically recognise monitor size and scale correctly
         if(!CreateWindow(800, 550, m_ApplicationName, GraphicsAPI::OpenGL)) // Check to make sure the Window is created
         {
             return; // Return if the Window wasnt created

@@ -5,6 +5,7 @@
 #include <GameObjects/Components/CameraComponent.h>
 #include <GameObjects/Components/RenderComponent.h>
 #include <GameObjects/Components/AmbientLightComponent.h>
+#include <GameObjects/Components/DiffuseLightComponent.h>
 #include <Bed/Game/World/GameObjects/Components/VelocityComponent.h>
 
 #include <GameObjects/Systems/CameraSystem.h>
@@ -15,26 +16,29 @@
 Bed::World::World()
 {
     //TODO: this is meant to all be loaded from JSON
+    uint64_t player = ecs.CreateEntity();
+    ecs.AttachComponents(player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, -2.0f), Bed::Vector3(), Bed::Vector3(1.0f)),
+                               Bed::Render("Assets/Resources/Meshes/Cube.obj"));
+    
     uint64_t cam = ecs.CreateEntity();
-    ecs.AttachComponents(cam, Bed::Transform(Bed::Vector3(), Bed::Vector3(), Bed::Vector3()),
+    ecs.AttachComponents(cam, Bed::Transform(),
                               Bed::Camera(Bed::RenderType::Projection));
 
     uint64_t ent1 = ecs.CreateEntity();
     ecs.AttachComponents(ent1, Bed::Transform(Bed::Vector3(3.0f, 0.0f, -2.0f), Bed::Vector3(), Bed::Vector3(1.0f)),
                                Bed::Velocity(Bed::Vector3(0.0f, 0.5f, 0.0f)),
-                               Bed::Render("Assets/Resources/Meshes/Tri.obj"));
+                               Bed::Render("Assets/Resources/Meshes/Cube.obj"));
 
     uint64_t ent2 = ecs.CreateEntity();
     ecs.AttachComponents(ent2, Bed::Transform(Bed::Vector3(-3.0f, 0.0f, -2.0f), Bed::Vector3(), Bed::Vector3(1.0f)),
                                Bed::Velocity(Bed::Vector3(0.0f, -0.5f, 0.0f)),
-                               Bed::Render("Assets/Resources/Meshes/Untitled.obj"));
-
-    uint64_t player = ecs.CreateEntity();
-    ecs.AttachComponents(player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, -2.0f), Bed::Vector3(), Bed::Vector3(1.0f)),
                                Bed::Render("Assets/Resources/Meshes/Cube.obj"));
 
     uint64_t ambientLight = ecs.CreateEntity();
     ecs.AttachComponents(ambientLight, Bed::AmbientLight(0.1f, Bed::Vector3(1.0f, 1.0f, 1.0f)));
+
+    uint64_t pointLight = ecs.CreateEntity();
+    ecs.AttachComponents(pointLight, Bed::DiffuseLight(Bed::Vector3(1.0f, 0.0f, 0.6f)));
 
     ecs.AddSystem(Bed::MoveSystem);
     ecs.AddSystem(Bed::RenderSystem);

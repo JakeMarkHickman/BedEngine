@@ -34,7 +34,7 @@ namespace Bed
                 switch(cam.m_RenderType)
                 {
                     case Bed::RenderType::Orthographic:
-                        proj = glm::ortho(-2.0f *2, 2.0f*2, -1.5f*2, 1.5f*2, -1.0f, 100.0f); // Camera Screen Size
+                        proj = glm::ortho(-2.0f * 2, 2.0f * 2, -1.5f * 2, 1.5f * 2, -1.0f, 100.0f); // Camera Screen Size
                         break;
                     case Bed::RenderType::Projection:
                         proj = glm::perspective(35.0f, 4.0f / 3.0f, 0.1f, 100.0f);
