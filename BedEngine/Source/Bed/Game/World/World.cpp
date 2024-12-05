@@ -7,6 +7,7 @@
 #include <GameObjects/Components/AmbientLightComponent.h>
 #include <GameObjects/Components/DiffuseLightComponent.h>
 #include <Bed/Game/World/GameObjects/Components/VelocityComponent.h>
+#include <Bed/Game/World/GameObjects/Components/UiRenderComponent.h>
 
 #include <GameObjects/Systems/CameraSystem.h>
 #include <GameObjects/Systems/RenderSystem.h>
@@ -33,6 +34,10 @@ Bed::World::World()
     ecs.AttachComponents(ent2, Bed::Transform(Bed::Vector3(-3.0f, 0.0f, -2.0f), Bed::Vector3(), Bed::Vector3(1.0f)),
                                Bed::Velocity(Bed::Vector3(0.0f, -0.5f, 0.0f)),
                                Bed::Render("Assets/Resources/Meshes/Cube.obj"));
+
+    uint64_t Ui = ecs.CreateEntity();
+    ecs.AttachComponents(Ui, Bed::Transform(Bed::Vector3(0.5f, 0.5f, 0.0f), Bed::Vector3(), Bed::Vector3(0.5f)),
+                               Bed::UIRender());
 
     uint64_t ambientLight = ecs.CreateEntity();
     ecs.AttachComponents(ambientLight, Bed::AmbientLight(0.1f, Bed::Vector3(1.0f, 1.0f, 1.0f)));
