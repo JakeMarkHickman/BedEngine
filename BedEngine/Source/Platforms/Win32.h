@@ -162,6 +162,10 @@ namespace Bed
             vb = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
             ib = new Bed::IndexBuffer(4000);
 
+            va2D = new Bed::VertexArray();
+            vb2D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
+            ib2D = new Bed::IndexBuffer(4000);
+
             vaUI = new Bed::VertexArray();
             vbUI = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
             ibUI = new Bed::IndexBuffer(4000);
@@ -173,6 +177,14 @@ namespace Bed
             vertLayout.Push<float>(2); // TextureCoord: 2 Floats (x, y)
             vertLayout.Push<float>(1); // Texture ID: 1 Float (ID)
             va->AddBuffer(vb, vertLayout);
+
+            VertexBufferLayout vertLayout2D;
+            vertLayout2D.Push<float>(3); // Position: 3 Floats (x, y, z)
+            vertLayout2D.Push<float>(3); // Normal: 3 Floats (x, y, z)
+            vertLayout2D.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
+            vertLayout2D.Push<float>(2); // TextureCoord: 2 Floats (x, y)
+            vertLayout2D.Push<float>(1); // Texture ID: 1 Float (ID)
+            va2D->AddBuffer(vb2D, vertLayout2D);
 
             //TODO: UI doesnt need normal
             VertexBufferLayout vertLayoutUI;
@@ -194,6 +206,12 @@ namespace Bed
 
                 int samplers[2] = { 0, 1 };
                 shader->SetUniform1iv("u_Textures", 2, samplers);
+            }
+
+            //2D Shader
+            {
+                shader2D = new Bed::Shader("Assets/Resources/Shaders/Bed2D.shader");
+                shader2D->Bind();
             }
             
             //UI Shader
@@ -218,6 +236,9 @@ namespace Bed
             glEnable(GL_DEPTH_TEST);
             renderer->Draw(va, ib, shader);
 
+            glEnable(GL_DEPTH_TEST);
+            renderer->Draw(va2D, ib2D, shader2D);
+
             glDisable(GL_DEPTH_TEST);
             renderer->Draw(vaUI, ibUI, shaderUI);
 
@@ -226,6 +247,11 @@ namespace Bed
             shader->Unbind();
             vb->Unbind();
             ib->Unbind();
+
+            va2D->Unbind();
+            shader2D->Unbind();
+            vb2D->Unbind();
+            ib2D->Unbind();
 
             vaUI->Unbind();
             shaderUI->Unbind();

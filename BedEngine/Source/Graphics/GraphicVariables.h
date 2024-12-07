@@ -16,6 +16,12 @@ namespace Bed
     extern Bed::IndexBuffer* ib;
     extern Bed::VertexArray* va;
 
+    //2D
+    extern Bed::Shader* shader2D;
+    extern Bed::VertexBuffer* vb2D;
+    extern Bed::IndexBuffer* ib2D;
+    extern Bed::VertexArray* va2D;
+
     //UI
     extern Bed::Shader* shaderUI;
     extern Bed::VertexBuffer* vbUI;

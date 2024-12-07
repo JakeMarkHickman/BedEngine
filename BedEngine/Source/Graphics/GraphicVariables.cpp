@@ -4,8 +4,15 @@ namespace Bed
 {
     //3D
     extern Bed::Shader* shader = nullptr;
+    extern Bed::VertexBuffer* vb = nullptr;
     extern Bed::IndexBuffer* ib = nullptr;
     extern Bed::VertexArray* va = nullptr;
+
+    //2D
+    extern Bed::Shader* shader2D = nullptr;
+    extern Bed::VertexBuffer* vb2D = nullptr;
+    extern Bed::IndexBuffer* ib2D = nullptr;
+    extern Bed::VertexArray* va2D = nullptr;
 
     //UI
     extern Bed::Shader* shaderUI = nullptr;
@@ -15,6 +22,5 @@ namespace Bed
 
     //shared
     extern Bed::Renderer* renderer = nullptr;
-    extern Bed::VertexBuffer* vb = nullptr;
     extern Bed::Texture* texture = nullptr;
 }
