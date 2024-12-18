@@ -1,4 +1,5 @@
 {
+	// Type of data that is inputed
  	"World" : {
 		"WorldName" : "TestWorld",
 		"Entities" : [

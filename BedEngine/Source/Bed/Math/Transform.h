@@ -8,23 +8,20 @@
 #include <gtc/matrix_transform.hpp>
 #include <gtc/quaternion.hpp>
 #include <gtx/quaternion.hpp>
+
 namespace Bed
 {
     struct BED_API Transform
     {
         Transform() {};
 
-        Transform(float value) : Position(value), Rotation(value), Scale(value),
-                                 LocalPosition(value), LocalRotation(value), LocalScale(value) {};
+        Transform(float value) : Position(value), Rotation(value), Scale(value), LocalPosition(value), LocalRotation(value), LocalScale(value) {};
 
-        Transform(float position, float rotation, float scale) : Position(position), Rotation(rotation), Scale(scale),
-                                                                 LocalPosition(position), LocalRotation(rotation), LocalScale(scale) {};
+        Transform(float position, float rotation, float scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(position), LocalRotation(rotation), LocalScale(scale) {};
 
-        Transform(Bed::Vector3 value) : Position(value), Rotation(value), Scale(value), 
-                                        LocalPosition(value), LocalRotation(value), LocalScale(value) {};
+        Transform(Bed::Vector3 value) : Position(value), Rotation(value), Scale(value), LocalPosition(value), LocalRotation(value), LocalScale(value) {};
 
-        Transform(Bed::Vector3 position, Bed::Vector3 rotation, Bed::Vector3 scale) : Position(position), Rotation(rotation), Scale(scale),
-                                                                                      LocalPosition(position), LocalRotation(rotation), LocalScale(scale) {};
+        Transform(Bed::Vector3 position, Bed::Vector3 rotation, Bed::Vector3 scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(position), LocalRotation(rotation), LocalScale(scale) {};
 
         // TODO: change rotation to a quarternion
         Bed::Vector3 Position;

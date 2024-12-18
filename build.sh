@@ -1,43 +1,74 @@
 #!/bin/bash
 
+#TODO: this will need to be a build tool in editor
+
 #Build Path
 buildPath="build"                           # The path to build to
 
+#Locations
+Dependencies="BedEngine/Dependencies"
+Source="BedEngine/Source"
+    Bed="$Source/Bed"
+        App="$Bed/App"
+        Game="$Bed/Game"
+        Math="$Bed/Math"
+        Tools="$Bed/Tools"
+    Graphics="$Source/Graphics"
+    Inclusions="$Source/Inclusions"
+    Platforms="$Source/Platforms"
+
 #Output
-outputFile="Playground"                     # No extention as we will set it after we know what OS we are building for
-engineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
+GameOutputFile="Playground"                     # No extention as we will set it after we know what OS we are building for
+EngineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
 
 #Includes
-includes="-IBedEngine/Source -IBedEngine/Source/Inclusions"
-engineIncludes="-IBedEngine/Source -IBedEngine/Source/Inclusions -IBedEngine/Dependencies/GLFW/include -IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/stb_image -IBedEngine/Dependencies/glm"
+GameIncludes="-I$Source -I$Inclusions"
+EngineIncludes="-I$Source -I$Inclusions -I$Dependencies/GLFW/include -I$Dependencies/GLEW/include -I$Dependencies/stb_image -I$Dependencies/glm"
 
 #Libarys
-libs="$buildPath/BedEngine.lib"             # Libs for the game
-engineLibs=""                               # Libs for the engine
+GameLibs="$buildPath/BedEngine.lib"             # Libs for the game
+EngineLibs=""                               # Libs for the engine
 
 #flags
-flags="-fuse-ld=lld-link"                   # Flags for the game
-engineFlags=""                              # Flags for the engine
+GameFlags="-fuse-ld=lld-link"                   # Flags for the game
+EngineFlags=""                              # Flags for the engine
 
 #Preprocessor Definitions
-predef="-std=c++17 -Wno-c++17-extensions"                                   # Definitions for the game
-enginePredef="-std=c++17 -Wno-c++17-extensions -DBED_BUILD_DLL"             # Definitions for the engine
+GamePredef="-std=c++17 -Wno-c++17-extensions"                                   # Definitions for the game
+EnginePredef="-std=c++17 -Wno-c++17-extensions -DBED_BUILD_DLL"             # Definitions for the engine
 
-#BuildEntry
-entry="Playground/Source/App.cpp"
-engineEntry="BedEngine/Source/Bed/App/Application.cpp"
+#CPPs
+GraphicsCpp="$Graphics/VertexBuffer.cpp $Graphics/IndexBuffer.cpp
+            $Graphics/VertexArray.cpp $Graphics/Renderer.cpp
+            $Graphics/Shader.cpp $Graphics/GraphicVariables.cpp
+            $Graphics/Texture.cpp"
 
-#ExtraCpps
-cpp=""
-enginecpp=" BedEngine/Source/Graphics/VertexBuffer.cpp BedEngine/Source/Graphics/IndexBuffer.cpp
-            BedEngine/Source/Graphics/VertexArray.cpp BedEngine/Source/Graphics/Renderer.cpp BedEngine/Source/Graphics/Shader.cpp
-            BedEngine/Source/Graphics/OpenGL/OpenRenderer.cpp BedEngine/Source/Graphics/OpenGL/OpenShader.cpp
-            BedEngine/Source/Graphics/GraphicVariables.cpp
-            BedEngine/Source/Graphics/Texture.cpp BedEngine/Dependencies/stb_image/stb_image.cpp 
-            BedEngine/Source/Bed/Tools/FileLoader.cpp BedEngine/Source/Bed/Tools/StringSearcher.cpp
-            BedEngine/Source/Bed/Game/World/GameObjects/ECS/ECS.cpp BedEngine/Source/Bed/Game/World/GameObjects/Mesh/Mesh.cpp
-            BedEngine/Source/Bed/Game/World/World.cpp
-            BedEngine/Source/Bed/Math/Matrix/Matrix3x3.cpp"
+OpenGLCpp="$Graphics/OpenGL/OpenRenderer.cpp $Graphics/OpenGL/OpenShader.cpp"
+
+VulkanCpp=""
+
+DirectXCpp=""
+
+MetalCpp=""
+
+ToolsCpp="$Tools/FileLoader.cpp $Tools/StringSearcher.cpp $Tools/Memory/MemoryPool.cpp"
+
+GameObjectsCpp="$Game/World/GameObjects/ECS/EntityManager.cpp $Game/World/GameObjects/ECS/ComponentManager.cpp
+                $Game/World/GameObjects/Mesh/Mesh.cpp $Game/World/World.cpp"
+
+MathCpp="$Math/Matrix/Matrix3x3.cpp"
+
+EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
+            $GraphicsCpp
+            $ToolsCpp 
+            $GameObjectsCpp 
+            $MathCpp
+            $OpenGLCpp
+            $VulkanCpp
+            $DirectXCpp
+            $MetalCpp"
+
+GameCpp="Playground/Source/App.cpp"
 
 
 #Check what system is being used
@@ -46,8 +77,8 @@ if [[ "$uname" == "Linux" ]]; then           # This checks if the version is Lin
     echo Linux is currently unsupported
 
     # Set Variables
-    predef="$predef -DBED_LINUX_PLATFORM"
-    enginePredef="$enginePredef -DBED_LINUX_PLATFORM"
+    GamePredef="$GamePredef -DBED_LINUX_PLATFORM"
+    EnginePredef="$EnginePredef -DBED_LINUX_PLATFORM"
     outputFile="$outputFile.elf"
 
 elif [[ "$uname" == "Darwin" ]]; then
@@ -55,27 +86,27 @@ elif [[ "$uname" == "Darwin" ]]; then
     echo Mac is currently unsupported
 
     # Set Variables
-    predef="$predef -DBED_MAC_PLATFORM"
-    enginePredef="$enginePredef -DBED_MAC_PLATFORM"
-    outputFile="$outputFile.app"
+    GamePredef="$GamePredef -DBED_MAC_PLATFORM"
+    EnginePredef="$EnginePredef -DBED_MAC_PLATFORM"
+    GameOutputFile="$GameOutputFile.app"
 
 else
 
     echo Building for Windows...
 
     # Set Variables
-    engineLibs="$engineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
-    predef="$predef -DBED_WINDOWS_PLATFORM"
+    EngineLibs="$EngineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
+    GamePredef="$GamePredef -DBED_WINDOWS_PLATFORM"
     
-    enginePredef="$enginePredef -DBED_WINDOWS_PLATFORM -DGLEW_STATIC"
-    outputFile="$outputFile.exe"
+    EnginePredef="$EnginePredef -DBED_WINDOWS_PLATFORM -DGLEW_STATIC"
+    GameOutputFile="$GameOutputFile.exe"
 
 fi
 
 # Build the Engine 
 echo Building Engine DLL...
-clang++ -shared $engineIncludes $engineLibs $engineFlags $enginePredef -o"$buildPath/$engineOutputFile" $engineEntry $enginecpp
+clang++ -shared $EngineIncludes $EngineLibs $EngineFlags $EnginePredef -o"$buildPath/$EngineOutputFile" $EngineCpp
 
 # Build the Game
 echo Building Game...
-clang++ $includes $libs $flags $predef -o"$buildPath/$outputFile" $entry $cpp
+clang++ $GameIncludes $GameLibs $GameFlags $GamePredef -o"$buildPath/$GameOutputFile" $GameCpp

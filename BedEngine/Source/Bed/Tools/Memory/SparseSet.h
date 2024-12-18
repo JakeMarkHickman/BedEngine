@@ -9,7 +9,8 @@ namespace Bed
     class SparseSet
     {
     public:
-        void Insert(uint64_t id, const T& data)
+
+        void Insert(uint64_t id, T data)
         {
             if(id >= m_Sparse.size()) // Checks to see if id is greater than or equal to the size of the sparce vector
             {
@@ -51,19 +52,31 @@ namespace Bed
             return id < m_Sparse.size() && m_Sparse[id] != -1;
         }
 
-        T& GetData(uint64_t id)
+        T* GetData(uint64_t id)
         {
-            return m_Data[m_Sparse[id]];
+            if(id < m_Sparse.size() && m_Sparse[id] != -1)
+            {
+                return m_Data[m_Sparse[id]].get();
+            }
+
+            return nullptr;
         }
 
-        void SetData(uint64_t id, const T& data)
+        /*void SetData(uint64_t id, const T& data)
         {
             m_Data[m_Sparse[id]] = data;
-        }
+        }*/
 
         const std::vector<uint64_t>& GetIDs() const
         {
             return m_Dense;
+        }
+
+        void Clear()
+        {
+            m_Sparse.clear();
+            m_Dense.clear();
+            m_Data.clear();
         }
 
     private:
