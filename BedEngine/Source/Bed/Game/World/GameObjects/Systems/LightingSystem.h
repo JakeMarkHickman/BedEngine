@@ -16,23 +16,23 @@ namespace Bed
         {
             if(ecs.HasComponents<Bed::AmbientLight>(i))
             {
-                Bed::AmbientLight ambient = ecs.GetComponent<Bed::AmbientLight>(i);
-                shader->SetUniform1f("u_ambientLightStrenght", ambient.Strength);
-                shader->SetUniform3f("u_ambientLightColour", ambient.Colour);
+                Bed::AmbientLight* ambient = ecs.GetComponent<Bed::AmbientLight>(i);
+                shader->SetUniform1f("u_ambientLightStrenght", ambient->Strength);
+                shader->SetUniform3f("u_ambientLightColour", ambient->Colour);
             }
 
             if(ecs.HasComponents<Bed::DiffuseLight>(i))
             {
-                Bed::DiffuseLight diffuse = ecs.GetComponent<Bed::DiffuseLight>(i);
-                Bed::Transform transform(0.0f);
+                Bed::DiffuseLight* diffuse = ecs.GetComponent<Bed::DiffuseLight>(i);
+                Bed::Transform* transform = new Bed::Transform(0.0f);
 
                 if(ecs.HasComponents<Bed::Transform>(i))
                 {
                     transform = ecs.GetComponent<Bed::Transform>(i);
                 }
 
-                shader->SetUniform3f("u_DiffuseLightPos", transform.Position);
-                shader->SetUniform3f("u_DiffuseLightColour", diffuse.Colour);
+                shader->SetUniform3f("u_DiffuseLightPos", transform->Position);
+                shader->SetUniform3f("u_DiffuseLightColour", diffuse->Colour);
             }
         }
     }
