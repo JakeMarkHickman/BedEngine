@@ -19,9 +19,9 @@ namespace Bed
         {
             if(ecs.HasComponents<Bed::Camera>(i))
             {
-                Bed::Camera cam = ecs.GetComponent<Bed::Camera>(i);
+                Bed::Camera* cam = ecs.GetComponent<Bed::Camera>(i);
 
-                Bed::Transform transform(0.0f);
+                Bed::Transform* transform = new Bed::Transform(0.0f);
 
                 if(ecs.HasComponents<Bed::Transform>(i))
                 {
@@ -31,7 +31,7 @@ namespace Bed
                 //Bind Shader
                 shader->Bind();
 
-                switch(cam.m_RenderType)
+                switch(cam->m_RenderType)
                 {
                     case Bed::RenderType::Orthographic:
                                         //TODO: Take in Screen Width and Hight
@@ -49,7 +49,7 @@ namespace Bed
                 }
 
                 //Set mvp
-                view = glm::translate(glm::mat4(1.0f), glm::vec3(transform.Position.x, transform.Position.y, transform.Position.z)); // Camera Pos
+                view = glm::translate(glm::mat4(1.0f), glm::vec3(transform->Position.x, transform->Position.y, transform->Position.z)); // Camera Pos
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));// model Pos
                 vp = proj * view;
                 shader->SetUniformMat4f("u_ViewProjection", vp);

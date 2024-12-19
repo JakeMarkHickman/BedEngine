@@ -45,12 +45,23 @@ namespace Bed
         }
 
         template<typename... Components>
+        void RemoveComponents(uint64_t entity)
+        {
+            //([&]{
+
+            //}(), ...);
+        }
+
+        template<typename... Components>
         bool HasComponents(uint64_t entity)
         {
             bool result = true;
-            //([&]{
-                
-            //}(), ...);
+            ([&]{
+                if(!m_CompManager.HasComponent<Components>(entity))
+                {
+                    result = false;
+                }
+            }(), ...);
 
             return result;
         }
@@ -58,7 +69,7 @@ namespace Bed
         template<typename Component>
         Component* GetComponent(uint64_t entity)
         {
-            
+            return m_CompManager.GetComponent<Component>(entity);
         }
 
         /////////////////////////////////////

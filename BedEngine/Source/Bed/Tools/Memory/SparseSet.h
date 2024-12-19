@@ -52,14 +52,14 @@ namespace Bed
             return id < m_Sparse.size() && m_Sparse[id] != -1;
         }
 
-        T* GetData(uint64_t id)
+        T GetData(uint64_t id)
         {
-            if(id < m_Sparse.size() && m_Sparse[id] != -1)
-            {
-                return m_Data[m_Sparse[id]].get();
-            }
+            //if(!id < m_Sparse.size() && !m_Sparse[id] != -1)
+            //{
+            //    throw std::runtime_error("No Data in ID");
+            //}
 
-            return nullptr;
+            return m_Data[m_Sparse[id]];
         }
 
         /*void SetData(uint64_t id, const T& data)

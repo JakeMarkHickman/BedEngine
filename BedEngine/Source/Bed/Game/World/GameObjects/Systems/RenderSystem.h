@@ -25,17 +25,17 @@ namespace Bed
         {
             if (ecs.HasComponents<Bed::Render>(i))
             {
-                Bed::Transform transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f));
+                Bed::Transform* transform = new Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f));
 
-                Bed::Render renderer = ecs.GetComponent<Bed::Render>(i);
+                Bed::Render* renderer = ecs.GetComponent<Bed::Render>(i);
 
                 if(ecs.HasComponents<Bed::Transform>(i)) // Checks for a Transform for renderering
                 {
                     transform = ecs.GetComponent<Bed::Transform>(i);
                 }
 
-                const auto& verts = renderer.m_Mesh.GetVertices();
-                const auto& indices = renderer.m_Mesh.GetIndices();
+                const auto& verts = renderer->m_Mesh.GetVertices();
+                const auto& indices = renderer->m_Mesh.GetIndices();
 
                 std::vector<Bed::Vertex> transformedVerts = verts;
                 std::vector<unsigned int> modifiedIndices = indices;
@@ -44,7 +44,7 @@ namespace Bed
                 for (auto& vert : transformedVerts)
                 {
                     // Apply the transformation matrix to each vertex position
-                    glm::vec4 transformedPosition = transform.GetMatrix() * glm::vec4(vert.m_Position.x, vert.m_Position.y, vert.m_Position.z, 1.0f);  // Matrix-vector multiplication
+                    glm::vec4 transformedPosition = transform->GetMatrix() * glm::vec4(vert.m_Position.x, vert.m_Position.y, vert.m_Position.z, 1.0f);  // Matrix-vector multiplication
                     vert.m_Position = Bed::Vector3(transformedPosition.x, transformedPosition.y, transformedPosition.z);
                 }
 
@@ -52,6 +52,8 @@ namespace Bed
                 {
                     ind += totalVertsBefore;
                 }
+
+                
 
                 allVerts.insert(allVerts.end(), transformedVerts.begin(), transformedVerts.end());
                 allIndices.insert(allIndices.end(), modifiedIndices.begin(), modifiedIndices.end());

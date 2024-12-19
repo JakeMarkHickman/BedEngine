@@ -12,24 +12,6 @@ namespace Bed
     class ComponentManager
     {
     public:
-
-        /*~ComponentManager()
-        {
-            for(auto& sparse : m_EntityComponents)
-            {
-                sparse.Clear();
-            }
-
-            m_EntityComponents.clear();
-
-            for(auto& pool : m_ComponentPool)
-            {
-                pool.~MemoryPool();
-            }
-
-            //m_ComponentPool.clear();
-        }*/
-
         template<typename Component>
         void AttachComponent(uint64_t entity, Component comp)
         {
@@ -55,7 +37,7 @@ namespace Bed
 
             if(!rawMemory)
             {
-                throw std::runtime_error("ComponentPool is full!");
+                throw std::runtime_error("Component Pool is full!");
             }
 
             Component* allocatedComp = new (rawMemory) Component(comp);
@@ -72,7 +54,36 @@ namespace Bed
         template<typename Component>
         bool HasComponent(uint64_t entity)
         {
+            uint64_t hashCode = typeid(Component).hash_code();
 
+            if(!IsComponentRegistered(hashCode))
+            {
+                return false;
+            }
+
+            uint64_t compID = GetRegisteredComponentIndex(hashCode);
+
+            if(!m_EntityComponents[compID].HasIndex(entity))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        template<typename Component>
+        Component* GetComponent(uint64_t entity)
+        {
+            uint64_t hashCode = typeid(Component).hash_code();
+
+            if(!IsComponentRegistered(hashCode))
+            {
+                return nullptr;
+            }
+
+            uint64_t compID = GetRegisteredComponentIndex(hashCode);
+
+            return static_cast<Component*>(m_EntityComponents[compID].GetData(entity));
         }
 
     private:
