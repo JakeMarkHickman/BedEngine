@@ -21,13 +21,13 @@ Bed::World::World()
                                  Bed::Render("Assets/Resources/Meshes/Cube.obj"));
 
     uint64_t Camera = ecs.CreateEntity();
-    ecs.AttachComponents(Camera, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+    ecs.AttachComponents(Camera, Bed::Transform(Bed::Vector3(0.0f, 0.0f, -15.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                  Bed::Camera(Bed::RenderType::Projection));
 
     uint64_t Ent1 = ecs.CreateEntity();
     ecs.AttachComponents(Ent1, Bed::Transform(Bed::Vector3(3.0f, 0.0f, -2.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                               Bed::Render("Assets/Resources/Meshes/Cube.obj"),
-                              Bed::Velocity(Bed::Vector3(0.0f, 0.1f, 0.0f)));
+                              Bed::Velocity(Bed::Vector3(0.0f, 0.5f, 0.0f)));
 
     uint64_t Ent2 = ecs.CreateEntity();
     ecs.AttachComponents(Ent2, Bed::Transform(Bed::Vector3(-3.0f, 0.0f, -2.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),

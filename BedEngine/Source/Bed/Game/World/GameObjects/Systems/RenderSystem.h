@@ -53,8 +53,6 @@ namespace Bed
                     ind += totalVertsBefore;
                 }
 
-                
-
                 allVerts.insert(allVerts.end(), transformedVerts.begin(), transformedVerts.end());
                 allIndices.insert(allIndices.end(), modifiedIndices.begin(), modifiedIndices.end());
 

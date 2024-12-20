@@ -24,14 +24,9 @@ namespace Bed
 
                     Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
 
-                    transform->Position = parentTransform->Position + transform->LocalPosition;
-                    
-                    //TODO: Rotation needs to rotate from parents local position
-                    transform->Rotation = parentTransform->Rotation + transform->LocalRotation;
-                    transform->Scale = parentTransform->Scale * transform->LocalScale;
 
-                    std::cout << "Child x = " << transform->Position.x << " y = " << transform->Position.y << " z = " << transform->Position.z << "\n";
-                    std::cout << "Parent x = " << parentTransform->Position.x << " y = " << parentTransform->Position.y << " z = " << parentTransform->Position.z << "\n";
+                    //TODO: Figure out how to make the child Inherit the parents position
+                    //TODO: Rotation needs to rotate from parents local position
                 }
             }
         }

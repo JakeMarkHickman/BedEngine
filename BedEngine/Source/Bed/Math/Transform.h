@@ -13,15 +13,12 @@ namespace Bed
 {
     struct BED_API Transform
     {
+        // TODO: Local Position will be the position in a hieracrhy
         Transform() {};
-
-        Transform(float value) : Position(value), Rotation(value), Scale(value), LocalPosition(value), LocalRotation(value), LocalScale(value) {};
-
-        Transform(float position, float rotation, float scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(position), LocalRotation(rotation), LocalScale(scale) {};
-
-        Transform(Bed::Vector3 value) : Position(value), Rotation(value), Scale(value), LocalPosition(value), LocalRotation(value), LocalScale(value) {};
-
-        Transform(Bed::Vector3 position, Bed::Vector3 rotation, Bed::Vector3 scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(position), LocalRotation(rotation), LocalScale(scale) {};
+        Transform(float value) : Position(value), Rotation(value), Scale(value), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(value) {};
+        Transform(float position, float rotation, float scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(scale) {};
+        Transform(Bed::Vector3 value) : Position(value), Rotation(value), Scale(value), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(value) {};
+        Transform(Bed::Vector3 position, Bed::Vector3 rotation, Bed::Vector3 scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(scale) {};
 
         // TODO: change rotation to a quarternion
         Bed::Vector3 Position;
@@ -51,6 +48,14 @@ namespace Bed
             Position += other.Position;
             Rotation += other.Rotation;
             Scale += other.Scale;
+            return *this;
+        }
+
+        Transform& operator*=(const Transform& other)
+        {
+            Position *= other.Position;
+            Rotation *= other.Rotation;
+            Scale *= other.Scale;
             return *this;
         }
     };
