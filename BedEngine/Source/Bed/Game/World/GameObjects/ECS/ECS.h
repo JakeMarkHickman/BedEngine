@@ -47,9 +47,9 @@ namespace Bed
         template<typename... Components>
         void RemoveComponents(uint64_t entity)
         {
-            //([&]{
-
-            //}(), ...);
+            ([&]{
+                m_CompManager.RemoveComponent<Components>(entity);
+            }(), ...);
         }
 
         template<typename... Components>

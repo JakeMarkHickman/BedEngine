@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GameObjects/Components/RenderComponent.h>
+#include <GameObjects/Components/StaticMeshComponent.h>
 
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
@@ -23,19 +23,19 @@ namespace Bed
 
         for(int i = 0; ecs.GetAllEntities().size() > i; i++)
         {
-            if (ecs.HasComponents<Bed::Render>(i))
+            if (ecs.HasComponents<Bed::StaticMesh>(i))
             {
                 Bed::Transform* transform = new Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, 0.0f, 0.0f));
 
-                Bed::Render* renderer = ecs.GetComponent<Bed::Render>(i);
+                Bed::StaticMesh* StaticMesh = ecs.GetComponent<Bed::StaticMesh>(i);
 
                 if(ecs.HasComponents<Bed::Transform>(i)) // Checks for a Transform for renderering
                 {
                     transform = ecs.GetComponent<Bed::Transform>(i);
                 }
 
-                const auto& verts = renderer->m_Mesh.GetVertices();
-                const auto& indices = renderer->m_Mesh.GetIndices();
+                const auto& verts = StaticMesh->m_Mesh.GetVertices();
+                const auto& indices = StaticMesh->m_Mesh.GetIndices();
 
                 std::vector<Bed::Vertex> transformedVerts = verts;
                 std::vector<unsigned int> modifiedIndices = indices;

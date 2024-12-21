@@ -48,7 +48,29 @@ namespace Bed
         template<typename Component>
         void RemoveComponent(uint64_t entity)
         {
+            uint64_t hashCode = typeid(Component).hash_code();
+            uint64_t compID;
 
+            if(!IsComponentRegistered(hashCode))
+            {
+                return;
+            }
+
+            compID = GetRegisteredComponentIndex(hashCode);
+
+            void* compData = m_EntityComponents[compID].GetData(entity);
+
+            if(compData)
+            {
+                // call the destructor of the data
+                static_cast<Component*>(compData)->~Component();
+
+                // Deallocate the memory from the pool
+                m_ComponentPool[compID].Deallocate(compData);
+
+                // Remove entity from sparse set
+                m_EntityComponents[compID].Remove(entity);
+            }
         }
 
         template<typename Component>

@@ -7,9 +7,9 @@
 
 namespace Bed
 {
-    struct BED_API Render
+    struct BED_API StaticMesh
     {
-        Render(const std::string& meshPath) : m_Mesh(meshPath) {};
+        StaticMesh(const std::string& meshPath) : m_Mesh(meshPath) {};
 
         Bed::Mesh m_Mesh;
     };
