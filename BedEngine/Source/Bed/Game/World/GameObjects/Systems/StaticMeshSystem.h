@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GameObjects/Components/StaticMeshComponent.h>
+#include <GameObjects/Components/StaticMesh.h>
 
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
@@ -11,7 +11,7 @@
 
 namespace Bed
 {
-    void RenderSystem(Bed::ECS& ecs, float deltaTime)
+    void StaticMeshSystem(Bed::ECS& ecs, float deltaTime)
     {
         unsigned int totalVertsBefore = 0;
         unsigned int totalIndicesBefore = 0;
@@ -34,8 +34,8 @@ namespace Bed
                     transform = ecs.GetComponent<Bed::Transform>(i);
                 }
 
-                const auto& verts = StaticMesh->m_Mesh.GetVertices();
-                const auto& indices = StaticMesh->m_Mesh.GetIndices();
+                const auto& verts = StaticMesh->Mesh.GetVertices();
+                const auto& indices = StaticMesh->Mesh.GetIndices();
 
                 std::vector<Bed::Vertex> transformedVerts = verts;
                 std::vector<unsigned int> modifiedIndices = indices;
@@ -61,8 +61,8 @@ namespace Bed
             }
         }
 
-        shader->Bind();
-        vb->PopulateBuffer(allVerts.data(), allVerts.size() * sizeof(Bed::Vertex), 0);
-        ib->PopulateBuffer(allIndices.data(), allIndices.size() * sizeof(unsigned int), 0);
+        Bed::shader3D->Bind();
+        Bed::vb3D->PopulateBuffer(allVerts.data(), allVerts.size() * sizeof(Bed::Vertex), 0);
+        Bed::ib3D->PopulateBuffer(allIndices.data(), allIndices.size() * sizeof(unsigned int), 0);
     }
 }

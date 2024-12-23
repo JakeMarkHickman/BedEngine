@@ -158,9 +158,9 @@ namespace Bed
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
             //Vertex array object
-            va = new Bed::VertexArray();
-            vb = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
-            ib = new Bed::IndexBuffer(4000);
+            va3D = new Bed::VertexArray();
+            vb3D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
+            ib3D = new Bed::IndexBuffer(4000);
 
             va2D = new Bed::VertexArray();
             vb2D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
@@ -170,13 +170,13 @@ namespace Bed
             vbUI = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
             ibUI = new Bed::IndexBuffer(4000);
 
-            VertexBufferLayout vertLayout;
-            vertLayout.Push<float>(3); // Position: 3 Floats (x, y, z)
-            vertLayout.Push<float>(3); // Normal: 3 Floats (x, y, z)
-            vertLayout.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
-            vertLayout.Push<float>(2); // TextureCoord: 2 Floats (x, y)
-            vertLayout.Push<float>(1); // Texture ID: 1 Float (ID)
-            va->AddBuffer(vb, vertLayout);
+            VertexBufferLayout vertLayout3D;
+            vertLayout3D.Push<float>(3); // Position: 3 Floats (x, y, z)
+            vertLayout3D.Push<float>(3); // Normal: 3 Floats (x, y, z)
+            vertLayout3D.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
+            vertLayout3D.Push<float>(2); // TextureCoord: 2 Floats (x, y)
+            vertLayout3D.Push<float>(1); // Texture ID: 1 Float (ID)
+            va3D->AddBuffer(vb3D, vertLayout3D);
 
             VertexBufferLayout vertLayout2D;
             vertLayout2D.Push<float>(3); // Position: 3 Floats (x, y, z)
@@ -197,15 +197,15 @@ namespace Bed
 
             //3D Shader
             {
-                shader = new Bed::Shader("Assets/Resources/Shaders/Bed3D.shader");
-                shader->Bind();
+                shader3D = new Bed::Shader("Assets/Resources/Shaders/Bed3D.shader");
+                shader3D->Bind();
 
                 //Texture
                 texture = new Texture("Assets/Resources/Textures/256xWhite.png");
                 texture->Bind(0); //Bind to slot 0
 
                 int samplers[2] = { 0, 1 };
-                shader->SetUniform1iv("u_Textures", 2, samplers);
+                shader3D->SetUniform1iv("u_Textures", 2, samplers);
             }
 
             //2D Shader
@@ -234,7 +234,7 @@ namespace Bed
             //TODO: Render World3D then World2D then UI
             //Render Everything
             glEnable(GL_DEPTH_TEST);
-            renderer->Draw(va, ib, shader);
+            renderer->Draw(va3D, ib3D, shader3D);
 
             glEnable(GL_DEPTH_TEST);
             renderer->Draw(va2D, ib2D, shader2D);
@@ -243,10 +243,10 @@ namespace Bed
             renderer->Draw(vaUI, ibUI, shaderUI);
 
             //Unbind Everything
-            va->Unbind();
-            shader->Unbind();
-            vb->Unbind();
-            ib->Unbind();
+            va3D->Unbind();
+            shader3D->Unbind();
+            vb3D->Unbind();
+            ib3D->Unbind();
 
             va2D->Unbind();
             shader2D->Unbind();
@@ -272,7 +272,9 @@ namespace Bed
 
         void OpenGLCloseWindow()
         {
-            delete shader;
+            delete shader3D;
+            delete shader2D;
+            delete shaderUI;
             glfwTerminate();
         }
     };

@@ -59,6 +59,7 @@ GameObjectsCpp="$Game/World/GameObjects/ECS/EntityManager.cpp $Game/World/GameOb
 MathCpp="$Math/Matrix/Matrix3x3.cpp"
 
 EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
+            $App/DeltaTime.cpp
             $GraphicsCpp
             $ToolsCpp 
             $GameObjectsCpp 

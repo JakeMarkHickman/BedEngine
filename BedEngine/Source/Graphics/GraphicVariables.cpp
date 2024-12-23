@@ -3,10 +3,10 @@
 namespace Bed
 {
     //3D
-    extern Bed::Shader* shader = nullptr;
-    extern Bed::VertexBuffer* vb = nullptr;
-    extern Bed::IndexBuffer* ib = nullptr;
-    extern Bed::VertexArray* va = nullptr;
+    extern Bed::Shader* shader3D = nullptr;
+    extern Bed::VertexBuffer* vb3D = nullptr;
+    extern Bed::IndexBuffer* ib3D = nullptr;
+    extern Bed::VertexArray* va3D = nullptr;
 
     //2D
     extern Bed::Shader* shader2D = nullptr;

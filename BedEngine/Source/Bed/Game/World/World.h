@@ -13,6 +13,9 @@ namespace Bed
         ~World();
 
         bool LoadWorld(std::string path);
+        bool UnloadWorld();
+
+        bool IsWorldLoaded();
 
         void BeginPlay();
         void Update(float deltaTime);

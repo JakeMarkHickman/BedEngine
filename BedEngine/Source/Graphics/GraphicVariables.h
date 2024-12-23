@@ -11,10 +11,10 @@
 namespace Bed
 {
     //3D
-    extern Bed::Shader* shader;
-    extern Bed::VertexBuffer* vb;
-    extern Bed::IndexBuffer* ib;
-    extern Bed::VertexArray* va;
+    extern Bed::Shader* shader3D;
+    extern Bed::VertexBuffer* vb3D;
+    extern Bed::IndexBuffer* ib3D;
+    extern Bed::VertexArray* va3D;
 
     //2D
     extern Bed::Shader* shader2D;
