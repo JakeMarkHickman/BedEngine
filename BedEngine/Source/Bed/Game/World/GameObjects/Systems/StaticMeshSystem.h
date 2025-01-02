@@ -1,6 +1,6 @@
 #pragma once
 
-#include <GameObjects/Components/StaticMesh.h>
+#include <Components/StaticMesh.h>
 
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>

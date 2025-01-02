@@ -22,8 +22,6 @@ namespace Bed
         {
             float delta = m_DeltaTime.CalculateDeltaTime();
 
-            std::cout << delta << "\n";
-
             m_Game.Update( delta );
             UpdateWindow(); // Update the platform App
         }

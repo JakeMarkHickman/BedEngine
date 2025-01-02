@@ -52,6 +52,20 @@ uniform vec3 u_DiffuseLightColour;
 //Texture
 uniform sampler2D u_Textures[2];
 
+vec3 CalculateDiffuse(vec3 baseColour, vec3 norm, vec3 lightDir)
+{
+    float diff = max(dot(norm, lightDir), 0.0);
+    return diff * baseColour;
+}
+
+vec3 CalculateSpecular(vec3 lightColour, float lightStrenght, vec3 norm, vec3 lightDir, vec3 viewPos)
+{
+    vec3 reflectDir = reflect(-lightDir, norm);
+    vec3 viewDir = normalize(viewPos - vec3(v_Pos));
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    return spec * lightColour * lightStrenght;
+}
+
 void main()
 {
     //Unlit
@@ -64,11 +78,11 @@ void main()
     //Diffuse Lighting
     vec3 norm = normalize(v_Normal);
     vec3 lightDir = normalize(u_DiffuseLightPos - v_Pos.xyz);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * u_DiffuseLightColour;
+    vec3 diffuse = CalculateDiffuse(u_DiffuseLightColour, norm, lightDir);
+    vec3 specular = CalculateSpecular(vec3(1.0, 1.0, 1.0), 1.0, norm, lightDir, vec3(1.0, 1.0, 1.0));
 
     //Final Colour Calculation
-    vec3 result = (ambientLight + diffuse) * unlitResult;
+    vec3 result = (ambientLight + diffuse + specular) * unlitResult;
 
     //Output
     o_FragColour = vec4(result, 1.0);
