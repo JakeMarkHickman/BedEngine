@@ -10,22 +10,26 @@ layout(location = 4) in float a_TexID;
 
 //Model view Projection Matrix
 uniform mat4 u_Model;
-uniform mat4 u_ViewProjection;
+uniform mat4 u_View;
+uniform mat4 u_Projection;
+uniform vec3 u_CamPos;
 
 out vec4 v_Pos;
 out vec3 v_Normal;
 out vec4 v_Colour;
 out vec2 v_TexCoord;
 out float v_TexID;
+out vec3 v_CamPos;
 
 void main()
 {
     v_Pos = u_Model * a_Position;
-    v_Normal = a_Normal;
+    v_Normal = normalize(a_Normal);
     v_Colour = a_Colour;
     v_TexCoord = a_TexCoord;
     v_TexID = a_TexID;
-    gl_Position = u_ViewProjection * u_Model * a_Position;
+    v_CamPos = u_CamPos;
+    gl_Position = u_Projection * u_View * u_Model * a_Position;
 }
 
 
@@ -34,12 +38,48 @@ void main()
 
 layout(location = 0) out vec4 o_FragColour;
 
-//Vector
+// Vector
 in vec4 v_Pos;
 in vec3 v_Normal;
 in vec4 v_Colour;
 in vec2 v_TexCoord;
 in float v_TexID;
+
+// Camera
+in vec3 v_CamPos;
+
+// Point Light
+struct PointLight
+{
+    vec3 Position;
+    vec3 Colour;
+    float Strenght;
+    float Radius;
+};
+
+layout(std430, binding = 0) buffer PointLightBuffer {
+    PointLight pointLights[];
+};
+
+// Spot Light
+struct SpotLight
+{
+    vec3 Position;
+    vec3 Colour;
+    vec3 Direction;
+    float Strenght;
+    float CutOff;
+    float OuterCutOff;
+    float Radius;
+};
+
+// Directional Light
+struct DirectionalLight
+{
+    vec3 Colour;
+    vec3 Direction;
+    float Strenght;
+};
 
 //Ambient Light
 uniform float u_ambientLightStrenght;
@@ -52,18 +92,30 @@ uniform vec3 u_DiffuseLightColour;
 //Texture
 uniform sampler2D u_Textures[2];
 
-vec3 CalculateDiffuse(vec3 baseColour, vec3 norm, vec3 lightDir)
+vec3 CalculateDiffuse(vec3 lightColour, vec3 lightDir)
 {
-    float diff = max(dot(norm, lightDir), 0.0);
-    return diff * baseColour;
+    float diff = max(dot(v_Normal, lightDir), 0.0);
+    return diff * lightColour;
 }
 
-vec3 CalculateSpecular(vec3 lightColour, float lightStrenght, vec3 norm, vec3 lightDir, vec3 viewPos)
+vec3 CalculateSpecular(vec3 lightColour, float lightStrenght, vec3 lightDir, vec3 viewPos)
 {
-    vec3 reflectDir = reflect(-lightDir, norm);
-    vec3 viewDir = normalize(viewPos - vec3(v_Pos));
+    vec3 reflectDir = reflect(-lightDir, v_Normal);
+    vec3 viewDir = normalize(viewPos - v_Pos.xyz);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    return spec * lightColour * lightStrenght;
+    return spec * lightColour; //* lightStrenght;
+}
+
+vec3 CalculatePointLight(PointLight light, vec3 viewPos)
+{
+    vec3 lightDir = normalize(light.Position - v_Pos.xyz);
+    float distance = length(light.Position - v_Pos.xyz);
+    float attenuation = 1.0 / (distance / light.Radius + 1.0); // TODO: Example attenuation calculate proper fall off
+
+    vec3 diffuse = CalculateDiffuse(light.Colour, lightDir) * attenuation;
+    vec3 specular = CalculateSpecular(light.Colour, light.Strenght, lightDir, viewPos) * attenuation;
+
+    return diffuse + specular;
 }
 
 void main()
@@ -75,14 +127,18 @@ void main()
     //Ambient Lighting
     vec3 ambientLight = u_ambientLightStrenght * u_ambientLightColour;
 
-    //Diffuse Lighting
-    vec3 norm = normalize(v_Normal);
-    vec3 lightDir = normalize(u_DiffuseLightPos - v_Pos.xyz);
-    vec3 diffuse = CalculateDiffuse(u_DiffuseLightColour, norm, lightDir);
-    vec3 specular = CalculateSpecular(vec3(1.0, 1.0, 1.0), 1.0, norm, lightDir, vec3(1.0, 1.0, 1.0));
+    //PointLight
+
+    vec3 point;
+
+    for(int i = 0; i < 10; i++)
+    {
+        vec3 result = CalculatePointLight(pointLights[i], v_CamPos);
+        point += result;
+    }
 
     //Final Colour Calculation
-    vec3 result = (ambientLight + diffuse + specular) * unlitResult;
+    vec3 result = (ambientLight + point) * unlitResult;
 
     //Output
     o_FragColour = vec4(result, 1.0);

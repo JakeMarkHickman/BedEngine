@@ -11,7 +11,7 @@ namespace Bed
     struct Camera
     {
         Camera() {};
-        Camera(Bed::ProjectionType projectionType) {};
+        Camera(Bed::ProjectionType projectionType) : ProjectionType(projectionType) {};
 
         Bed::ProjectionType ProjectionType = Bed::ProjectionType::Perspective;
     };

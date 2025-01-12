@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "Texture.h"
+#include "StorageBuffer.h"
 
 #include <Bed/Core.h>
 
@@ -15,6 +16,7 @@ namespace Bed
     extern Bed::VertexBuffer* vb3D;
     extern Bed::IndexBuffer* ib3D;
     extern Bed::VertexArray* va3D;
+    extern Bed::StorageBuffer* pointLightBuffer;
 
     //2D
     extern Bed::Shader* shader2D;

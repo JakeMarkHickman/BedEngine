@@ -3,70 +3,51 @@
 #include <Math/Transform.h>
 #include <Components/StaticMesh.h>
 #include <Components/LightSources/AmbientLight.h>
+#include <Components/LightSources/PointLight.h>
 #include <Components/Camera.h>
 
 #include <Systems/StaticMeshSystem.h>
 #include <Systems/LightSources/AmbientLightSystem.h>
+#include <Systems/LightSources/PointLightSystem.h>
 #include <Systems/CameraSystem.h>
-/*#include <GameObjects/Components/CameraComponent.h>
-#include <GameObjects/Components/StaticMeshComponent.h>
-#include <GameObjects/Components/AmbientLightComponent.h>
-#include <GameObjects/Components/DiffuseLightComponent.h>
-#include <GameObjects/Components/ChildComponent.h>
-#include <Bed/Game/World/GameObjects/Components/VelocityComponent.h>
-
-#include <GameObjects/Systems/CameraSystem.h>
-#include <GameObjects/Systems/RenderSystem.h>
-#include <GameObjects/Systems/LightingSystem.h>
-#include <GameObjects/Systems/ChildSystem.h>
-#include <Bed/Game/World/GameObjects/Systems/MovementSystem.h>*/
 
 Bed::World::World()
 {
     uint64_t Player = ecs.CreateEntity();
-    ecs.AttachComponents(Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+    ecs.AttachComponents(Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                  Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
 
     uint64_t Camera = ecs.CreateEntity();
-    ecs.AttachComponents(Camera, Bed::Transform(Bed::Vector3(0.0f, 0.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+    ecs.AttachComponents(Camera, Bed::Transform(Bed::Vector3(0.0f, 1.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                  Bed::Camera(Bed::ProjectionType::Perspective));
 
     uint64_t Ent1 = ecs.CreateEntity();
-    ecs.AttachComponents(Ent1, Bed::Transform(-2.0f, 0.0f, 1.0f),
+    ecs.AttachComponents(Ent1, Bed::Transform(Bed::Vector3(-2.5f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+                               Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
+
+    uint64_t Ent2 = ecs.CreateEntity();
+    ecs.AttachComponents(Ent2, Bed::Transform(Bed::Vector3(2.5f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
 
     uint64_t Ambient = ecs.CreateEntity();
     ecs.AttachComponents(Ambient, Bed::AmbientLight());
 
-    //uint64_t Diffuse = 
+    uint64_t Point1 = ecs.CreateEntity();
+    ecs.AttachComponents(Point1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 3.0f), 0.0f, 1.0f),
+                                Bed::PointLight(1.0f, 1.0f, 1.0f));
+
+    uint64_t Point2 = ecs.CreateEntity();
+    ecs.AttachComponents(Point2, Bed::Transform(Bed::Vector3(-2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
+                                Bed::PointLight(Bed::Vector3(0.11f, 0.8f, 0.6f), 1.0f, 1.0f));
+
+    uint64_t Point3 = ecs.CreateEntity();
+    ecs.AttachComponents(Point3, Bed::Transform(Bed::Vector3(2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
+                                Bed::PointLight(Bed::Vector3(0.2f, 0.0f, 1.0f), 1.0f, 1.0f));
 
     ecs.AddSystem(Bed::StaticMeshSystem);
     ecs.AddSystem(Bed::AmbientLightSystem);
+    ecs.AddSystem(Bed::PointLightSystem);
     ecs.AddSystem(Bed::CameraSystem);
-
-    /*
-
-    uint64_t Ent1 = ecs.CreateEntity();
-    ecs.AttachComponents(Ent1, Bed::Transform(Bed::Vector3(3.0f, 0.0f, -2.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                              Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
-                              Bed::Velocity(Bed::Vector3(0.0f, 0.5f, 0.0f)));
-
-    uint64_t Ent2 = ecs.CreateEntity();
-    ecs.AttachComponents(Ent2, Bed::Transform(Bed::Vector3(-3.0f, 0.0f, -2.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                               Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
-                               Bed::Child(Ent1));
-
-    uint64_t Ambient = ecs.CreateEntity();
-    ecs.AttachComponents(Ambient, Bed::AmbientLight(0.1f, Bed::Vector3(1.0f, 1.0f, 1.0f)));
-
-    uint64_t Diffuse = ecs.CreateEntity();
-    ecs.AttachComponents(Diffuse, Bed::DiffuseLight(Bed::Vector3(1.0f, 1.0f, 1.0f)));
-
-    ecs.AddSystem(MoveSystem);
-    
-    ecs.AddSystem(RenderSystem);
-    ecs.AddSystem(LightingSystem);
-    ecs.AddSystem(ChildSystem);*/
 }
 
 Bed::World::~World()

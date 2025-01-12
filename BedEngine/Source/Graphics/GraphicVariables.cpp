@@ -7,6 +7,7 @@ namespace Bed
     extern Bed::VertexBuffer* vb3D = nullptr;
     extern Bed::IndexBuffer* ib3D = nullptr;
     extern Bed::VertexArray* va3D = nullptr;
+    extern Bed::StorageBuffer* pointLightBuffer = nullptr;
 
     //2D
     extern Bed::Shader* shader2D = nullptr;

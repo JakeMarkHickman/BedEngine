@@ -155,12 +155,27 @@ namespace Bed
 
             glEnable(GL_DEPTH_TEST);
 
+            glFrontFace(GL_CW);
+
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
             //Vertex array object
             va3D = new Bed::VertexArray();
             vb3D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
             ib3D = new Bed::IndexBuffer(4000);
+
+            //TODO: Make this dynamic
+            struct PointData
+            {
+                Bed::Vector3 Position;
+                float Padding1;
+                Bed::Vector3 Colour;
+                float Padding2;
+                float Strength;
+                float Radius;
+                float padding3[2];
+            };
+            pointLightBuffer = new Bed::StorageBuffer(10 * sizeof(PointData)); // should give 10 point lights
 
             va2D = new Bed::VertexArray();
             vb2D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
@@ -247,6 +262,7 @@ namespace Bed
             shader3D->Unbind();
             vb3D->Unbind();
             ib3D->Unbind();
+            pointLightBuffer->Unbind();
 
             va2D->Unbind();
             shader2D->Unbind();
