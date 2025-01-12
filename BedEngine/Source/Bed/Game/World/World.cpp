@@ -4,11 +4,13 @@
 #include <Components/StaticMesh.h>
 #include <Components/LightSources/AmbientLight.h>
 #include <Components/LightSources/PointLight.h>
+#include <Components/LightSources/DirectionalLight.h>
 #include <Components/Camera.h>
 
 #include <Systems/StaticMeshSystem.h>
 #include <Systems/LightSources/AmbientLightSystem.h>
 #include <Systems/LightSources/PointLightSystem.h>
+#include <Systems/LightSources/DirectionalLightSystem.h>
 #include <Systems/CameraSystem.h>
 
 Bed::World::World()
@@ -32,6 +34,9 @@ Bed::World::World()
     uint64_t Ambient = ecs.CreateEntity();
     ecs.AttachComponents(Ambient, Bed::AmbientLight());
 
+    uint64_t Directional = ecs.CreateEntity();
+    ecs.AttachComponents(Directional, DirectionalLight());
+
     uint64_t Point1 = ecs.CreateEntity();
     ecs.AttachComponents(Point1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 3.0f), 0.0f, 1.0f),
                                 Bed::PointLight(1.0f, 1.0f, 1.0f));
@@ -47,6 +52,7 @@ Bed::World::World()
     ecs.AddSystem(Bed::StaticMeshSystem);
     ecs.AddSystem(Bed::AmbientLightSystem);
     ecs.AddSystem(Bed::PointLightSystem);
+    ecs.AddSystem(Bed::DirectionalLightSystem);
     ecs.AddSystem(Bed::CameraSystem);
 }
 

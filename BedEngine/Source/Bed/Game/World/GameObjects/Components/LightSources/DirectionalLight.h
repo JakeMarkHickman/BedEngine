@@ -11,5 +11,5 @@ namespace Bed
         Bed::Vector3 Colour;
         Bed::Vector3 Direction;
         float Strength = 10;
-    }
+    };
 }

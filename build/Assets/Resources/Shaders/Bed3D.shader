@@ -73,12 +73,20 @@ struct SpotLight
     float Radius;
 };
 
+layout(std430, binding = 1) buffer SpotLightBuffer{
+    SpotLight spotLights[];
+};
+
 // Directional Light
 struct DirectionalLight
 {
     vec3 Colour;
     vec3 Direction;
     float Strenght;
+};
+
+layout(std430, binding = 2) buffer DirectionalLightBuffer{
+    DirectionalLight directionalLights[];
 };
 
 //Ambient Light
@@ -128,7 +136,6 @@ void main()
     vec3 ambientLight = u_ambientLightStrenght * u_ambientLightColour;
 
     //PointLight
-
     vec3 point;
 
     for(int i = 0; i < 10; i++)
@@ -136,6 +143,12 @@ void main()
         vec3 result = CalculatePointLight(pointLights[i], v_CamPos);
         point += result;
     }
+
+    //SpotLight
+    vec3 SpotLight;
+
+    //DirectionalLight
+    vec3 DirectionalLight;
 
     //Final Colour Calculation
     vec3 result = (ambientLight + point) * unlitResult;
