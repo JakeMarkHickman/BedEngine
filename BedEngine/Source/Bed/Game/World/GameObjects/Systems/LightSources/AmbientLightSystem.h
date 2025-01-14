@@ -13,7 +13,7 @@ namespace Bed
             {
                 Bed::AmbientLight* ambient = ecs.GetComponent<Bed::AmbientLight>(i);
 
-                shader3D->SetUniform1f("u_ambientLightStrenght", ambient->Strength);
+                shader3D->SetUniform1f("u_ambientLightStrength", ambient->Strength);
                 shader3D->SetUniform3f("u_ambientLightColour", ambient->Colour);
             }
         }

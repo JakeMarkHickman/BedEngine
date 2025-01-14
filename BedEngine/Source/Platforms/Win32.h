@@ -175,7 +175,32 @@ namespace Bed
                 float Radius;
                 float padding3[2];
             };
+            struct DirectionalData
+            {
+                Bed::Vector3 Colour;
+                float Padding1;
+                Bed::Vector3 Direction;
+                float Padding2;
+                float Strength;
+                float Padding3;
+            };
+            struct SpotData
+            {
+                Bed::Vector3 Position;
+                float Padding1;
+                Bed::Vector3 Colour;
+                float Padding2;
+                Bed::Vector3 Direction;
+                float Padding3;
+                float Strength;
+                float CutOff;
+                float OuterCutOff;
+                float Radius;
+                float padding4[4];
+            };
             pointLightBuffer = new Bed::StorageBuffer(10 * sizeof(PointData)); // should give 10 point lights
+            directionalLightBuffer = new Bed::StorageBuffer(10 * sizeof(DirectionalData)); // should give 10 directional lights
+            spotLightBuffer = new Bed::StorageBuffer(10 * sizeof(SpotData)); // should give 10 spot lights
 
             va2D = new Bed::VertexArray();
             vb2D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)

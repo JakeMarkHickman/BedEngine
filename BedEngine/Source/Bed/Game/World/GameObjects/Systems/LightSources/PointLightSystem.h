@@ -29,6 +29,7 @@ namespace Bed
             {
                 Bed::PointLight* pointLight = ecs.GetComponent<Bed::PointLight>(i);
 
+                //TODO: this causes memory leak!!!!
                 Bed::Transform* transform = new Bed::Transform(0.0f, 0.0f, 1.0f);
 
                 if(ecs.HasComponents<Bed::Transform>(i))
@@ -45,8 +46,7 @@ namespace Bed
                 pointData.emplace_back(data);
             }
         }
-
+        pointLightBuffer->Bind(0);
         pointLightBuffer->PopulateBuffer(pointData.data(), pointData.size() * sizeof(PointData), 0);
-        pointLightBuffer->Bind();
     }
 }

@@ -52,9 +52,12 @@ in vec3 v_CamPos;
 struct PointLight
 {
     vec3 Position;
+    float Padding1;
     vec3 Colour;
-    float Strenght;
+    float Padding2;
+    float Strength;
     float Radius;
+    float padding3[2];
 };
 
 layout(std430, binding = 0) buffer PointLightBuffer {
@@ -65,12 +68,16 @@ layout(std430, binding = 0) buffer PointLightBuffer {
 struct SpotLight
 {
     vec3 Position;
+    float Padding1;
     vec3 Colour;
+    float Padding2;
     vec3 Direction;
-    float Strenght;
+    float Padding3;
+    float Strength;
     float CutOff;
     float OuterCutOff;
     float Radius;
+    float padding4[4];
 };
 
 layout(std430, binding = 1) buffer SpotLightBuffer{
@@ -81,8 +88,11 @@ layout(std430, binding = 1) buffer SpotLightBuffer{
 struct DirectionalLight
 {
     vec3 Colour;
+    float Padding1;
     vec3 Direction;
-    float Strenght;
+    float Padding2;
+    float Strength;
+    float Padding3;
 };
 
 layout(std430, binding = 2) buffer DirectionalLightBuffer{
@@ -90,7 +100,7 @@ layout(std430, binding = 2) buffer DirectionalLightBuffer{
 };
 
 //Ambient Light
-uniform float u_ambientLightStrenght;
+uniform float u_ambientLightStrength;
 uniform vec3 u_ambientLightColour;
 
 //Diffuse Light
@@ -106,12 +116,12 @@ vec3 CalculateDiffuse(vec3 lightColour, vec3 lightDir)
     return diff * lightColour;
 }
 
-vec3 CalculateSpecular(vec3 lightColour, float lightStrenght, vec3 lightDir, vec3 viewPos)
+vec3 CalculateSpecular(vec3 lightColour, vec3 lightDir, vec3 viewPos)
 {
     vec3 reflectDir = reflect(-lightDir, v_Normal);
     vec3 viewDir = normalize(viewPos - v_Pos.xyz);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    return spec * lightColour; //* lightStrenght;
+    return spec * lightColour;
 }
 
 vec3 CalculatePointLight(PointLight light, vec3 viewPos)
@@ -121,7 +131,34 @@ vec3 CalculatePointLight(PointLight light, vec3 viewPos)
     float attenuation = 1.0 / (distance / light.Radius + 1.0); // TODO: Example attenuation calculate proper fall off
 
     vec3 diffuse = CalculateDiffuse(light.Colour, lightDir) * attenuation;
-    vec3 specular = CalculateSpecular(light.Colour, light.Strenght, lightDir, viewPos) * attenuation;
+    vec3 specular = CalculateSpecular(light.Colour, lightDir, viewPos) * attenuation;
+
+    return diffuse + specular;
+}
+
+vec3 CalculateSpotLight(SpotLight light, vec3 viewPos)
+{
+    vec3 lightDir = normalize(light.Position - v_Pos.xyz);
+    float theta = dot(lightDir, normalize(-light.Direction));
+
+    float epsilon = light.CutOff - light.OuterCutOff;
+    float intensity = clamp((theta - light.OuterCutOff) / epsilon, 0.0, 1.0);
+
+    float distance = length(light.Position - v_Pos.xyz);
+    float attenuation = 1.0 / (distance / light.Radius + 1.0); // TODO: Example attenuation calculate proper fall off
+    
+    vec3 diffuse = CalculateDiffuse(light.Colour, lightDir) * attenuation * intensity;
+    vec3 specular = CalculateSpecular(light.Colour, lightDir, viewPos) * attenuation * intensity;
+
+    return diffuse + specular;
+}
+
+vec3 CalculateDirectionalLight(DirectionalLight light, vec3 viewPos)
+{
+    vec3 lightDir = normalize(-light.Direction);
+
+    vec3 diffuse = CalculateDiffuse(light.Colour, lightDir) * light.Strength;
+    vec3 specular = CalculateSpecular(light.Colour, lightDir, viewPos) * light.Strength;
 
     return diffuse + specular;
 }
@@ -133,25 +170,37 @@ void main()
     vec3 unlitResult = vec3(texture(u_Textures[index], v_TexCoord) * v_Colour);
 
     //Ambient Lighting
-    vec3 ambientLight = u_ambientLightStrenght * u_ambientLightColour;
+    vec3 ambientLight = u_ambientLightStrength * u_ambientLightColour;
 
     //PointLight
     vec3 point;
 
-    for(int i = 0; i < 10; i++)
+    for(int i = 0; i < 10; i++)//TODO: this needs to be dynamic
     {
-        vec3 result = CalculatePointLight(pointLights[i], v_CamPos);
-        point += result;
+        vec3 pointResult = CalculatePointLight(pointLights[i], v_CamPos);
+        point += pointResult;
     }
 
     //SpotLight
-    vec3 SpotLight;
+    vec3 spot;
+
+    for(int i = 0; i < 10; i++)//TODO: this needs to be dynamic
+    {
+        vec3 spotResult = CalculateSpotLight(spotLights[i], v_CamPos);
+        spot += spotResult;
+    }
 
     //DirectionalLight
-    vec3 DirectionalLight;
+    vec3 directional;
+    
+    for(int i = 0; i < 10; i++)//TODO: this needs to be dynamic
+    {
+        vec3 dirResult = CalculateDirectionalLight(directionalLights[i], v_CamPos);
+        directional += dirResult;
+    }
 
     //Final Colour Calculation
-    vec3 result = (ambientLight + point) * unlitResult;
+    vec3 result = (ambientLight + point + spot + directional) * unlitResult;
 
     //Output
     o_FragColour = vec4(result, 1.0);

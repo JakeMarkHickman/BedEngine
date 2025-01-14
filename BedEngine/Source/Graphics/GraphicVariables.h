@@ -17,6 +17,8 @@ namespace Bed
     extern Bed::IndexBuffer* ib3D;
     extern Bed::VertexArray* va3D;
     extern Bed::StorageBuffer* pointLightBuffer;
+    extern Bed::StorageBuffer* directionalLightBuffer;
+    extern Bed::StorageBuffer* spotLightBuffer;
 
     //2D
     extern Bed::Shader* shader2D;

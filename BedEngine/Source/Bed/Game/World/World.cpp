@@ -4,12 +4,14 @@
 #include <Components/StaticMesh.h>
 #include <Components/LightSources/AmbientLight.h>
 #include <Components/LightSources/PointLight.h>
+#include <Components/LightSources/SpotLight.h>
 #include <Components/LightSources/DirectionalLight.h>
 #include <Components/Camera.h>
 
 #include <Systems/StaticMeshSystem.h>
 #include <Systems/LightSources/AmbientLightSystem.h>
 #include <Systems/LightSources/PointLightSystem.h>
+#include <Systems/LightSources/SpotLightSystem.h>
 #include <Systems/LightSources/DirectionalLightSystem.h>
 #include <Systems/CameraSystem.h>
 
@@ -20,7 +22,7 @@ Bed::World::World()
                                  Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
 
     uint64_t Camera = ecs.CreateEntity();
-    ecs.AttachComponents(Camera, Bed::Transform(Bed::Vector3(0.0f, 1.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+    ecs.AttachComponents(Camera, Bed::Transform(Bed::Vector3(0.0f, 5.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                  Bed::Camera(Bed::ProjectionType::Perspective));
 
     uint64_t Ent1 = ecs.CreateEntity();
@@ -35,7 +37,11 @@ Bed::World::World()
     ecs.AttachComponents(Ambient, Bed::AmbientLight());
 
     uint64_t Directional = ecs.CreateEntity();
-    ecs.AttachComponents(Directional, DirectionalLight());
+    ecs.AttachComponents(Directional, DirectionalLight(Bed::Vector3(1.0f, 1.0f, 1.0f), Bed::Vector3(0.0f, -1.0f, 1.0f), 0.5f));
+
+    uint64_t Spot = ecs.CreateEntity();
+    ecs.AttachComponents(Spot, Bed::Transform(Bed::Vector3(0.0f, 3.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+                                Bed::SpotLight(Bed::Vector3(1.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, -1.0f, 0.0f), 1.0f, 20.0f, 30.0f, 2.0f));
 
     uint64_t Point1 = ecs.CreateEntity();
     ecs.AttachComponents(Point1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 3.0f), 0.0f, 1.0f),
@@ -52,6 +58,7 @@ Bed::World::World()
     ecs.AddSystem(Bed::StaticMeshSystem);
     ecs.AddSystem(Bed::AmbientLightSystem);
     ecs.AddSystem(Bed::PointLightSystem);
+    ecs.AddSystem(Bed::SpotLightSystem);
     ecs.AddSystem(Bed::DirectionalLightSystem);
     ecs.AddSystem(Bed::CameraSystem);
 }

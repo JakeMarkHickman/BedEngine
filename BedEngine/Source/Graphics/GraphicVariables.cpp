@@ -8,6 +8,8 @@ namespace Bed
     extern Bed::IndexBuffer* ib3D = nullptr;
     extern Bed::VertexArray* va3D = nullptr;
     extern Bed::StorageBuffer* pointLightBuffer = nullptr;
+    extern Bed::StorageBuffer* directionalLightBuffer = nullptr;
+    extern Bed::StorageBuffer* spotLightBuffer = nullptr;
 
     //2D
     extern Bed::Shader* shader2D = nullptr;
