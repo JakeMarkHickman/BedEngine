@@ -33,6 +33,10 @@ Bed::World::World()
     ecs.AttachComponents(Ent2, Bed::Transform(Bed::Vector3(2.5f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
 
+    uint64_t floor = ecs.CreateEntity();
+    ecs.AttachComponents(floor, Bed::Transform(Bed::Vector3(0.0f, -2.5f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(20.0f, 0.5f, 20.0f)),
+                               Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
+
     uint64_t Ambient = ecs.CreateEntity();
     ecs.AttachComponents(Ambient, Bed::AmbientLight());
 
@@ -41,7 +45,7 @@ Bed::World::World()
 
     uint64_t Spot = ecs.CreateEntity();
     ecs.AttachComponents(Spot, Bed::Transform(Bed::Vector3(0.0f, 3.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                Bed::SpotLight(Bed::Vector3(1.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, -1.0f, 0.0f), 1.0f, 20.0f, 30.0f, 2.0f));
+                                Bed::SpotLight(Bed::Vector3(1.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, -1.0f, 0.0f), 1.0f, 28.0f, 30.0f, 2.0f));
 
     uint64_t Point1 = ecs.CreateEntity();
     ecs.AttachComponents(Point1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 3.0f), 0.0f, 1.0f),
