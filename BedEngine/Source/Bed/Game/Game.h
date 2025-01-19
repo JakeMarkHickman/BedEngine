@@ -12,7 +12,7 @@ namespace Bed
         Game() {};
         ~Game() {};
 
-        Bed::World GetCurrentWorld() { return m_World; };
+        std::string GetCurrentLoadedWorld() { return "m_World"; };
         Bed::GameSession GetGameSession() { return m_GameSession; };
 
         void Update(float deltaTime) { m_World.Update(deltaTime); };

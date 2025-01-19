@@ -53,8 +53,9 @@ MetalCpp=""
 
 ToolsCpp="$Tools/FileLoader.cpp $Tools/StringSearcher.cpp $Tools/Memory/MemoryPool.cpp"
 
-GameObjectsCpp="$Game/World/GameObjects/ECS/EntityManager.cpp $Game/World/GameObjects/ECS/ComponentManager.cpp
-                $Game/World/GameObjects/Mesh/Mesh.cpp $Game/World/World.cpp"
+GameObjectsCpp="$Game/World/GameObjects/Mesh/Mesh.cpp $Game/World/World.cpp"
+
+EcsCpps="$Bed/ECS/ComponentManager.cpp $Bed/ECS/EntityManager.cpp"
 
 MathCpp="$Math/Matrix/Matrix3x3.cpp"
 
@@ -62,7 +63,8 @@ EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
             $App/DeltaTime.cpp
             $GraphicsCpp
             $ToolsCpp 
-            $GameObjectsCpp 
+            $GameObjectsCpp
+            $EcsCpps
             $MathCpp
             $OpenGLCpp
             $VulkanCpp

@@ -78,12 +78,14 @@ namespace Bed
 
         void AddSystem(SystemFunc systemToAdd)
         {
+            //TODO: check for pre-existing systems
             m_Systems.push_back(systemToAdd);
         };
 
         void RemoveSystem(SystemFunc systemToRemove)
         {
-            
+            //TODO: check to see if system exists
+            // no need to delete function pointer
         };
 
         void RemoveAllSystems()
