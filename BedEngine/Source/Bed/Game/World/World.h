@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <Bed/ECS/ECS.h>
+#include <Bed/Events/EventManager.h>
 
 //TODO: DELETE
 #include <Bed/Events/Event.h>
@@ -29,5 +30,6 @@ namespace Bed
         Bed::ECS ecs;
 
         Event<std::string> testEvent;
+        Bed::EventManager worldEventManager;
     };
 }

@@ -59,6 +59,9 @@ Bed::World::World()
     ecs.AttachComponents(Point3, Bed::Transform(Bed::Vector3(2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
                                 Bed::PointLight(Bed::Vector3(0.2f, 0.0f, 1.0f), 1.0f, 1.0f));
 
+    worldEventManager.CreateEvent<int>("TestEvent");
+    worldEventManager.CreateEvent<int>("JestEvent");
+    worldEventManager.CreateEvent<std::string>("JokeEvent");
 
     testEvent.Subscribe([this](std::string value) { this->testEventFunc(value); });
 
@@ -104,5 +107,5 @@ void Bed::World::Update(float deltaTime)
 
 void Bed::World::testEventFunc(std::string value)
 {
-    std::cout << value << "\n";
+    //std::cout << value << "\n";
 }

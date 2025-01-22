@@ -67,7 +67,11 @@
         "filesystem": "cpp",
         "forward_list": "cpp",
         "ratio": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "barrier": "cpp",
+        "mutex": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
