@@ -8,6 +8,7 @@ namespace Bed
     class MemoryPool
     {
     public:
+        //TODO: allow for dynamic allocation of extra memory
         MemoryPool(size_t chunkSize, size_t chunkCount);
         ~MemoryPool();
 
