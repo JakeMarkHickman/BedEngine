@@ -7,6 +7,7 @@
 #include <Components/LightSources/SpotLight.h>
 #include <Components/LightSources/DirectionalLight.h>
 #include <Components/Camera.h>
+#include <Components/Input.h>
 
 #include <Systems/StaticMeshSystem.h>
 #include <Systems/LightSources/AmbientLightSystem.h>
@@ -19,7 +20,8 @@ Bed::World::World()
 {
     uint64_t Player = ecs.CreateEntity();
     ecs.AttachComponents(Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                 Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
+                                 Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
+                                 Bed::Input());
 
     uint64_t Camera = ecs.CreateEntity();
     ecs.AttachComponents(Camera, Bed::Transform(Bed::Vector3(0.0f, 5.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),

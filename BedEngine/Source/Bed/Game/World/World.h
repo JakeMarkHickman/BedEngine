@@ -2,9 +2,6 @@
 
 #include <iostream>
 #include <Bed/ECS/ECS.h>
-#include <Math/Vector/Vector3.h>
-
-#include <Bed/Events/Event.h>
 
 //This will load a level from a file (JSON for now but binary later)
 namespace Bed

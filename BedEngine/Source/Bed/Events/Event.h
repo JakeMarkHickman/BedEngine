@@ -51,7 +51,7 @@ namespace Bed
                 try {
                     listner(data);
                 } catch (const std::exception& e) {
-                    std::cerr << "Listener " << id << " threw an exception: " << e.what() << '\n';
+                    //std::cerr << "Listener " << id << " threw an exception: " << e.what() << '\n';
                 } 
             }
         };

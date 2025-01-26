@@ -3,9 +3,17 @@
 #include "Platform.h"
 #include <Graphics/GraphicVariables.h>
 #include <iostream>
+#include <Bed/Input/InputPoller.h>
 
 namespace Bed
 {
+
+    void TestEvent(Bed::InputData data)
+    {
+        std::cout << data.Keycode << "\n";
+        std::cout << data.State << "\n";
+    }
+
     class Win32 : public Bed::Platform
     {
     public:
@@ -159,6 +167,9 @@ namespace Bed
 
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
+            Bed::InputPoller::Init();
+            Bed::InputPoller::InputEvent.Subscribe(Bed::TestEvent);
+
             //Vertex array object
             va3D = new Bed::VertexArray();
             vb3D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
@@ -265,6 +276,8 @@ namespace Bed
 
         void OpenGLUpdateWindow()
         {
+            Bed::InputPoller::PollInput(window, 0);
+
             /* Render here */
             renderer->Clear();
 

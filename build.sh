@@ -57,6 +57,8 @@ GameObjectsCpp="$Game/World/GameObjects/Mesh/Mesh.cpp $Game/World/World.cpp"
 
 EcsCpps="$Bed/ECS/ComponentManager.cpp $Bed/ECS/EntityManager.cpp"
 
+InputCpps="$Bed/Input/InputPoller.cpp"
+
 MathCpp="$Math/Matrix/Matrix3x3.cpp"
 
 EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
@@ -65,6 +67,7 @@ EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
             $ToolsCpp 
             $GameObjectsCpp
             $EcsCpps
+            $InputCpps
             $MathCpp
             $OpenGLCpp
             $VulkanCpp
