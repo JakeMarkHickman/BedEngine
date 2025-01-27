@@ -147,7 +147,7 @@ namespace Bed
 
             glfwMakeContextCurrent(window);
 
-            glfwSwapInterval(1);
+            glfwSwapInterval(1); //Framerate
 
             if(glewInit() != GLEW_OK)
             {
