@@ -3,6 +3,7 @@
 #include <functional>
 #include <unordered_map>
 #include <mutex>
+#include <memory>
 
 namespace Bed
 {
@@ -10,10 +11,11 @@ namespace Bed
     class Event
     {
     public:
+        Event() : m_Mutex(std::make_shared<std::mutex>()) {}; //Thread safe and copyable
+
         uint64_t Subscribe(std::function<void(payload)> listner) 
         {
-            std::mutex mutex;
-            std::lock_guard<std::mutex> lock(mutex);
+            std::lock_guard<std::mutex> lock(*m_Mutex);
 
             uint64_t curListner;
 
@@ -37,8 +39,7 @@ namespace Bed
 
         void Unsubscribe(uint64_t listnerID) 
         {
-            std::mutex mutex;
-            std::lock_guard<std::mutex> lock(mutex);
+            std::lock_guard<std::mutex> lock(*m_Mutex);
 
             m_Listners.erase(listnerID);
             m_RemovedListners.emplace(listnerID);
@@ -46,8 +47,7 @@ namespace Bed
 
         void Broadcast(payload data) 
         {
-            std::mutex mutex;
-            std::lock_guard<std::mutex> lock(mutex);
+            std::lock_guard<std::mutex> lock(*m_Mutex);
             for(const auto& [id, listner] : m_Listners)
             {
                 try {
@@ -62,5 +62,6 @@ namespace Bed
         std::unordered_map<uint64_t, std::function<void(payload)>> m_Listners;
         uint64_t m_NextListnerId = 0;
         std::vector<uint64_t> m_RemovedListners;
+        std::shared_ptr<std::mutex> m_Mutex;
     };
 }
