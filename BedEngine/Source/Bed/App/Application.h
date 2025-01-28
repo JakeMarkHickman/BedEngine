@@ -4,6 +4,7 @@
 
 #include <Bed/Core.h>
 #include <Bed/Game/Game.h>
+#include <Bed/ContextRegistry/ContextRegisrty.h>
 
 namespace Bed
 {
@@ -43,6 +44,9 @@ namespace Bed
 
         Bed::Game m_Game;
         Bed::DeltaTime m_DeltaTime;
+
+        //TODO: Delete this
+        Bed::ContextRegistry m_registry;
 
     }; 
 

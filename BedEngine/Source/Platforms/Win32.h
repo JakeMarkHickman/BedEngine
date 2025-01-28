@@ -167,6 +167,7 @@ namespace Bed
 
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
+            //TODO: delete this!!
             Bed::InputPoller::Init();
             Bed::InputPoller::InputEvent.Subscribe(Bed::TestEvent);
 
@@ -276,6 +277,7 @@ namespace Bed
 
         void OpenGLUpdateWindow()
         {
+            //TODO: delete this!!
             Bed::InputPoller::PollInput(window, 0);
 
             /* Render here */

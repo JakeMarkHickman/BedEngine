@@ -4,7 +4,6 @@
 #include <Tools/Memory/MemoryPool.h>
 #include <vector>
 #include <typeindex>
-#include <memory>
 #include <unordered_map>
 
 namespace Bed
