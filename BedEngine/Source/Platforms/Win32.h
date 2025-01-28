@@ -266,6 +266,11 @@ namespace Bed
 
         void OpenGLUpdateWindow()
         {
+            //TODO: Switch this to be better
+            Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
+            Bed::InputPoller* input = instance.GetContext<Bed::InputPoller>();
+            input->PollInput(window, 0);
+
             /* Render here */
             renderer->Clear();
 

@@ -25,7 +25,7 @@ namespace Bed
     class InputPoller
     {
     public:
-        static void Init()
+        void Init()
         {
             for (int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; ++key)
             {
@@ -33,7 +33,7 @@ namespace Bed
             }
         }
 
-        static void PollInput(GLFWwindow* window, int playerID)
+        void PollInput(GLFWwindow* window, int playerID)
         {
             for(int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; key++)
             {
@@ -49,10 +49,10 @@ namespace Bed
             }
         }
 
-        static Event<InputData> InputEvent;
+        Event<InputData> InputEvent;
 
     private:
-        static KeyState GetKeyState(GLFWwindow* window, int key)
+        KeyState GetKeyState(GLFWwindow* window, int key)
         {
             int state = glfwGetKey(window, key);
 
@@ -75,7 +75,7 @@ namespace Bed
             
             return curState;
         }
-        static std::unordered_map<int, KeyState> m_LastKeyStates;
+        std::unordered_map<int, KeyState> m_LastKeyStates;
     };
     
 }
