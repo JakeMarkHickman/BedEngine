@@ -167,10 +167,6 @@ namespace Bed
 
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
-            //TODO: delete this!!
-            Bed::InputPoller::Init();
-            Bed::InputPoller::InputEvent.Subscribe(Bed::TestEvent);
-
             //Vertex array object
             va3D = new Bed::VertexArray();
             vb3D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
@@ -277,9 +273,6 @@ namespace Bed
 
         void OpenGLUpdateWindow()
         {
-            //TODO: delete this!!
-            Bed::InputPoller::PollInput(window, 0);
-
             /* Render here */
             renderer->Clear();
 
