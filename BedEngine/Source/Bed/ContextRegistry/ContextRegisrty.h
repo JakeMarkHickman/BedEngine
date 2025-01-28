@@ -4,12 +4,13 @@
 #include <unordered_map>
 #include <Tools/Memory/MemoryPool.h>
 #include <vector>
+#include <Bed/Singleton/Singleton.h>
 
 //TODO: make sure this correctly cleans up
 
 namespace Bed
 {
-    class ContextRegistry
+    class ContextRegistry : public Bed::Singleton<ContextRegistry>
     {
     public:
         template<typename Context>
@@ -82,6 +83,8 @@ namespace Bed
         }
 
     private:
+        friend class Bed::Singleton<ContextRegistry>; //Allows private and protected access to Singleton class
+        ContextRegistry() {}; //private decleration so no  more instanced
 
         bool IsContextRegistered(std::type_index context)
         {

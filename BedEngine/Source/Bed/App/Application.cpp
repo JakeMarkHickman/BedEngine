@@ -12,6 +12,11 @@ namespace Bed
             return; // Return if the Window wasnt created
         }
 
+        Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
+
+        instance.RegisterContext(m_Game);
+        instance.RegisterContext(m_Game);
+
         Update();
     }
 

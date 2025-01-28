@@ -5,6 +5,8 @@
 #include <Bed/Core.h>
 #include <Bed/Game/Game.h>
 
+#include <Bed/ContextRegistry/ContextRegisrty.h>
+
 namespace Bed
 {
     
