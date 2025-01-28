@@ -12,9 +12,6 @@ namespace Bed
             return; // Return if the Window wasnt created
         }
 
-        //Delete this
-        m_registry.RegisterContext(m_Game);
-
         Update();
     }
 

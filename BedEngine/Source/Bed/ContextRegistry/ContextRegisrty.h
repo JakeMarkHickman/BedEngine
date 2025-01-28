@@ -3,6 +3,9 @@
 #include <typeindex>
 #include <unordered_map>
 #include <Tools/Memory/MemoryPool.h>
+#include <vector>
+
+//TODO: make sure this correctly cleans up
 
 namespace Bed
 {
@@ -10,7 +13,7 @@ namespace Bed
     {
     public:
         template<typename Context>
-        void RegisterContext(Context& contextToRegister)
+        void RegisterContext(Context contextToRegister)
         {
             std::type_index contextIndex = typeid(Context);
 
@@ -31,21 +34,51 @@ namespace Bed
                 return;
             }
 
-            new (memory) Context(contextToRegister);
+            Context* contentPointer = new (memory) Context(contextToRegister);
 
             m_RegisteredContexts.emplace(contextIndex, std::move(memoryPool));
+            m_Contexts.emplace(contextIndex, contentPointer);
         }
 
         template<typename Context>
         void RemoveContext()
         {
+            std::type_index contextIndex = typeid(Context);
 
+            if (!IsContextRegistered(contextIndex))
+            {
+                std::cout << "Context " << contextIndex.name() << " doesn't exist" << "\n";
+                return;
+            }
+
+            void* contextPointer = m_Contexts[contextIndex];
+
+            // Destroy the context object (call its destructor)
+
+            if(contextPointer)
+            {
+                static_cast<Context*>(contextPointer)->~Context();
+            }
+            
+
+            // The memory pool will be automatically cleaned up when it goes out of scope
+            // Remove the context and memory pool from the maps
+            m_Contexts.erase(contextIndex);
+            m_RegisteredContexts.erase(contextIndex);
         }
 
         template<typename Context>
         Context* GetContext()
         {
-            return nullptr;
+            std::type_index contextIndex = typeid(Context);
+
+            if(!IsContextRegistered(contextIndex))
+            {
+                std::cout << "Context " << contextIndex.name() << " doesn't exist" << "\n";
+                return nullptr;
+            }
+
+            return static_cast<Context*>(m_Contexts[contextIndex]);
         }
 
     private:
@@ -56,5 +89,6 @@ namespace Bed
         }
 
         std::unordered_map<std::type_index, Bed::MemoryPool> m_RegisteredContexts;
+        std::unordered_map<std::type_index, void*> m_Contexts;
     };
 }

@@ -7,13 +7,6 @@
 
 namespace Bed
 {
-
-    void TestEvent(Bed::InputData data)
-    {
-        std::cout << data.Keycode << "\n";
-        std::cout << data.State << "\n";
-    }
-
     class Win32 : public Bed::Platform
     {
     public:
