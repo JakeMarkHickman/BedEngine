@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Events/Event.h>
+#include <unordered_map>
 #include <GLFW/glfw3.h>
 
 namespace Bed
@@ -38,8 +39,11 @@ namespace Bed
             for(int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; key++)
             {
                 KeyState state = GetKeyState(window, key);
+
                 if(m_LastKeyStates[key] != state) // checks when the state changes
                 {
+                    m_LastKeyStates[key] = state;
+
                     InputData data;
                     data.Player = playerID;
                     data.Keycode = key;
@@ -59,13 +63,13 @@ namespace Bed
             KeyState curState;
             switch(state)
             {
-                case 0:
+                case GLFW_RELEASE:
                     curState = KeyState::Released;
                     break;
-                case 1:
+                case GLFW_PRESS:
                     curState = KeyState::Press;
                     break;
-                case 2:
+                case GLFW_REPEAT: // Not reliable
                     curState = KeyState::Hold;
                     break;
                 default:
@@ -75,6 +79,7 @@ namespace Bed
             
             return curState;
         }
+
         std::unordered_map<int, KeyState> m_LastKeyStates;
     };
     

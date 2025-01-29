@@ -7,7 +7,22 @@ namespace Bed
 {
     void TestEvent(InputData data)
     {
-        std::cout << data.Keycode << "\n";
+        std::string state = "";
+
+        switch(data.State)
+        {
+            case 0:
+                state = "Released";
+                break;
+            case 1:
+                state = "Pressed";
+                break;
+            case 2:
+                state = "Held";
+                break;
+        }
+
+        std::cout << data.Keycode << " | " << state << "\n";
     }
 
     void Application::Run()
