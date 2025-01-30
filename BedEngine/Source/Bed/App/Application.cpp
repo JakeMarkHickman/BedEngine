@@ -1,11 +1,11 @@
 
 #include "Application.h"
 #include <Platforms/PlatformWrapper.h>
-#include <Bed/Input/InputPoller.h>
+#include <Bed/Input/Input.h>
 
 namespace Bed
 {
-    void TestEvent(InputData data)
+    void TestEvent(Bed::InputData data)
     {
         std::string state = "";
 
@@ -40,9 +40,9 @@ namespace Bed
     {
         //TODO: This needs to be better
         Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
-        Bed::InputPoller poller;
+        Bed::Input poller;
         instance.RegisterContext(poller);
-        Bed::InputPoller* input = instance.GetContext<Bed::InputPoller>();
+        Bed::Input* input = instance.GetContext<Bed::Input>();
         input->Init();
         input->InputEvent.Subscribe(Bed::TestEvent);
 

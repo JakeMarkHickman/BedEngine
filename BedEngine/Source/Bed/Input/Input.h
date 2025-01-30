@@ -24,7 +24,7 @@ namespace Bed
         float MouseY;
     };
 
-    class BED_API InputPoller
+    class BED_API Input
     {
     public:
         void Init()

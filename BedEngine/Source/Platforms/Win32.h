@@ -3,7 +3,7 @@
 #include "Platform.h"
 #include <Graphics/GraphicVariables.h>
 #include <iostream>
-#include <Bed/Input/InputPoller.h>
+#include <Bed/Input/Input.h>
 
 namespace Bed
 {
@@ -268,7 +268,7 @@ namespace Bed
         {
             //TODO: Switch this to be better
             Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
-            Bed::InputPoller* input = instance.GetContext<Bed::InputPoller>();
+            Bed::Input* input = instance.GetContext<Bed::Input>();
             input->PollInput(window, 0);
 
             /* Render here */
