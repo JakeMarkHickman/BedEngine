@@ -3,11 +3,6 @@
 #include <Platforms/PlatformWrapper.h>
 #include <Bed/Input/InputPoller.h>
 
-//Memory Leak Check
-#define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
-#include <crtdbg.h>
-
 namespace Bed
 {
     void TestEvent(InputData data)
@@ -37,9 +32,6 @@ namespace Bed
         {
             return; // Return if the Window wasnt created
         }
-
-        //Memory Leak Check
-        _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
         Update();
     }

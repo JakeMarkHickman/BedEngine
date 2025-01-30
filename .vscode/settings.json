@@ -71,7 +71,8 @@
         "barrier": "cpp",
         "mutex": "cpp",
         "stop_token": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "*.rh": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
