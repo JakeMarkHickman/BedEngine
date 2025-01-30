@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Bed/Core.h>
 #include <Events/Event.h>
 #include <unordered_map>
 #include <GLFW/glfw3.h>
@@ -13,7 +14,7 @@ namespace Bed
         Hold
     };
 
-    struct InputData
+    struct BED_API InputData
     {
         int Player; // Player who used the event (local multiplayer)
         int Keycode; // Key that was pressed
@@ -23,7 +24,7 @@ namespace Bed
         float MouseY;
     };
 
-    class InputPoller
+    class BED_API InputPoller
     {
     public:
         void Init()

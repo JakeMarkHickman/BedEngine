@@ -10,7 +10,7 @@
 
 namespace Bed
 {
-    class ContextRegistry : public Bed::Singleton<ContextRegistry>
+    class BED_API ContextRegistry : public Bed::Singleton<ContextRegistry>
     {
     public:
         template<typename Context>

@@ -33,13 +33,12 @@ namespace Bed
             {
                 Bed::SpotLight* spotLight = ecs.GetComponent<Bed::SpotLight>(i);
 
-                //TODO: this causes memory leak!!!!
-                Bed::Transform* transform = new Bed::Transform(0.0f, 0.0f, 1.0f);
-
-                if(ecs.HasComponents<Bed::Transform>(i))
+                if(!ecs.HasComponents<Bed::Transform>(i))
                 {
-                    transform = ecs.GetComponent<Bed::Transform>(i);
+                    ecs.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
                 }
+
+                Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
 
                 Bed::SpotData data;
                     data.Position = transform->Position;

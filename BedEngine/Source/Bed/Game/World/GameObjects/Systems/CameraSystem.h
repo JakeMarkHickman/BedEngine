@@ -16,12 +16,12 @@ namespace Bed
             {
                 Bed::Camera* cam = ecs.GetComponent<Bed::Camera>(i);
 
-                Bed::Transform* transform = new Bed::Transform(0.0f);
-
-                if(ecs.HasComponents<Bed::Transform>(i))
+                if(!ecs.HasComponents<Bed::Transform>(i))
                 {
-                    transform = ecs.GetComponent<Bed::Transform>(i);
+                    ecs.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
                 }
+
+                Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
 
                 //Bind Shader
                 shader3D->Bind();

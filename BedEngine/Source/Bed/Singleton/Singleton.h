@@ -3,7 +3,7 @@
 namespace Bed
 {
     template<typename T>
-    class Singleton
+    class BED_API Singleton
     {
     public:
         static T& GetInstance()
