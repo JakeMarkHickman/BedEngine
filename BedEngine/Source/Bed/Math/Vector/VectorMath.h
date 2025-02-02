@@ -24,8 +24,8 @@ namespace Bed
         {
             float mag = Magnitude(v);
 
-            float x = v.x/mag;
-            float y = v.y/mag;
+            float x = isnan(v.x/mag) ? 0.0f : v.x/mag;
+            float y = isnan(v.y/mag) ? 0.0f : v.y/mag;
 
             return Bed::Vector2(x, y);
         };
@@ -34,9 +34,9 @@ namespace Bed
         {
             float mag = Magnitude(v);
 
-            float x = v.x/mag;
-            float y = v.y/mag;
-            float z = v.z/mag;
+            float x = isnan(v.x/mag) ? 0.0f : v.x/mag;
+            float y = isnan(v.y/mag) ? 0.0f : v.y/mag;
+            float z = isnan(v.z/mag) ? 0.0f : v.z/mag;
 
             return Bed::Vector3(x, y, z);
         };
@@ -45,10 +45,10 @@ namespace Bed
         {
             float mag = Magnitude(v);
 
-            float x = v.x/mag;
-            float y = v.y/mag;
-            float z = v.z/mag;
-            float w = v.w/mag;
+            float x = isnan(v.x/mag) ? 0.0f : v.x/mag;
+            float y = isnan(v.y/mag) ? 0.0f : v.y/mag;
+            float z = isnan(v.z/mag) ? 0.0f : v.z/mag;
+            float w = isnan(v.w/mag) ? 0.0f : v.w/mag;
 
             return Bed::Vector4(x, y, z, w);
         };

@@ -15,11 +15,10 @@ namespace Bed
                 Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
                 Bed::Velocity* velocity = ecs.GetComponent<Bed::Velocity>(i);
 
-                Bed::Vector3 nomalisedDirection = velocity->Direction;
+                Bed::Vector3 nomalisedDirection = Bed::VectorMath::Normalise(velocity->Direction);
 
-                std::cout << nomalisedDirection.x << " " << nomalisedDirection.y << " " << nomalisedDirection.x << "\n";
-
-                transform->Position += nomalisedDirection * deltaTime;
+                //TODO: make this not use normalised velocity
+                transform->Position += nomalisedDirection * 5.0f * deltaTime;
             }
         }
     }
