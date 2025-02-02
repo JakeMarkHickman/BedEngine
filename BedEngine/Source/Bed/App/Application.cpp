@@ -5,26 +5,6 @@
 
 namespace Bed
 {
-    void TestEvent(Bed::InputData data)
-    {
-        std::string state = "";
-
-        switch(data.State)
-        {
-            case 0:
-                state = "Released";
-                break;
-            case 1:
-                state = "Pressed";
-                break;
-            case 2:
-                state = "Held";
-                break;
-        }
-
-        std::cout << data.Keycode << " | " << state << "\n";
-    }
-
     void Application::Run()
     {
         //TODO: make a system to automatically recognise monitor size and scale correctly
@@ -44,8 +24,7 @@ namespace Bed
         instance.RegisterContext(poller);
         Bed::Input* input = instance.GetContext<Bed::Input>();
         input->Init();
-        input->InputEvent.Subscribe(Bed::TestEvent);
-
+        
         //Game Loop
         while (IsWindowOpen())
         {

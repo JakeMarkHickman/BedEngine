@@ -7,6 +7,7 @@
 #include <Components/LightSources/SpotLight.h>
 #include <Components/LightSources/DirectionalLight.h>
 #include <Components/Camera.h>
+#include <Components/Velocity.h>
 #include <Bed/Game/World/GameObjects/Components/PlayerController.h>
 
 #include <Systems/StaticMeshSystem.h>
@@ -15,6 +16,7 @@
 #include <Systems/LightSources/SpotLightSystem.h>
 #include <Systems/LightSources/DirectionalLightSystem.h>
 #include <Systems/CameraSystem.h>
+#include <Systems/MovementSystem.h>
 #include <Bed/Game/World/GameObjects/Systems/PlayerControllerSystem.h>
 
 Bed::World::World()
@@ -62,15 +64,14 @@ Bed::World::World()
     ecs.AttachComponents(Point3, Bed::Transform(Bed::Vector3(2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
                                 Bed::PointLight(Bed::Vector3(0.2f, 0.0f, 1.0f), 1.0f, 1.0f));
 
-    //testEvent.Subscribe([this](Bed::Vector3 value) { this->TestString(value); });
-
+    ecs.AddSystem(Bed::PlayerControllerSystem);
+    ecs.AddSystem(Bed::MovementSystem);
     ecs.AddSystem(Bed::StaticMeshSystem);
     ecs.AddSystem(Bed::AmbientLightSystem);
     ecs.AddSystem(Bed::PointLightSystem);
     ecs.AddSystem(Bed::SpotLightSystem);
     ecs.AddSystem(Bed::DirectionalLightSystem);
     ecs.AddSystem(Bed::CameraSystem);
-    ecs.AddSystem(Bed::PlayerControllerSystem);
 }
 
 Bed::World::~World()

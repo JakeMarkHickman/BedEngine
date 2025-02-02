@@ -5,7 +5,7 @@
 #include <Bed/Core.h>
 #include <Bed/Game/Game.h>
 
-#include <Bed/ContextRegistry/ContextRegisrty.h>
+#include <Bed/ContextRegistry/ContextRegistry.h>
 
 namespace Bed
 {

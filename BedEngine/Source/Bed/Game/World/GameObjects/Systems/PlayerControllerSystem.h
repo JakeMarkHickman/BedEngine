@@ -2,22 +2,85 @@
 
 #include <Bed/Game/World/GameObjects/Components/PlayerController.h>
 #include <Bed/Input/Input.h>
+#include <Bed/ContextRegistry/ContextRegistry.h>
+#include <Components/Velocity.h>
 
 namespace Bed
 {
-    void MoveForward(Bed::InputData data)
-    {
-        
-    };
-
     void PlayerControllerSystem(Bed::ECS& ecs, float deltaTime)
     {
-        for(int i = 0; ecs.GetAllEntities().size() > i; i++)
-        {
-            if(ecs.HasComponents<Bed::PlayerController>(i))
-            {
+        static bool DoOnce = false;
 
+        if(DoOnce)
+            return;
+
+        DoOnce = true;
+
+        Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
+        Bed::Input* input = instance.GetContext<Bed::Input>();
+
+        input->InputEvent.Subscribe([&ecs](Bed::InputData data){
+
+            for(int i = 0; ecs.GetAllEntities().size() > i; i++)
+            {
+                if(ecs.HasComponents<Bed::PlayerController>(i))
+                {
+                    if(!ecs.HasComponents<Bed::Velocity>(i))
+                    {
+                        ecs.AttachComponents(i, Bed::Velocity(0.0f));
+                    }
+
+                    Bed::Velocity* vel = ecs.GetComponent<Bed::Velocity>(i);
+
+                    if (data.Keycode == GLFW_KEY_W)
+                    {
+                        if(data.State == KeyState::Press)
+                        {
+                            vel->Direction += Bed::Vector3(0.0f, 0.0f, 5.0f);
+                        }
+                        else if(data.State == KeyState::Released)
+                        {
+                            vel->Direction -= Bed::Vector3(0.0f, 0.0f, 5.0f);
+                        }
+                    }
+
+                    if (data.Keycode == GLFW_KEY_A)
+                    {
+                        if(data.State == KeyState::Press)
+                        {
+                            vel->Direction += Bed::Vector3(-5.0f, 0.0f, 0.0f);
+                        }
+                        else if(data.State == KeyState::Released)
+                        {
+                            vel->Direction -= Bed::Vector3(-5.0f, 0.0f, 0.0f);
+                        }
+                    }
+
+                    if (data.Keycode == GLFW_KEY_S)
+                    {
+                        if(data.State == KeyState::Press)
+                        {
+                            vel->Direction += Bed::Vector3(0.0f, 0.0f, -5.0f);
+                        }
+                        else if(data.State == KeyState::Released)
+                        {
+                            vel->Direction -= Bed::Vector3(0.0f, 0.0f, -5.0f);
+                        }
+                    }
+
+                    if (data.Keycode == GLFW_KEY_D)
+                    {
+                        if(data.State == KeyState::Press)
+                        {
+                            vel->Direction += Bed::Vector3(5.0f, 0.0f, 0.0f);
+                        }
+                        else if(data.State == KeyState::Released)
+                        {
+                            vel->Direction -= Bed::Vector3(5.0f, 0.0f, 0.0f);
+                        }
+                    }
+                }
             }
-        }
+        });
     };
 }
