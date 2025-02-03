@@ -90,8 +90,9 @@ bool Bed::World::LoadWorld(std::string path)
     }
     
 
-    std::cout << "World name: " << jsonWorld["World"]["Entities"][0]["Name"] << "\n";
 
+    m_LoadedWorldName = jsonWorld["World"]["WorldName"];
+    std::cout << "Loaded World: " << m_LoadedWorldName << "\n";
     BeginPlay();
     return true;
 }

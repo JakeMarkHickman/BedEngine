@@ -22,6 +22,7 @@ namespace Bed
         void Update(float deltaTime);
 
     private:
+        std::string m_LoadedWorldName;
         Bed::ECS ecs;
     };
 }
