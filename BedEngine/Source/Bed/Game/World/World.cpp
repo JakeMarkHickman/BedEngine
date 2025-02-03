@@ -81,8 +81,19 @@ Bed::World::~World()
 
 bool Bed::World::LoadWorld(std::string path)
 {
+    nlohmann::json jsonWorld = Bed::JsonRW::ReadFromFile(path);
+
+    if(!jsonWorld.contains("World"))
+    {
+        std::cout << path << " is not a world file" << "\n";
+        return false;
+    }
+    
+
+    std::cout << "World name: " << jsonWorld["World"]["Entities"][0]["Name"] << "\n";
+
     BeginPlay();
-    return false;
+    return true;
 }
 
 bool Bed::World::UnloadWorld()

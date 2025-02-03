@@ -72,7 +72,14 @@
         "mutex": "cpp",
         "stop_token": "cpp",
         "thread": "cpp",
-        "*.rh": "cpp"
+        "*.rh": "cpp",
+        "codecvt": "cpp",
+        "map": "cpp",
+        "numeric": "cpp",
+        "ranges": "cpp",
+        "span": "cpp",
+        "valarray": "cpp",
+        "xtree": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

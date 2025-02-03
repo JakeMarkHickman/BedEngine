@@ -22,8 +22,10 @@ GameOutputFile="Playground"                     # No extention as we will set it
 EngineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
 
 #Includes
-GameIncludes="-I$Source -I$Inclusions"
-EngineIncludes="-I$Source -I$Inclusions -I$Dependencies/GLFW/include -I$Dependencies/GLEW/include -I$Dependencies/stb_image -I$Dependencies/glm"
+GameIncludes="-I$Source -I$Inclusions -I$Dependencies/nlohmann"
+EngineIncludes="-I$Source -I$Inclusions -I$Dependencies/GLFW/include
+                -I$Dependencies/GLEW/include -I$Dependencies/stb_image
+                -I$Dependencies/glm -I$Dependencies/nlohmann"
 
 #Libarys
 GameLibs="$buildPath/BedEngine.lib"             # Libs for the game

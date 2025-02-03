@@ -1,5 +1,4 @@
 {
-	// Type of data that is inputed
  	"World" : {
 		"WorldName" : "TestWorld",
 		"Entities" : [
@@ -7,11 +6,11 @@
 				"Name" : "Player",
 				"Components" : {
 					"Bed::Transform" : {
-						"Position" : [0.0, 0.0, 0.0],
+						"Position" : [0.0, 0.0, 5.0],
 						"Rotation" : [0.0, 0.0, 0.0],
 						"Scale" : [1.0, 1.0, 1.0]
 					},
-					"Bed::Render" : {
+					"Bed::StaticMesh" : {
 						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
 					}
 				}
@@ -21,70 +20,65 @@
 				"Parent" : "Player",
 				"Components" : {
 					"Bed::Transform" : {
-						"Position" : [0.0, 1.0, 1.0],
+						"Position" : [0.0, 5.0, -5.0],
 						"Rotation" : [0.0, 0.0, 0.0],
 						"Scale" : [1.0, 1.0, 1.0]
 					},
 					"Bed::Camera" : {
-						"Perspective" : "Bed::RenderType::Projection"
+						"Projection" : "Bed::RenderType::Perspective"
 					}
 				}
 			},
 			{
-				"Name" : "ent1",
+				"Name" : "Ent1",
 				"Components" : {
 					"Bed::Transform" : {
-						"Position" : [3.0, 0.0, -2.0],
+						"Position" : [-2.5, 0.0, 5.0],
 						"Rotation" : [0.0, 0.0, 0.0],
 						"Scale" : [1.0, 1.0, 1.0]
 					},
-					"Bed::Velocity" : {
-						"value" : [0.0, 0.5, 0.0]
-					},
-					"Bed::Render" : {
+					"Bed::StaticMesh" : {
 						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
 					}
 				}
 			},
 			{
-				"Name" : "ent2",
+				"Name" : "Ent2",
 				"Components" : {
 					"Bed::Transform" : {
-						"Position" : [-3.0, 0.0, -2.0],
+						"Position" : [2.5, 0.0, 5.0],
 						"Rotation" : [0.0, 0.0, 0.0],
 						"Scale" : [1.0, 1.0, 1.0]
 					},
-					"Bed::Velocity" : {
-						"value" : [0.0, -0.5, 0.0]
-					},
-					"Bed::Render" : {
+					"Bed::StaticMesh" : {
 						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
 					}
 				}
 			},
 			{
-				"Name" : "ambientLight",
+				"Name" : "Floor",
 				"Components" : {
-					"Bed::AmbientLight" : {
-						"Strength" : 0.1,
-						"Colour" : [1.0, 1.0, 1.0]
+					"Bed::Transform" : {
+						"Position" : [0.0, -2.5, 5.0],
+						"Rotation" : [0.0, 0.0, 0.0],
+						"Scale" : [20.0, 0.5, 20.0]
+					},
+					"Bed::StaticMesh" : {
+						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
 					}
 				}
 			},
 			{
-				"Name" : "pointLight",
+				"Name" : "AmbientLight",
 				"Components" : {
-					"Bed::DiffuseLight" : {
-						"Colour" : [1.0, 0.0, 0.6]
-					}
+					"Bed::AmbientLight" : {}
 				}
 			}
-		]
+		],
 		"Systems" : [
-			"MoveSystem",
-			"RenderSystem",
-			"CameraSystem",
-			"LightingSystem"
+			"StaticMeshSystem",
+			"AmbientLightSystem",
+			"CameraSystem"
 		]
  	}
 }

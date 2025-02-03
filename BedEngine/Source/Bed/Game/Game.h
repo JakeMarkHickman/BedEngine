@@ -9,7 +9,9 @@ namespace Bed
     class Game
     {
     public:
-        Game() {};
+        Game() {
+            m_World.LoadWorld("Assets/Worlds/TestWorld.world");
+        };
         ~Game() {};
 
         std::string GetCurrentLoadedWorld() { return "m_World"; };
