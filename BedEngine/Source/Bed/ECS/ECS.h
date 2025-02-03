@@ -36,6 +36,7 @@ namespace Bed
         //             COMPONENT           //
         /////////////////////////////////////
 
+        //TODO: This causes a break on exeption when on more than 1000 entites
         template<typename... Components>
         void AttachComponents(uint64_t entity, Components... comps)
         {

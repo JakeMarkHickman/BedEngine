@@ -19,7 +19,53 @@
 #include <Systems/MovementSystem.h>
 #include <Bed/Game/World/GameObjects/Systems/PlayerControllerSystem.h>
 
+#include <Bed/Game/World/GameObjects/Systems/Tests/StressTestSystem.h>
+
 Bed::World::World()
+{
+    /*for(int i = 0; i < 10000; i++)
+    {
+        uint64_t ent = ecs.CreateEntity();
+        //ecs.AttachComponents(ent, Bed::Transform(0.0f, 0.0f, 1.0f));
+    }
+
+    ecs.AddSystem(Bed::StressTestSystem);*/
+}
+
+Bed::World::~World()
+{
+    ecs.RemoveAllSystems();
+}
+
+bool Bed::World::LoadWorld(std::string path)
+{
+    nlohmann::json jsonWorld = Bed::JsonRW::ReadFromFile(path);
+
+    if(!jsonWorld.contains("World"))
+    {
+        std::cout << path << " is not a world file" << "\n";
+        return false;
+    }
+    
+
+
+    m_LoadedWorldName = jsonWorld["World"]["WorldName"];
+    std::cout << "Loaded World: " << m_LoadedWorldName << "\n";
+    BeginPlay();
+    return true;
+}
+
+bool Bed::World::UnloadWorld()
+{
+    return false;
+}
+
+bool Bed::World::IsWorldLoaded()
+{
+    return false;
+}
+
+void Bed::World::BeginPlay()
 {
     uint64_t Player = ecs.CreateEntity();
     ecs.AttachComponents(Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
@@ -72,44 +118,6 @@ Bed::World::World()
     ecs.AddSystem(Bed::SpotLightSystem);
     ecs.AddSystem(Bed::DirectionalLightSystem);
     ecs.AddSystem(Bed::CameraSystem);
-}
-
-Bed::World::~World()
-{
-    ecs.RemoveAllSystems();
-}
-
-bool Bed::World::LoadWorld(std::string path)
-{
-    nlohmann::json jsonWorld = Bed::JsonRW::ReadFromFile(path);
-
-    if(!jsonWorld.contains("World"))
-    {
-        std::cout << path << " is not a world file" << "\n";
-        return false;
-    }
-    
-
-
-    m_LoadedWorldName = jsonWorld["World"]["WorldName"];
-    std::cout << "Loaded World: " << m_LoadedWorldName << "\n";
-    BeginPlay();
-    return true;
-}
-
-bool Bed::World::UnloadWorld()
-{
-    return false;
-}
-
-bool Bed::World::IsWorldLoaded()
-{
-    return false;
-}
-
-void Bed::World::BeginPlay()
-{
-
 }
 
 void Bed::World::Update(float deltaTime)
