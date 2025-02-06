@@ -4,6 +4,10 @@
 		"Entities" : [
 			{
 				"Name" : "Player",
+				"Tags" : [
+					"Player",
+					"Entity"
+				],
 				"Components" : {
 					"Bed::Transform" : {
 						"Position" : [0.0, 0.0, 5.0],
@@ -31,6 +35,9 @@
 			},
 			{
 				"Name" : "Ent1",
+				"Tags" : [
+					"Entity"
+				],
 				"Components" : {
 					"Bed::Transform" : {
 						"Position" : [-2.5, 0.0, 5.0],
@@ -44,6 +51,9 @@
 			},
 			{
 				"Name" : "Ent2",
+				"Tags" : [
+					"Entity"
+				],
 				"Components" : {
 					"Bed::Transform" : {
 						"Position" : [2.5, 0.0, 5.0],

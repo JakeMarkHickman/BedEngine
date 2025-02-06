@@ -46,6 +46,8 @@ bool Bed::World::LoadWorld(std::string path)
         std::cout << path << " is not a world file" << "\n";
         return false;
     }
+
+    
     
 
 
