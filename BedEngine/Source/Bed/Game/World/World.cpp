@@ -23,13 +23,17 @@
 
 Bed::World::World()
 {
-    /*for(int i = 0; i < 10000; i++)
+    uint64_t Camera = ecs.CreateEntity();
+    ecs.AttachComponents(Camera, Bed::Transform(Bed::Vector3(0.0f, 5.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+                                 Bed::Camera(Bed::ProjectionType::Perspective));
+
+    for(int i = 0; i < 1000; i++)
     {
         uint64_t ent = ecs.CreateEntity();
-        //ecs.AttachComponents(ent, Bed::Transform(0.0f, 0.0f, 1.0f));
+        ecs.AttachComponents(ent, Bed::Transform(0.0f, 0.0f, 1.0f));
     }
 
-    ecs.AddSystem(Bed::StressTestSystem);*/
+    ecs.AddSystem(Bed::StressTestSystem);
 }
 
 Bed::World::~World()
@@ -47,8 +51,9 @@ bool Bed::World::LoadWorld(std::string path)
         return false;
     }
 
+    //TODO: Register Components to the engine, once registred use to figure out intput :)
     
-    
+    /* Read Data from file */
 
 
     m_LoadedWorldName = jsonWorld["World"]["WorldName"];
@@ -69,7 +74,7 @@ bool Bed::World::IsWorldLoaded()
 
 void Bed::World::BeginPlay()
 {
-    uint64_t Player = ecs.CreateEntity();
+    /*uint64_t Player = ecs.CreateEntity();
     ecs.AttachComponents(Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                  Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                  Bed::PlayerController());
@@ -119,7 +124,7 @@ void Bed::World::BeginPlay()
     ecs.AddSystem(Bed::PointLightSystem);
     ecs.AddSystem(Bed::SpotLightSystem);
     ecs.AddSystem(Bed::DirectionalLightSystem);
-    ecs.AddSystem(Bed::CameraSystem);
+    ecs.AddSystem(Bed::CameraSystem);*/
 }
 
 void Bed::World::Update(float deltaTime)

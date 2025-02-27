@@ -26,6 +26,7 @@ void Bed::VertexBuffer::Unbind() const
 
 void Bed::VertexBuffer::PopulateBuffer(const void* verts, unsigned int size, unsigned int offset)
 {
+    std::cout << size << "\n";
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_RendererID));
     GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset, size, verts));
 }

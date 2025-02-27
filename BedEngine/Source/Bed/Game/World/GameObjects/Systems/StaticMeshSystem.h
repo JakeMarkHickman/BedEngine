@@ -21,6 +21,8 @@ namespace Bed
         std::vector<Bed::Vertex> allVerts;  // Collect all vertices for dynamic allocation
         std::vector<unsigned int> allIndices;  // Collect all indices for dynamic allocation
 
+        //TODO: memeory pool 
+
         for(int i = 0; ecs.GetAllEntities().size() > i; i++)
         {
             if (ecs.HasComponents<Bed::StaticMesh>(i))

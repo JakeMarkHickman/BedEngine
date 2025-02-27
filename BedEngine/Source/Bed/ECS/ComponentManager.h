@@ -11,6 +11,9 @@ namespace Bed
     class ComponentManager
     {
     public:
+        //TODO: Look into archietypes
+        //TODO: query system 
+
         template<typename Component>
         void AttachComponent(uint64_t entity, Component comp)
         {
@@ -22,7 +25,7 @@ namespace Bed
                 compID = RegisterComponent(hashCode);
 
                 // MemoryPool needs to be constructed inside the vector as moving data causes a crash
-                m_ComponentPool.emplace_back(sizeof(Component), 1000); //TODO: Scale this with the amount of entities available
+                m_ComponentPool.emplace_back(sizeof(Component), 10001); //TODO: Scale this with the amount of entities available
 
                 Bed::SparseSet<void*> newCompSet;
                 m_EntityComponents.emplace_back(newCompSet); 

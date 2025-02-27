@@ -140,7 +140,7 @@ namespace Bed
 
             glfwMakeContextCurrent(window);
 
-            glfwSwapInterval(1); //Framerate
+            glfwSwapInterval(0); //Framerate
 
             if(glewInit() != GLEW_OK)
             {
@@ -162,8 +162,8 @@ namespace Bed
 
             //Vertex array object
             va3D = new Bed::VertexArray();
-            vb3D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
-            ib3D = new Bed::IndexBuffer(4000);
+            vb3D = new Bed::VertexBuffer(30000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
+            ib3D = new Bed::IndexBuffer(40000);
 
             //TODO: Make this dynamic
             struct PointData
