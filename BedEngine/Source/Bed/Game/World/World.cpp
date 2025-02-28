@@ -61,7 +61,7 @@ bool Bed::World::LoadWorld(std::string path)
 
         for(const nlohmann::json entityJson : jsonWorld["World"]["Entities"])
         {
-            uint64_t entity = ecs.CreateEntity();
+            //uint64_t entity = ecs.CreateEntity();
 
             if(entityJson.contains("Name"))
             {
@@ -69,10 +69,12 @@ bool Bed::World::LoadWorld(std::string path)
             }
 
             //Load Components
-            if(entityJson.contains("Components"))
+            if(entityJson.contains("Components") && entityJson["Components"].is_object())
             {
-                size_t componentCount = entityJson["Components"].size();
-                std::cout << entityJson["Name"] << " has " << componentCount << " component(s)" << "\n";
+                for(const auto& [componentName, componentData] : entityJson["Components"].items())
+                {
+                    std::cout << entityJson["Name"] << " has a " << componentName << " component" << "\n";
+                }
             }
         }
     }
