@@ -62,7 +62,7 @@ EcsCpps="$Bed/ECS/ComponentManager.cpp $Bed/ECS/EntityManager.cpp"
 MathCpp="$Math/Matrix/Matrix3x3.cpp"
 
 EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
-            $App/DeltaTime.cpp
+            $App/Time.cpp
             $GraphicsCpp
             $ToolsCpp 
             $GameObjectsCpp

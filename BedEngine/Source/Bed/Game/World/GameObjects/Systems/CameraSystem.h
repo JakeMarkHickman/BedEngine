@@ -4,7 +4,7 @@
 
 namespace Bed
 {
-    void CameraSystem(Bed::ECS& ecs, float deltaTime)
+    void CameraSystem(Bed::ECS& ecs)
     {
         glm::mat4 vp;
         glm::mat4 model;

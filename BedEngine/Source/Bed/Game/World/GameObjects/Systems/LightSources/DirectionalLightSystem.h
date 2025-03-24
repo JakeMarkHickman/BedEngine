@@ -16,7 +16,7 @@ namespace Bed
         float Padding3;
     };
 
-    void DirectionalLightSystem(Bed::ECS& ecs, float deltaTime)
+    void DirectionalLightSystem(Bed::ECS& ecs)
     {
         std::vector<Bed::DirectionalData> directionalData;
 

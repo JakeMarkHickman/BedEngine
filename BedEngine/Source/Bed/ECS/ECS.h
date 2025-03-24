@@ -8,7 +8,7 @@ namespace Bed
 {
     class ECS;
 
-    using SystemFunc = void (*)(ECS&, float);
+    using SystemFunc = void (*)(ECS&);
 
     class BED_API ECS
     {
@@ -77,6 +77,8 @@ namespace Bed
         //             SYSTEMS             //
         /////////////////////////////////////
 
+        //TODO: Systems should push any changed variables to a buffer to change after all systems have done their work
+
         void AddSystem(SystemFunc systemToAdd)
         {
             //TODO: check for pre-existing systems
@@ -94,11 +96,11 @@ namespace Bed
             m_Systems.clear();
         };
 
-        void UpdateSystems(float DeltaTime)
+        void UpdateSystems()
         {
             for(SystemFunc& Syst : m_Systems)
             {
-                Syst(*this, DeltaTime);
+                Syst(*this);
             }
         };
 

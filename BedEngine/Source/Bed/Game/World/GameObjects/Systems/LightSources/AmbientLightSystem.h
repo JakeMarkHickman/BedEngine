@@ -5,7 +5,7 @@
 
 namespace Bed
 {
-    void AmbientLightSystem(Bed::ECS& ecs, float deltaTime)
+    void AmbientLightSystem(Bed::ECS& ecs)
     {
         for(int i = 0; ecs.GetAllEntities().size() > i; i++)
         {

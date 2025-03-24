@@ -19,7 +19,7 @@ namespace Bed
         float padding3[2];
     };
 
-    void PointLightSystem(Bed::ECS& ecs, float deltaTime)
+    void PointLightSystem(Bed::ECS& ecs)
     {
         std::vector<Bed::PointData> pointData;
 

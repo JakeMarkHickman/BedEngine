@@ -150,7 +150,7 @@ void Bed::World::BeginPlay()
     ecs.AddSystem(Bed::CameraSystem);
 }
 
-void Bed::World::Update(float deltaTime)
+void Bed::World::Update()
 {
-    ecs.UpdateSystems(deltaTime);
+    ecs.UpdateSystems();
 }

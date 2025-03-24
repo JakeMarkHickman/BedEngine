@@ -4,9 +4,11 @@
 #include <Math/Vector/VectorMath.h>
 #include <Components/Velocity.h>
 
+#include <App/Time.h>
+
 namespace Bed
 {
-    void MovementSystem(Bed::ECS& ecs, float deltaTime)
+    void MovementSystem(Bed::ECS& ecs)
     {
         for(int i = 0; ecs.GetAllEntities().size() > i; i++)
         {
@@ -18,7 +20,7 @@ namespace Bed
                 Bed::Vector3 nomalisedDirection = Bed::VectorMath::Normalise(velocity->Direction);
 
                 //TODO: make this not use normalised velocity
-                transform->Position += nomalisedDirection * 5.0f * deltaTime;
+                transform->Position += nomalisedDirection * 5.0f * Bed::Time::GetDeltaTime();
             }
         }
     }

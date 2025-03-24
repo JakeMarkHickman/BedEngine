@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DeltaTime.h"
+#include "Time.h"
 
 #include <Bed/Core.h>
 #include <Bed/Game/Game.h>
@@ -44,7 +44,7 @@ namespace Bed
         void Update();
 
         Bed::Game m_Game;
-        Bed::DeltaTime m_DeltaTime;
+        Bed::Time m_Time;
     }; 
 
     Application* CreateApplication();

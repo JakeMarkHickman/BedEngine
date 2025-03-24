@@ -7,7 +7,7 @@
 
 namespace Bed
 {
-    void PlayerControllerSystem(Bed::ECS& ecs, float deltaTime)
+    void PlayerControllerSystem(Bed::ECS& ecs)
     {
         static bool DoOnce = false;
 

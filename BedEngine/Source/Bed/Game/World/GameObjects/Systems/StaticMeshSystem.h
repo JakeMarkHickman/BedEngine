@@ -11,7 +11,7 @@
 
 namespace Bed
 {
-    void StaticMeshSystem(Bed::ECS& ecs, float deltaTime)
+    void StaticMeshSystem(Bed::ECS& ecs)
     {
         unsigned int totalVertsBefore = 0;
         unsigned int totalIndicesBefore = 0;

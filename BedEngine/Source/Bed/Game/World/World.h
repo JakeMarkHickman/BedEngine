@@ -19,7 +19,7 @@ namespace Bed
         bool IsWorldLoaded();
 
         void BeginPlay();
-        void Update(float deltaTime);
+        void Update();
 
     private:
         std::string m_LoadedWorldName;

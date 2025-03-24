@@ -23,7 +23,7 @@ namespace Bed
         float padding4[4];
     };
 
-    void SpotLightSystem(Bed::ECS& ecs, float deltaTime)
+    void SpotLightSystem(Bed::ECS& ecs)
     {
         std::vector<Bed::SpotData> spotData;
 

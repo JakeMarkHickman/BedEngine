@@ -4,7 +4,7 @@
 
 namespace Bed
 {
-    void StressTestSystem(ECS& ecs, float deltaTime)
+    void StressTestSystem(ECS& ecs)
     {
         for(int i = 0; i < ecs.GetAllEntities().size() > i; i++)
         {

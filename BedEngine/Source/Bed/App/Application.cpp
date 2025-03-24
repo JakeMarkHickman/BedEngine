@@ -28,11 +28,11 @@ namespace Bed
         //Game Loop
         while (IsWindowOpen())
         {
-            float delta = m_DeltaTime.CalculateDeltaTime();
+            m_Time.CalculateDeltaTime();
 
-            //std::cout << delta << "\n";
+            //std::cout << Time::GetDeltaTime() << "\n";
 
-            m_Game.Update( delta );
+            m_Game.Update();
             UpdateWindow(); // Update the platform App
         }
         

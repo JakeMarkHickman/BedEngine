@@ -17,7 +17,7 @@ namespace Bed
         std::string GetCurrentLoadedWorld() { return "m_World"; };
         Bed::GameSession GetGameSession() { return m_GameSession; };
 
-        void Update(float deltaTime) { m_World.Update(deltaTime); };
+        void Update() { m_World.Update(); };
 
     private:
         Bed::GameSession m_GameSession;
