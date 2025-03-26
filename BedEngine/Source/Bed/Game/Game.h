@@ -9,7 +9,7 @@
 #include <Components/Camera.h>
 #include <Components/StaticMesh.h>
 
-#include <Systems/CameraSystem.h>
+//#include <Systems/CameraSystem.h>
 #include <Systems/StaticMeshSystem.h>
 
 //This file will not be able to be edited. This is an overhead for worlds and events can be sent between game session and world
@@ -32,7 +32,7 @@ namespace Bed
             uint64_t w2ent1 = m_ecs.CreateEntity(world2);
             uint64_t w2ent2 = m_ecs.CreateEntity(world2);
 
-            m_ecs.AddSystem(world1, Bed::CameraSystem);
+            //m_ecs.AddSystem(world1, Bed::CameraSystem);
             m_ecs.AddSystem(world1, Bed::StaticMeshSystem);
 
             std::cout << world1 << ": world ID. " << w1ent2 << ": EntityID\n";

@@ -2,7 +2,7 @@
 
 #include <Components/Camera.h>
 
-//#include <Graphics/GraphicVariables.h>
+#include <Graphics/GraphicVariables.h> // without this error: use of undeclared identifier 'shader3D' shader3D->Bind();
 
 namespace Bed
 {
