@@ -1,7 +1,5 @@
 #include "Time.h"
 
-#include <iostream>
-
 void Bed::Time::CalculateDeltaTime()
 {
     if(m_LastTimePoint == std::chrono::time_point<std::chrono::steady_clock>()) // check if m_LastTimePoint is initialised

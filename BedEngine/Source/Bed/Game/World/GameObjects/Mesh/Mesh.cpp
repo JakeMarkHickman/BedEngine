@@ -1,6 +1,4 @@
 #include "Mesh.h"
-
-#include <iostream>
 #include <fstream>
 #include <string>
 #include <Bed/Tools/StringSearcher.h>

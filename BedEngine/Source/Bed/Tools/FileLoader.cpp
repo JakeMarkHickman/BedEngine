@@ -1,12 +1,11 @@
 #include "FileLoader.h"
 
-#include <iostream>
 #include <fstream>
 #include <string>
 
 std::string Bed::FileLoader::GetFileContents(const std::filesystem::path& path)
 {
-    std::cout << "Loading data from " << path << std::endl;
+    //std::cout << "Loading data from " << path << std::endl;
 
     std::string line;
     std::string data;
@@ -22,10 +21,10 @@ std::string Bed::FileLoader::GetFileContents(const std::filesystem::path& path)
     }
     else
     {
-        std::cout << "Unable to open file" << std::endl;
+        //std::cout << "Unable to open file" << std::endl;
     }
 
-    std::cout << data;
+    //std::cout << data;
 
     return data;
 }

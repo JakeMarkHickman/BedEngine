@@ -5,7 +5,6 @@
 #include <Math/Vector.h>
 #include <Math/Transform.h>
 
-#include <iostream>
 #include <vector>
 
 namespace Bed

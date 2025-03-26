@@ -15,7 +15,7 @@ namespace Bed
             std::ifstream inputFile(path);
             if(!inputFile.is_open())
             {
-                std::cout << "File path: " << path << " could not be read" << "\n";
+                //std::cout << "File path: " << path << " could not be read" << "\n";
                 return jsonObj;
             }
 
@@ -26,7 +26,7 @@ namespace Bed
             }
             catch(const std::exception& e)
             {
-                std::cerr << e.what() << '\n';
+                //std::cerr << e.what() << '\n';
             }
 
             return jsonObj;

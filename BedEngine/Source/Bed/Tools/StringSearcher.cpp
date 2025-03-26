@@ -1,7 +1,5 @@
 #include "StringSearcher.h"
 
-#include <iostream>
-
 std::string Bed::StringSearcher::Disjunction(std::string* strings, int size)
 {
     std::string disjunction;

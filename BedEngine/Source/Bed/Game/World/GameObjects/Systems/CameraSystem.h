@@ -2,9 +2,11 @@
 
 #include <Components/Camera.h>
 
+//#include <Graphics/GraphicVariables.h>
+
 namespace Bed
 {
-    void CameraSystem(Bed::ECS& ecs)
+    void CameraSystem(Bed::World& ecs)
     {
         glm::mat4 vp;
         glm::mat4 model;

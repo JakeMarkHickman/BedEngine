@@ -26,6 +26,8 @@ namespace Bed
 
             m_CurrentFlag = UseGraphicsPipeline(Pipeline);
 
+            
+
             switch (m_CurrentFlag)
             {
             case GraphicsAPI::OpenGL:

@@ -1,5 +1,4 @@
 #include "MemoryPool.h"
-#include <iostream>
 
 Bed::MemoryPool::MemoryPool(size_t chunkSize, size_t chunkCount) : m_ChunkSize(chunkSize), m_ChunkCount(chunkCount)
 {

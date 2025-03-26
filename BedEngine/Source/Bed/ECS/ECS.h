@@ -1,113 +1,39 @@
 #pragma once
 
-#include "EntityManager.h"
-#include "ComponentManager.h"
-#include <Bed/Core.h>
+#include "World.h"
+#include "unordered_map"
+
+#include <Tools/Memory/MemoryPool.h>
 
 namespace Bed
 {
-    class ECS;
-
-    using SystemFunc = void (*)(ECS&);
-
-    class BED_API ECS
+    class ECS
     {
     public:
-        ECS() {};
+        ECS() { m_WorldPool = new Bed::MemoryPool(sizeof(Bed::World), 10); }; //TODO: Why am i using a vector?
         ~ECS() {};
 
-        /////////////////////////////////////
-        //              ENTITY             //
-        /////////////////////////////////////
+        uint64_t CreateWorld();
+        void RemoveWorld(uint64_t worldID);
 
-        uint64_t CreateEntity()
-        {
-            return m_EntityManager.CreateEntity();
-        }
-
-        std::vector<uint64_t> GetAllEntities()
-        {
-            return m_EntityManager.GetAllEntities();
-        }
-        
-
-
-        /////////////////////////////////////
-        //             COMPONENT           //
-        /////////////////////////////////////
-
-        //TODO: This causes a break on exeption when on more than 1000 entites
-        template<typename... Components>
-        void AttachComponents(uint64_t entity, Components... comps)
-        {
-            ([&]{
-                m_CompManager.AttachComponent(entity, comps);
-            }(), ...);
-        }
+        uint64_t CreateEntity(uint64_t worldID);
+        void DestroyEntity(uint64_t worldID, uint64_t entityID);
 
         template<typename... Components>
-        void RemoveComponents(uint64_t entity)
+        void AttachComponents(uint64_t worldID, uint64_t entityID, Components... comps)
         {
-            ([&]{
-                m_CompManager.RemoveComponent<Components>(entity);
-            }(), ...);
+            m_WorldRegistry[worldID]->AttachComponents(entityID, std::forward<Components>(comps)...);
         }
 
-        template<typename... Components>
-        bool HasComponents(uint64_t entity)
-        {
-            bool result = true;
-            ([&]{
-                if(!m_CompManager.HasComponent<Components>(entity))
-                {
-                    result = false;
-                }
-            }(), ...);
-
-            return result;
-        }
-
-        template<typename Component>
-        Component* GetComponent(uint64_t entity)
-        {
-            return m_CompManager.GetComponent<Component>(entity);
-        }
-
-        /////////////////////////////////////
-        //             SYSTEMS             //
-        /////////////////////////////////////
-
-        //TODO: Systems should push any changed variables to a buffer to change after all systems have done their work
-
-        void AddSystem(SystemFunc systemToAdd)
-        {
-            //TODO: check for pre-existing systems
-            m_Systems.push_back(systemToAdd);
-        };
-
-        void RemoveSystem(SystemFunc systemToRemove)
-        {
-            //TODO: check to see if system exists
-            // no need to delete function pointer
-        };
-
-        void RemoveAllSystems()
-        {
-            m_Systems.clear();
-        };
-
-        void UpdateSystems()
-        {
-            for(SystemFunc& Syst : m_Systems)
-            {
-                Syst(*this);
-            }
-        };
+        void AddSystem(uint64_t worldID, std::function<void(Bed::World&)> systemToAdd);
+        void RemoveSystem(uint64_t worldID, std::function<void(Bed::World&)> systemToRemove);
+        void RemoveAllSystems(uint64_t worldID);
+        void UpdateSystems();
 
     private:
 
-        Bed::EntityManager m_EntityManager;
-        Bed::ComponentManager m_CompManager;
-        std::vector<SystemFunc> m_Systems;
+        std::unordered_map<uint64_t, Bed::World*> m_WorldRegistry;
+        Bed::MemoryPool* m_WorldPool;
+        int64_t m_NextId = 0;
     };
 }

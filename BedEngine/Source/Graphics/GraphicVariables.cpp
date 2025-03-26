@@ -3,27 +3,27 @@
 namespace Bed
 {
     //3D
-    extern Bed::Shader* shader3D = nullptr;
-    extern Bed::VertexBuffer* vb3D = nullptr;
-    extern Bed::IndexBuffer* ib3D = nullptr;
-    extern Bed::VertexArray* va3D = nullptr;
-    extern Bed::StorageBuffer* pointLightBuffer = nullptr;
-    extern Bed::StorageBuffer* directionalLightBuffer = nullptr;
-    extern Bed::StorageBuffer* spotLightBuffer = nullptr;
+    Bed::Shader* shader3D = nullptr;
+    Bed::VertexBuffer* vb3D = nullptr;
+    Bed::IndexBuffer* ib3D = nullptr;
+    Bed::VertexArray* va3D = nullptr;
+    Bed::StorageBuffer* pointLightBuffer = nullptr;
+    Bed::StorageBuffer* directionalLightBuffer = nullptr;
+    Bed::StorageBuffer* spotLightBuffer = nullptr;
 
     //2D
-    extern Bed::Shader* shader2D = nullptr;
-    extern Bed::VertexBuffer* vb2D = nullptr;
-    extern Bed::IndexBuffer* ib2D = nullptr;
-    extern Bed::VertexArray* va2D = nullptr;
+    Bed::Shader* shader2D = nullptr;
+    Bed::VertexBuffer* vb2D = nullptr;
+    Bed::IndexBuffer* ib2D = nullptr;
+    Bed::VertexArray* va2D = nullptr;
 
     //UI
-    extern Bed::Shader* shaderUI = nullptr;
-    extern Bed::VertexBuffer* vbUI = nullptr;
-    extern Bed::IndexBuffer* ibUI = nullptr;
-    extern Bed::VertexArray* vaUI = nullptr;
+    Bed::Shader* shaderUI = nullptr;
+    Bed::VertexBuffer* vbUI = nullptr;
+    Bed::IndexBuffer* ibUI = nullptr;
+    Bed::VertexArray* vaUI = nullptr;
 
     //shared
-    extern Bed::Renderer* renderer = nullptr;
-    extern Bed::Texture* texture = nullptr;
+    Bed::Renderer* renderer = nullptr;
+    Bed::Texture* texture = nullptr;
 }

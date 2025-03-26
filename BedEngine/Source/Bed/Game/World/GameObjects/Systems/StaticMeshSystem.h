@@ -11,7 +11,7 @@
 
 namespace Bed
 {
-    void StaticMeshSystem(Bed::ECS& ecs)
+    void StaticMeshSystem(Bed::World& ecs)
     {
         unsigned int totalVertsBefore = 0;
         unsigned int totalIndicesBefore = 0;

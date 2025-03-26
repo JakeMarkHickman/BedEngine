@@ -22,7 +22,7 @@ GameOutputFile="Playground"                     # No extention as we will set it
 EngineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
 
 #Includes
-GameIncludes="-I$Source -I$Inclusions -I$Dependencies/nlohmann"
+GameIncludes="-I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/glm -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include"
 EngineIncludes="-I$Source -I$Inclusions -I$Dependencies/GLFW/include
                 -I$Dependencies/GLEW/include -I$Dependencies/stb_image
                 -I$Dependencies/glm -I$Dependencies/nlohmann"
@@ -55,9 +55,9 @@ MetalCpp=""
 
 ToolsCpp="$Tools/FileLoader.cpp $Tools/StringSearcher.cpp $Tools/Memory/MemoryPool.cpp"
 
-GameObjectsCpp="$Game/World/GameObjects/Mesh/Mesh.cpp $Game/World/World.cpp"
+GameObjectsCpp="$Game/World/GameObjects/Mesh/Mesh.cpp"
 
-EcsCpps="$Bed/ECS/ComponentManager.cpp $Bed/ECS/EntityManager.cpp"
+EcsCpps="$Bed/ECS/ECS.cpp $Bed/ECS/ComponentManager.cpp $Bed/ECS/EntityManager.cpp $Bed/ECS/World.cpp"
 
 MathCpp="$Math/Matrix/Matrix3x3.cpp"
 
@@ -102,6 +102,8 @@ else
     # Set Variables
     EngineLibs="$EngineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
     GamePredef="$GamePredef -DBED_WINDOWS_PLATFORM"
+
+    GameFlags="$GameFlags -Wl,/subsystem:console"
     
     EnginePredef="$EnginePredef -DBED_WINDOWS_PLATFORM -DGLEW_STATIC"
     GameOutputFile="$GameOutputFile.exe"

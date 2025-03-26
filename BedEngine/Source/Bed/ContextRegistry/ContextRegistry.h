@@ -75,7 +75,7 @@ namespace Bed
 
             if(!IsContextRegistered(contextIndex))
             {
-                std::cout << "Context " << contextIndex.name() << " doesn't exist" << "\n";
+                //std::cout << "Context " << contextIndex.name() << " doesn't exist" << "\n";
                 return nullptr;
             }
 
