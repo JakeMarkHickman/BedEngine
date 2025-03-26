@@ -16,15 +16,15 @@ namespace Bed
         float Padding3;
     };
 
-    void DirectionalLightSystem(Bed::ECS& ecs)
+    void DirectionalLightSystem(Bed::World& world)
     {
         std::vector<Bed::DirectionalData> directionalData;
 
-        for(int i = 0; ecs.GetAllEntities().size() > i; i++)
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(ecs.HasComponents<Bed::DirectionalLight>(i))
+            if(world.HasComponents<Bed::DirectionalLight>(i))
             {
-                Bed::DirectionalLight* dirLight = ecs.GetComponent<Bed::DirectionalLight>(i);
+                Bed::DirectionalLight* dirLight = world.GetComponent<Bed::DirectionalLight>(i);
 
                 Bed::DirectionalData data;
                     data.Colour = dirLight->Colour;

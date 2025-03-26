@@ -5,13 +5,13 @@
 
 namespace Bed
 {
-    void AmbientLightSystem(Bed::ECS& ecs)
+    void AmbientLightSystem(Bed::World& world)
     {
-        for(int i = 0; ecs.GetAllEntities().size() > i; i++)
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(ecs.HasComponents<Bed::AmbientLight>(i))
+            if(world.HasComponents<Bed::AmbientLight>(i))
             {
-                Bed::AmbientLight* ambient = ecs.GetComponent<Bed::AmbientLight>(i);
+                Bed::AmbientLight* ambient = world.GetComponent<Bed::AmbientLight>(i);
 
                 shader3D->SetUniform1f("u_ambientLightStrength", ambient->Strength);
                 shader3D->SetUniform3f("u_ambientLightColour", ambient->Colour);

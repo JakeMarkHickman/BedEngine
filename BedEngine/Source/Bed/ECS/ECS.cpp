@@ -50,7 +50,7 @@ void Bed::ECS::RemoveAllSystems(uint64_t worldID)
 
 void Bed::ECS::UpdateSystems()
 {
-    for(int i = 0; i < m_WorldRegistry.size() - 1; i++)
+    for(int i = 0; i < m_WorldRegistry.size(); i++)
     {
         m_WorldRegistry[i]->UpdateSystems();
     }

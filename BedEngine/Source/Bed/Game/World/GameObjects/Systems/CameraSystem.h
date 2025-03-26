@@ -1,8 +1,7 @@
 #pragma once
 
 #include <Components/Camera.h>
-
-#include <Graphics/GraphicVariables.h> // without this error: use of undeclared identifier 'shader3D' shader3D->Bind();
+#include <Graphics/GraphicVariables.h>
 
 namespace Bed
 {
