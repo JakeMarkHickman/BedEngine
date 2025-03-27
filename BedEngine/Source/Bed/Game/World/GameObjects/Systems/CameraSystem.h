@@ -5,24 +5,24 @@
 
 namespace Bed
 {
-    void CameraSystem(Bed::World& ecs)
+    void CameraSystem(Bed::World& world)
     {
         glm::mat4 vp;
         glm::mat4 model;
         glm::mat4 proj;
         glm::mat4 view;
-        for(int i = 0; ecs.GetAllEntities().size() > i; i++)
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(ecs.HasComponents<Bed::Camera>(i))
+            if(world.HasComponents<Bed::Camera>(i))
             {
-                Bed::Camera* cam = ecs.GetComponent<Bed::Camera>(i);
+                Bed::Camera* cam = world.GetComponent<Bed::Camera>(i);
 
-                if(!ecs.HasComponents<Bed::Transform>(i))
+                if(!world.HasComponents<Bed::Transform>(i))
                 {
-                    ecs.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
+                    world.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
                 }
 
-                Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
+                Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
 
                 //Bind Shader
                 shader3D->Bind();

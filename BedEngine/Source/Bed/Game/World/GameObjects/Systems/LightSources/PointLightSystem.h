@@ -19,22 +19,22 @@ namespace Bed
         float padding3[2];
     };
 
-    void PointLightSystem(Bed::ECS& ecs)
+    void PointLightSystem(Bed::World& world)
     {
         std::vector<Bed::PointData> pointData;
 
-        for(int i = 0; ecs.GetAllEntities().size() > i; i++)
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(ecs.HasComponents<Bed::PointLight>(i))
+            if(world.HasComponents<Bed::PointLight>(i))
             {
-                Bed::PointLight* pointLight = ecs.GetComponent<Bed::PointLight>(i);
+                Bed::PointLight* pointLight = world.GetComponent<Bed::PointLight>(i);
 
-                if(!ecs.HasComponents<Bed::Transform>(i))
+                if(!world.HasComponents<Bed::Transform>(i))
                 {
-                    ecs.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
+                    world.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
                 }
 
-                Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
+                Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
 
                 Bed::PointData data;
                     data.Position = transform->Position;

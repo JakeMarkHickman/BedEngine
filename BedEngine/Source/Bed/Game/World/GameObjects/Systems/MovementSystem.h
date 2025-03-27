@@ -8,14 +8,14 @@
 
 namespace Bed
 {
-    void MovementSystem(Bed::ECS& ecs)
+    void MovementSystem(Bed::World& world)
     {
-        for(int i = 0; ecs.GetAllEntities().size() > i; i++)
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(ecs.HasComponents<Bed::Transform, Bed::Velocity>(i))
+            if(world.HasComponents<Bed::Transform, Bed::Velocity>(i))
             {
-                Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
-                Bed::Velocity* velocity = ecs.GetComponent<Bed::Velocity>(i);
+                Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
+                Bed::Velocity* velocity = world.GetComponent<Bed::Velocity>(i);
 
                 Bed::Vector3 nomalisedDirection = Bed::VectorMath::Normalise(velocity->Direction);
 

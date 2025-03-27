@@ -11,7 +11,7 @@
 
 namespace Bed
 {
-    void StaticMeshSystem(Bed::World& ecs)
+    void StaticMeshSystem(Bed::World& world)
     {
         unsigned int totalVertsBefore = 0;
         unsigned int totalIndicesBefore = 0;
@@ -23,18 +23,18 @@ namespace Bed
 
         //TODO: memeory pool 
 
-        for(int i = 0; ecs.GetAllEntities().size() > i; i++)
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if (ecs.HasComponents<Bed::StaticMesh>(i))
+            if (world.HasComponents<Bed::StaticMesh>(i))
             {
-                Bed::StaticMesh* StaticMesh = ecs.GetComponent<Bed::StaticMesh>(i);
+                Bed::StaticMesh* StaticMesh = world.GetComponent<Bed::StaticMesh>(i);
 
-                if(!ecs.HasComponents<Bed::Transform>(i))
+                if(!world.HasComponents<Bed::Transform>(i))
                 {
-                    ecs.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
+                    world.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
                 }
 
-                Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
+                Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
 
                 const auto& verts = StaticMesh->Mesh.GetVertices();
                 const auto& indices = StaticMesh->Mesh.GetIndices();
@@ -54,6 +54,10 @@ namespace Bed
                 {
                     ind += totalVertsBefore;
                 }
+
+                //TODO: rendering only works in one world at a time as it starts to remove entites from another world
+                //This is probably due to how the buffers work
+                //To combat this systems could operate on every world
 
                 allVerts.insert(allVerts.end(), transformedVerts.begin(), transformedVerts.end());
                 allIndices.insert(allIndices.end(), modifiedIndices.begin(), modifiedIndices.end());

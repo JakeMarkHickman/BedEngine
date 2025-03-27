@@ -4,11 +4,11 @@
 
 namespace Bed
 {
-    void StressTestSystem(ECS& ecs)
+    void StressTestSystem(Bed::World& world)
     {
-        for(int i = 0; i < ecs.GetAllEntities().size() > i; i++)
+        for(int i = 0; i < world.GetAllEntities().size() > i; i++)
         {
-            Bed::Transform* transform = ecs.GetComponent<Bed::Transform>(i);
+            Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
 
             transform->Position += 5.0f;
         }

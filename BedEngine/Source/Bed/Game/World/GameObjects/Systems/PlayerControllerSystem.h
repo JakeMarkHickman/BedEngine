@@ -7,7 +7,7 @@
 
 namespace Bed
 {
-    void PlayerControllerSystem(Bed::ECS& ecs)
+    void PlayerControllerSystem(Bed::World& world)
     {
         static bool DoOnce = false;
 
@@ -19,18 +19,18 @@ namespace Bed
         Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
         Bed::Input* input = instance.GetContext<Bed::Input>();
 
-        input->InputEvent.Subscribe([&ecs](Bed::InputData data){
+        input->InputEvent.Subscribe([&world](Bed::InputData data){
 
-            for(int i = 0; ecs.GetAllEntities().size() > i; i++)
+            for(int i = 0; world.GetAllEntities().size() > i; i++)
             {
-                if(ecs.HasComponents<Bed::PlayerController>(i))
+                if(world.HasComponents<Bed::PlayerController>(i))
                 {
-                    if(!ecs.HasComponents<Bed::Velocity>(i))
+                    if(!world.HasComponents<Bed::Velocity>(i))
                     {
-                        ecs.AttachComponents(i, Bed::Velocity(0.0f));
+                        world.AttachComponents(i, Bed::Velocity(0.0f));
                     }
 
-                    Bed::Velocity* vel = ecs.GetComponent<Bed::Velocity>(i);
+                    Bed::Velocity* vel = world.GetComponent<Bed::Velocity>(i);
 
                     if (data.Keycode == GLFW_KEY_W)
                     {
