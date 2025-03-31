@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Bed/Game/World/GameObjects/Mesh/Mesh.h>
+#include <Bed/Game/GameObjects/Mesh/Mesh.h>
 
 namespace Bed
 {

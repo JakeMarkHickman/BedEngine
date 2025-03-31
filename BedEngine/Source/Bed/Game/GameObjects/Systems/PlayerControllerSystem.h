@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Bed/Game/World/GameObjects/Components/PlayerController.h>
+#include <Bed/Game/GameObjects/Components/PlayerController.h>
 #include <Bed/Input/Input.h>
 #include <Bed/ContextRegistry/ContextRegistry.h>
 #include <Components/Velocity.h>

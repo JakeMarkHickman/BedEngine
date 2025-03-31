@@ -55,7 +55,7 @@ MetalCpp=""
 
 ToolsCpp="$Tools/FileLoader.cpp $Tools/StringSearcher.cpp $Tools/Memory/MemoryPool.cpp"
 
-GameObjectsCpp="$Game/Game.cpp $Game/World/GameObjects/Mesh/Mesh.cpp"
+GameObjectsCpp="$Game/Game.cpp $Game/GameObjects/Mesh/Mesh.cpp $Game/GameObjects/Collision/Collision.cpp"
 
 EcsCpps="$Bed/ECS/ECS.cpp $Bed/ECS/ComponentManager.cpp $Bed/ECS/EntityManager.cpp $Bed/ECS/World.cpp"
 

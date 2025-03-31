@@ -1,3 +1,3 @@
 #pragma once
 
-#include <Bed/Game/World/GameObjects/Components/Camera.h>
+#include <Bed/Game/GameObjects/Components/Camera.h>

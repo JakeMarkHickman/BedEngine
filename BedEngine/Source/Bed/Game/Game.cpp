@@ -7,7 +7,8 @@
 #include <Components/LightSources/DirectionalLight.h>
 #include <Components/LightSources/PointLight.h>
 #include <Components/LightSources/SpotLight.h>
-#include <Bed/Game/World/GameObjects/Components/PlayerController.h>
+#include <Bed/Game/GameObjects/Components/AABBCollision.h>
+#include <Bed/Game/GameObjects/Components/PlayerController.h>
 
 #include <Systems/CameraSystem.h>
 #include <Systems/StaticMeshSystem.h>
@@ -15,8 +16,9 @@
 #include <Systems/LightSources/DirectionalLightSystem.h>
 #include <Systems/LightSources/PointLightSystem.h>
 #include <Systems/LightSources/SpotLightSystem.h>
-#include <Bed/Game/World/GameObjects/Systems/PlayerControllerSystem.h>
-#include <Bed/Game/World/GameObjects/Systems/MovementSystem.h>
+#include <Bed/Game/GameObjects/Systems/AABBCollisionSystem.h>
+#include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
+#include <Bed/Game/GameObjects/Systems/MovementSystem.h>
 
 Bed::Game::Game()
 {
@@ -25,7 +27,8 @@ Bed::Game::Game()
     uint64_t w1Player = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                         Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
-                                        Bed::PlayerController());
+                                        Bed::PlayerController(),
+                                        Bed::AABBCollision(-1.0f, 1.0f));
                                         
     uint64_t w1Camera = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Camera, Bed::Transform(Bed::Vector3(0.0f, 5.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
@@ -34,15 +37,18 @@ Bed::Game::Game()
 
     uint64_t w1Ent1 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Ent1, Bed::Transform(Bed::Vector3(-2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                             Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
+                                             Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
+                                             Bed::AABBCollision(-1.0f, 1.0f));
 
     uint64_t w1Ent2 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Ent2, Bed::Transform(Bed::Vector3(2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                           Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
+                                           Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
+                                           Bed::AABBCollision(-1.0f, 1.0f));
 
     uint64_t w1Floor = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Floor, Bed::Transform(Bed::Vector3(0.0, -2.5, 5.0), Bed::Vector3(0.0f), Bed::Vector3(20.0, 0.5, 20.0)),
-                                           Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
+                                           Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj")/*,
+                                           Bed::AABBCollision(-20.0f, 20.0f)*/);
 
     uint64_t w1Ambient = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Ambient, Bed::AmbientLight());
@@ -74,7 +80,7 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::DirectionalLightSystem);
     m_ecs.AddSystem(world1, Bed::PlayerControllerSystem);
     m_ecs.AddSystem(world1, Bed::MovementSystem);
-
+    m_ecs.AddSystem(world1, Bed::AABBCollisionSystem);
 
     //World 2
     uint64_t world2 = m_ecs.CreateWorld();

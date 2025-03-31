@@ -1,3 +1,3 @@
 #pragma once
 
-#include <Bed/Game/World/GameObjects/Components/LightSources/SpotLight.h>
+#include <Bed/Game/GameObjects/Components/LightSources/SpotLight.h>

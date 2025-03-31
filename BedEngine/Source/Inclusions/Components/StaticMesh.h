@@ -1,3 +1,3 @@
 #pragma once
 
-#include <Bed/Game/World/GameObjects/Components/StaticMesh.h>
+#include <Bed/Game/GameObjects/Components/StaticMesh.h>
