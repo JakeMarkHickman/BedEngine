@@ -79,7 +79,8 @@
         "ranges": "cpp",
         "span": "cpp",
         "valarray": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "collisionstay": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

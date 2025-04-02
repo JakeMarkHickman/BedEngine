@@ -53,7 +53,7 @@ namespace Bed
             uint64_t hashCode = typeid(Component).hash_code();
             uint64_t compID;
 
-            if(!IsComponentRegistered(hashCode))
+            if(!IsComponentRegistered(hashCode) || !HasComponent<Component>(entity))
             {
                 return;
             }

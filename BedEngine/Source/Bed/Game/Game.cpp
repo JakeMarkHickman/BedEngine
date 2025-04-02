@@ -7,7 +7,7 @@
 #include <Components/LightSources/DirectionalLight.h>
 #include <Components/LightSources/PointLight.h>
 #include <Components/LightSources/SpotLight.h>
-#include <Bed/Game/GameObjects/Components/AABBCollision.h>
+#include <Components/Collision/AABBCollision.h>
 #include <Bed/Game/GameObjects/Components/PlayerController.h>
 
 #include <Systems/CameraSystem.h>
@@ -16,9 +16,10 @@
 #include <Systems/LightSources/DirectionalLightSystem.h>
 #include <Systems/LightSources/PointLightSystem.h>
 #include <Systems/LightSources/SpotLightSystem.h>
-#include <Bed/Game/GameObjects/Systems/AABBCollisionSystem.h>
+#include <Systems/Collision/AABBCollisionSystem.h>
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
 #include <Bed/Game/GameObjects/Systems/MovementSystem.h>
+#include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
 
 Bed::Game::Game()
 {
@@ -81,6 +82,10 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::PlayerControllerSystem);
     m_ecs.AddSystem(world1, Bed::MovementSystem);
     m_ecs.AddSystem(world1, Bed::AABBCollisionSystem);
+    m_ecs.AddSystem(world1, Bed::CollisionEnterTestSystem);
+    m_ecs.AddSystem(world1, Bed::CollisionExitTestSystem);
+    m_ecs.AddSystem(world1, Bed::CollisionStayTestSystem);
+    
 
     //World 2
     uint64_t world2 = m_ecs.CreateWorld();
