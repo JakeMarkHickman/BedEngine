@@ -25,5 +25,4 @@ namespace Bed
 
     //shared
     Bed::Renderer* renderer = nullptr;
-    Bed::Texture* texture = nullptr;
 }

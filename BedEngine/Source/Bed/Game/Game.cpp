@@ -8,6 +8,7 @@
 #include <Components/LightSources/PointLight.h>
 #include <Components/LightSources/SpotLight.h>
 #include <Components/Collision/AABBCollision.h>
+#include <Bed/Game/GameObjects/Components/Materials/Material.h>
 #include <Bed/Game/GameObjects/Components/PlayerController.h>
 
 #include <Systems/CameraSystem.h>
@@ -17,6 +18,7 @@
 #include <Systems/LightSources/PointLightSystem.h>
 #include <Systems/LightSources/SpotLightSystem.h>
 #include <Systems/Collision/AABBCollisionSystem.h>
+#include <Bed/Game/GameObjects/Systems/Materials/MaterialSystem.h>
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
 #include <Bed/Game/GameObjects/Systems/MovementSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
@@ -28,6 +30,7 @@ Bed::Game::Game()
     uint64_t w1Player = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                         Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
+                                        Bed::Material("Assets/Resources/Textures/256xWhite.png"),
                                         Bed::PlayerController(),
                                         Bed::AABBCollision(-1.0f, 1.0f));
                                         
@@ -75,6 +78,7 @@ Bed::Game::Game()
 
     m_ecs.AddSystem(world1, Bed::CameraSystem);
     m_ecs.AddSystem(world1, Bed::StaticMeshSystem);
+    m_ecs.AddSystem(world1, Bed::MaterialSystem);
     m_ecs.AddSystem(world1, Bed::AmbientLightSystem);
     m_ecs.AddSystem(world1, Bed::SpotLightSystem);
     m_ecs.AddSystem(world1, Bed::PointLightSystem);

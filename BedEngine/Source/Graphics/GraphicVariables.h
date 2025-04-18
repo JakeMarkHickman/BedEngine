@@ -34,5 +34,4 @@ namespace Bed
 
     //shared
     extern Bed::Renderer* renderer;
-    extern Bed::Texture* texture;
 }

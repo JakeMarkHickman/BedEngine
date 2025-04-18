@@ -1,11 +1,10 @@
 #pragma once
 
 #include <string>
-#include <Bed/Core.h>
 
 namespace Bed
 {
-    class BED_API Texture
+    class Texture
     {
     public:
         Texture(const std::string& path) : m_FilePath(path) {};

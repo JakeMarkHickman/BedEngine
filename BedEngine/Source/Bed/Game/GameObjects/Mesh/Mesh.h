@@ -14,7 +14,6 @@ namespace Bed
     public:
         Mesh(std::string path);
 
-        //TODO: When getting Verts apply a transform
         std::vector<Bed::Vertex> GetVertices() { return m_Vertices; };
         std::vector<unsigned int> GetIndices() { return m_Indices; };
         

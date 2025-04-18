@@ -4,6 +4,7 @@
 
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
+#include <Components/Materials/Material.h>
 
 //TODO: Remove this
 #include <glm.hpp>
@@ -21,8 +22,6 @@ namespace Bed
         std::vector<Bed::Vertex> allVerts;  // Collect all vertices for dynamic allocation
         std::vector<unsigned int> allIndices;  // Collect all indices for dynamic allocation
 
-        //TODO: memeory pool 
-
         for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
             if (world.HasComponents<Bed::StaticMesh>(i))
@@ -36,6 +35,7 @@ namespace Bed
 
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
 
+                //TODO: add TextureID from Texture Coordinates
                 const auto& verts = StaticMesh->Mesh.GetVertices();
                 const auto& indices = StaticMesh->Mesh.GetIndices();
 
@@ -48,6 +48,14 @@ namespace Bed
                     // Apply the transformation matrix to each vertex position
                     glm::vec4 transformedPosition = transform->GetMatrix() * glm::vec4(vert.m_Position.x, vert.m_Position.y, vert.m_Position.z, 1.0f);  // Matrix-vector multiplication
                     vert.m_Position = Bed::Vector3(transformedPosition.x, transformedPosition.y, transformedPosition.z);
+                    
+                    //TODO: change this to texture component
+                    if(world.HasComponents<Bed::Material>(i))
+                    {
+                        Bed::Material* mat = world.GetComponent<Bed::Material>(i);
+
+                        vert.m_TexID = mat->TextureSlot;
+                    }
                 }
 
                 for (auto& ind : modifiedIndices)

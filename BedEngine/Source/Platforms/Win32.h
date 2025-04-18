@@ -246,10 +246,6 @@ namespace Bed
                 shader3D = new Bed::Shader("Assets/Resources/Shaders/Bed3D.shader");
                 shader3D->Bind();
 
-                //Texture
-                texture = new Bed::OpenTexture("Assets/Resources/Textures/256xWhite.png");
-                texture->Bind(0); //Bind to slot 0
-
                 int samplers[2] = { 0, 1 };
                 shader3D->SetUniform1iv("u_Textures", 2, samplers);
             }
@@ -278,9 +274,6 @@ namespace Bed
 
             /* Render here */
             renderer->Clear();
-
-            //Bind Textures
-            texture->Bind(0);
 
             //TODO: Render World3D then World2D then UI
             //Render Everything
