@@ -8,21 +8,14 @@ namespace Bed
     class BED_API Texture
     {
     public:
-        Texture(const std::string& path);
-        ~Texture();
+        Texture(const std::string& path) : m_FilePath(path) {};
 
-        // change this to 
+        virtual void Bind(unsigned int slot = 0) const {};
+        virtual void Unbind() const {};
 
-        void Bind(unsigned int slot = 0) const;
-        void Unbind() const;
+    protected:
         
-        int GetWidth() { return m_Width; };
-        int GetHeight() { return m_Height; };
-
-    private:
-        unsigned int m_RendererID;
         std::string m_FilePath;
-        unsigned char* m_LocalBuffer;
-        int m_Width, m_Height, m_BitsPerPixel;
+        
     };
 }

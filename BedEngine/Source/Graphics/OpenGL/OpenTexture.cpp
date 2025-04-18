@@ -1,12 +1,12 @@
-#include "Texture.h"
+#include "OpenTexture.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
-#include "OpenGL/OpenDebugger.h"
+#include "OpenDebugger.h"
 
 
-Bed::Texture::Texture(const std::string& path) : m_RendererID(0), m_FilePath(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BitsPerPixel(0)
+Bed::OpenTexture::OpenTexture(const std::string& path) : m_RendererID(0), Bed::Texture(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BitsPerPixel(0)
 {
     stbi_set_flip_vertically_on_load(1);
     m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BitsPerPixel, 4);
@@ -28,18 +28,18 @@ Bed::Texture::Texture(const std::string& path) : m_RendererID(0), m_FilePath(pat
     }
 }
 
-Bed::Texture::~Texture()
+Bed::OpenTexture::~OpenTexture()
 {
     GLCall(glDeleteTextures(1, &m_RendererID));
 }
 
-void Bed::Texture::Bind(unsigned int slot) const
+void Bed::OpenTexture::Bind(unsigned int slot) const
 {
     GLCall(glActiveTexture(GL_TEXTURE0 + slot));
     GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
 }
 
-void Bed::Texture::Unbind() const
+void Bed::OpenTexture::Unbind() const
 {
     GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }

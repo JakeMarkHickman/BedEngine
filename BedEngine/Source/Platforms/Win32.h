@@ -5,6 +5,9 @@
 #include <iostream>
 #include <Bed/Input/Input.h>
 
+//TODO: Remove this
+#include <Graphics/OpenGL/OpenTexture.h>
+
 namespace Bed
 {
     class Win32 : public Bed::Platform
@@ -244,7 +247,7 @@ namespace Bed
                 shader3D->Bind();
 
                 //Texture
-                texture = new Texture("Assets/Resources/Textures/256xWhite.png");
+                texture = new Bed::OpenTexture("Assets/Resources/Textures/256xWhite.png");
                 texture->Bind(0); //Bind to slot 0
 
                 int samplers[2] = { 0, 1 };
