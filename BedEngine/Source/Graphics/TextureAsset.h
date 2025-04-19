@@ -4,10 +4,10 @@
 
 namespace Bed
 {
-    class Texture
+    class TextureAsset
     {
     public:
-        Texture(const std::string& path) : m_FilePath(path) {};
+        TextureAsset(const std::string& path) : m_FilePath(path) {};
 
         virtual void Bind(unsigned int slot = 0) const {};
         virtual void Unbind() const {};

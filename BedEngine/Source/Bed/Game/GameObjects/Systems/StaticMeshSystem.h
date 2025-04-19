@@ -4,7 +4,7 @@
 
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
-#include <Components/Materials/Material.h>
+#include <Components/Material/Material.h>
 
 //TODO: Remove this
 #include <glm.hpp>
@@ -12,6 +12,7 @@
 
 namespace Bed
 {
+    //TODO:: This needs to look much better as textures and location currently clash
     void StaticMeshSystem(Bed::World& world)
     {
         unsigned int totalVertsBefore = 0;

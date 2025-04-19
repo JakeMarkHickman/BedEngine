@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphics/Texture.h>
+#include <Graphics/TextureAsset.h>
 #include <Graphics/OpenGL/OpenTexture.h>
 
 #include <unordered_map>
@@ -11,7 +11,7 @@ namespace Bed
     class TextureManager
     {
     public:
-        static Bed::Texture* LoadTexture(std::string path)
+        static Bed::TextureAsset* LoadTexture(std::string path)
         {
             if(m_TextureLookup.find(path) != m_TextureLookup.end())
             {
@@ -19,7 +19,7 @@ namespace Bed
             }
 
             //TODO: change this based on renderer and selected texture storage (eg. bindless textures)
-            Bed::Texture* texture = new OpenTexture(path);
+            Bed::TextureAsset* texture = new OpenTexture(path);
 
             std::cout << "Register Texture\n";
             m_TextureLookup[path] = texture;
@@ -27,6 +27,6 @@ namespace Bed
         }
 
     private:
-        static inline std::unordered_map<std::string, Bed::Texture*> m_TextureLookup;
+        static inline std::unordered_map<std::string, Bed::TextureAsset*> m_TextureLookup;
     };
 }

@@ -4,7 +4,6 @@
 
 #include "Shader.h"
 #include "Renderer.h"
-#include "Texture.h"
 #include "StorageBuffer.h"
 
 #include <Bed/Core.h>

@@ -6,7 +6,7 @@
 #include "OpenDebugger.h"
 
 
-Bed::OpenTexture::OpenTexture(const std::string& path) : m_RendererID(0), Bed::Texture(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BitsPerPixel(0)
+Bed::OpenTexture::OpenTexture(const std::string& path) : m_RendererID(0), Bed::TextureAsset(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BitsPerPixel(0)
 {
     stbi_set_flip_vertically_on_load(1);
     m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BitsPerPixel, 4);

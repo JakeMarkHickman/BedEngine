@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Graphics/Texture.h>
+#include <Graphics/TextureAsset.h>
 
 namespace Bed
 {
-    class OpenTexture : public Bed::Texture
+    class OpenTexture : public Bed::TextureAsset
     {
     public:
         OpenTexture(const std::string& path);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphics/Texture.h>
+#include <Graphics/TextureAsset.h>
 #include <string>
 
 namespace Bed
@@ -12,7 +12,7 @@ namespace Bed
 
         std::string TexturePath;
 
-        Bed::Texture* Texture = nullptr;
+        Bed::TextureAsset* Texture = nullptr;
         unsigned int TextureSlot = 1;
     };
 }

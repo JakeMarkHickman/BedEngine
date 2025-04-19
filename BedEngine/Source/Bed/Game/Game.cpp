@@ -8,7 +8,7 @@
 #include <Components/LightSources/PointLight.h>
 #include <Components/LightSources/SpotLight.h>
 #include <Components/Collision/AABBCollision.h>
-#include <Bed/Game/GameObjects/Components/Materials/Material.h>
+#include <Components/Material/Material.h>
 #include <Bed/Game/GameObjects/Components/PlayerController.h>
 
 #include <Systems/CameraSystem.h>
@@ -18,7 +18,7 @@
 #include <Systems/LightSources/PointLightSystem.h>
 #include <Systems/LightSources/SpotLightSystem.h>
 #include <Systems/Collision/AABBCollisionSystem.h>
-#include <Bed/Game/GameObjects/Systems/Materials/MaterialSystem.h>
+#include <Systems/Material/MaterialSystem.h>
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
 #include <Bed/Game/GameObjects/Systems/MovementSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
