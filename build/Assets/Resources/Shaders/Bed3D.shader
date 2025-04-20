@@ -108,7 +108,7 @@ uniform vec3 u_DiffuseLightPos;
 uniform vec3 u_DiffuseLightColour;
 
 //Texture
-uniform sampler2D u_Textures[2];
+uniform sampler2D u_Textures[32];
 
 vec3 CalculateDiffuse(vec3 lightColour, vec3 lightDir)
 {

@@ -1,0 +1,36 @@
+#pragma once
+
+#include <Bed/Game/GameObjects/TextureManager.h>
+
+//TODO: This needs to change
+#include <Graphics/GraphicVariables.h>
+
+#include <iostream>
+
+namespace Bed
+{
+    void TextureSystem(Bed::World& world)
+    {
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        {
+            if(world.HasComponents<Bed::Texture>(i))
+            {
+                Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
+
+                //TODO: some textures may change from being locked to not being locked or visa versa
+
+
+                //TODO: change this as the texture may change
+                if(texture->TextureAsset == nullptr)
+                {
+                    texture->TextureAsset = Bed::TextureManager::LoadTexture(texture->TexturePath);
+                    texture->TextureSlot = Bed::TextureManager::GetSlot(texture->TexturePath);
+                }
+
+                shader3D->Bind();
+
+                texture->TextureAsset->Bind(texture->TextureSlot);
+            }
+        }
+    }
+}

@@ -51,11 +51,11 @@ namespace Bed
                     vert.m_Position = Bed::Vector3(transformedPosition.x, transformedPosition.y, transformedPosition.z);
                     
                     //TODO: change this to texture component
-                    if(world.HasComponents<Bed::Material>(i))
+                    if(world.HasComponents<Bed::Texture>(i))
                     {
-                        Bed::Material* mat = world.GetComponent<Bed::Material>(i);
+                        Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
 
-                        vert.m_TexID = mat->TextureSlot;
+                        vert.m_TexID = texture->TextureSlot;
                     }
                 }
 
