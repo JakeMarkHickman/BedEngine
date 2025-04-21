@@ -1,7 +1,7 @@
 #include "OpenRenderer.h"
 #include "OpenDebugger.h"
 
-void Bed::OpenRenderer::Draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader)
+void Bed::OpenRenderer::Draw(const VertexArray* va, const IndexBuffer* ib, const ShaderAsset* shader)
 {
     va->Bind();
     ib->Bind();

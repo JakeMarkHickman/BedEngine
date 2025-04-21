@@ -1,74 +1,41 @@
 #shader vertex
 #version 450 core
 
-//Vector
-layout(location = 0) in vec4 a_Position;
-layout(location = 1) in vec3 a_Normal;
-layout(location = 2) in vec4 a_Colour;
-layout(location = 3) in vec2 a_TexCoord;
-layout(location = 4) in float a_TexID;
-
-//Model view Projection Matrix
-uniform mat4 u_Model;
-uniform mat4 u_ViewProjection;
-
-out vec4 v_Pos;
-out vec3 v_Normal;
-out vec4 v_Colour;
-out vec2 v_TexCoord;
-out float v_TexID;
+#include "Vertex/Core/VertexLayout.glsl"
+#include "Vertex/Core/ModelViewProjection.glsl"
 
 void main()
 {
-    v_Pos = u_Model * a_Position;
+    v_Pos = ModelTransform(a_Position);
     v_Normal = a_Normal;
     v_Colour = a_Colour;
     v_TexCoord = a_TexCoord;
     v_TexID = a_TexID;
-    gl_Position = u_ViewProjection * u_Model * a_Position;
+
+    gl_Position = Transform(a_Position);
 }
 
 
 #shader fragment
 #version 450 core
 
-layout(location = 0) out vec4 o_FragColour;
+#include "Fragment/Core/VertexLayout.glsl"
+#include "Fragment/Core/FragColour.glsl"
 
-//Vector
-in vec4 v_Pos;
-in vec3 v_Normal;
-in vec4 v_Colour;
-in vec2 v_TexCoord;
-in float v_TexID;
+#include "Fragment/Material/Texture.glsl"
 
-//Ambient Light
-uniform float u_ambientLightStrenght;
-uniform vec3 u_ambientLightColour;
-
-//Diffuse Light
-uniform vec3 u_DiffuseLightPos;
-uniform vec3 u_DiffuseLightColour;
-
-//Texture
-uniform sampler2D u_Textures[2];
+#include "Fragment/lighting/PhongLighting.glsl"
 
 void main()
 {
     //Unlit
-    int index = int(v_TexID);
-    vec3 unlitResult = vec3(texture(u_Textures[index], v_TexCoord) * v_Colour);
+    vec3 unlitResult = ApplyTexture(int(v_TexID), v_TexCoord, v_Colour);
 
-    //Ambient Lighting
-    vec3 ambientLight = u_ambientLightStrenght * u_ambientLightColour;
-
-    //Diffuse Lighting
-    vec3 norm = normalize(v_Normal);
+    //Light Direction
     vec3 lightDir = normalize(u_DiffuseLightPos - v_Pos.xyz);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * u_DiffuseLightColour;
 
     //Final Colour Calculation
-    vec3 result = (ambientLight + diffuse) * unlitResult;
+    vec3 result = (CalculateAmbientLight() + CalculateDiffuse(u_DiffuseLightColour, lightDir)) * unlitResult;
 
     //Output
     o_FragColour = vec4(result, 1.0);

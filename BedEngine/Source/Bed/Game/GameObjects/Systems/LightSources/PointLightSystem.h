@@ -12,7 +12,7 @@ namespace Bed
     {
         Bed::Vector3 Position;
         float Padding1; // padding is needed for vectors
-        Bed::Vector3 Colour;
+        Bed::Colour3 Colour;
         float Padding2;
         float Strength = 1.0f;
         float Radius = 10.0f;

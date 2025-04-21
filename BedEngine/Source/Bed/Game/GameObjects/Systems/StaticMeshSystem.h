@@ -12,7 +12,9 @@
 
 namespace Bed
 {
-    //TODO:: This needs to look much better as textures and location currently clash
+    //TODO: This needs to look much better as textures and location currently clash
+    //TODO: highly inefficent batch entities based on model
+    //TODO: Make cleaner as there is alot of uploading to the GPU currently
     void StaticMeshSystem(Bed::World& world)
     {
         unsigned int totalVertsBefore = 0;

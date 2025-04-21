@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Bed/Game/GameObjects/TextureManager.h>
+#include <Graphics/TextureManager.h>
 
 //TODO: This needs to change
 #include <Graphics/GraphicVariables.h>

@@ -2,6 +2,8 @@
 
 #include <Bed/Core.h>
 
+//TODO: Make this compatable with Colour
+
 namespace Bed
 {
     struct BED_API Vector2

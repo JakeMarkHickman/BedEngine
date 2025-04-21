@@ -8,7 +8,7 @@ namespace Bed
 {
     struct DirectionalData
     {
-        Bed::Vector3 Colour;
+        Bed::Colour3 Colour;
         float Padding1;
         Bed::Vector3 Direction;
         float Padding2;

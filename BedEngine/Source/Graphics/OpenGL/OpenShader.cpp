@@ -2,15 +2,11 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <sstream>
 #include "OpenDebugger.h"
 
-Bed::OpenShader::OpenShader(const std::string& filepath) : m_FilePath(filepath), m_RendererID(0)
+Bed::OpenShader::OpenShader(const std::string& filepath) : Bed::ShaderAsset(filepath), m_RendererID(0)
 {
-    ShaderProgramSource source = ParseShader();
+    ShaderProgramSource source = ShaderAsset::ParseShader();
     m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
 }
 
@@ -19,12 +15,12 @@ Bed::OpenShader::~OpenShader()
     GLCall(glDeleteProgram(m_RendererID));
 }
 
-void Bed::OpenShader::Bind()
+void Bed::OpenShader::Bind() const
 {
     GLCall(glUseProgram(m_RendererID));
 }
 
-void Bed::OpenShader::Unbind()
+void Bed::OpenShader::Unbind() const
 {
     GLCall(glUseProgram(0));
 }
@@ -34,14 +30,29 @@ void Bed::OpenShader::SetUniform1f(const std::string& name, float value)
     GLCall(glUniform1f(GetUniformLocation(name), value));
 }
 
+void Bed::OpenShader::SetUniform2f(const std::string& name, Bed::Vector2 value)
+{
+    GLCall(glUniform2f(GetUniformLocation(name), value.x, value.y));
+}
+
 void Bed::OpenShader::SetUniform3f(const std::string& name, Bed::Vector3 value)
 {
     GLCall(glUniform3f(GetUniformLocation(name), value.x, value.y, value.z));
 }
 
+void Bed::OpenShader::SetUniform3f(const std::string& name, Bed::Colour3 value)
+{
+    GLCall(glUniform3f(GetUniformLocation(name), value.r, value.g, value.b));
+}
+
 void Bed::OpenShader::SetUniform4f(const std::string& name, Bed::Vector4 value)
 {
     GLCall(glUniform4f(GetUniformLocation(name), value.x, value.y, value.z, value.w));
+}
+
+void Bed::OpenShader::SetUniform4f(const std::string& name, Bed::Colour4 value)
+{
+    GLCall(glUniform4f(GetUniformLocation(name), value.r, value.g, value.b, value.a));
 }
 
 void Bed::OpenShader::SetUniform1i(const std::string& name, int value)
@@ -115,38 +126,4 @@ unsigned int Bed::OpenShader::CreateShader(const std::string& vertexShader, cons
     GLCall(glDeleteShader(fs));
     
     return program;
-}
-
-Bed::ShaderProgramSource Bed::OpenShader::ParseShader()
-{
-    std::ifstream stream(m_FilePath);
-
-    enum class ShaderType
-    {
-        NONE = -1, VERTEX = 0, FRAGMENT = 1
-    };
-
-    std::string line;
-    std::stringstream ss[2];
-    ShaderType type = ShaderType::NONE;
-    while (getline(stream, line))
-    {
-        if (line.find("#shader") != std::string::npos)
-        {
-            if(line.find("vertex") != std::string::npos)
-            {
-                type = ShaderType::VERTEX;
-            }
-            else if(line.find("fragment") != std::string::npos)
-            {
-                type = ShaderType::FRAGMENT;
-            }
-        }
-        else
-        {
-            ss[(int)type] << line << '\n';
-        }
-    }
-
-    return { ss[0].str(), ss[1].str() };
 }

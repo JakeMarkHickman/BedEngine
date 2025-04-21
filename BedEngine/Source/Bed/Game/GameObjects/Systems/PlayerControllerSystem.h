@@ -5,6 +5,8 @@
 #include <Bed/ContextRegistry/ContextRegistry.h>
 #include <Components/Velocity.h>
 
+#include <Graphics/GraphicVariables.h>
+
 namespace Bed
 {
     void PlayerControllerSystem(Bed::World& world)
@@ -31,6 +33,18 @@ namespace Bed
                     }
 
                     Bed::Velocity* vel = world.GetComponent<Bed::Velocity>(i);
+
+                    if (data.Keycode == GLFW_KEY_L)
+                    {
+                        if(data.State == KeyState::Press)
+                        {
+                            shader3D->SetUniform1i("u_GlobalUnlit", true);
+                        }
+                        else if(data.State == KeyState::Released)
+                        {
+                            shader3D->SetUniform1i("u_GlobalUnlit", false);
+                        }
+                    }
 
                     if (data.Keycode == GLFW_KEY_W)
                     {

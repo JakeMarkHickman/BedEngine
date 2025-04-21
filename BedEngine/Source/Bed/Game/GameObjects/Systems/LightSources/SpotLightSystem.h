@@ -12,7 +12,7 @@ namespace Bed
     {
         Bed::Vector3 Position;
         float Padding1;
-        Bed::Vector3 Colour;
+        Bed::Colour3 Colour;
         float Padding2;
         Bed::Vector3 Direction;
         float Padding3;

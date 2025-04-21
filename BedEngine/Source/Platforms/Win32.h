@@ -7,6 +7,7 @@
 
 //TODO: Remove this
 #include <Graphics/OpenGL/OpenTexture.h>
+#include <Graphics/OpenGL/OpenShader.h>
 
 namespace Bed
 {
@@ -243,8 +244,13 @@ namespace Bed
 
             //3D Shader
             {
-                shader3D = new Bed::Shader("Assets/Resources/Shaders/Bed3D.shader");
+                shader3D = new Bed::OpenShader("Assets/Resources/Shaders/Bed3D.shader");
                 shader3D->Bind();
+
+                // Set Default uniforms on start
+                shader3D->SetUniform1i("u_GlobalUnlit", false);
+                shader3D->SetUniform1i("u_MaterialUnlit", false);
+                shader3D->SetUniform1i("u_EnableFog", false);
 
                 int samplers[32] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                                     11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -255,13 +261,13 @@ namespace Bed
 
             //2D Shader
             {
-                shader2D = new Bed::Shader("Assets/Resources/Shaders/Bed2D.shader");
+                shader2D = new Bed::OpenShader("Assets/Resources/Shaders/Bed2D.shader");
                 shader2D->Bind();
             }
             
             //UI Shader
             {
-                shaderUI = new Bed::Shader("Assets/Resources/Shaders/BedUI.shader");
+                shaderUI = new Bed::OpenShader("Assets/Resources/Shaders/BedUI.shader");
                 shaderUI->Bind();
             }
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Components/Camera.h>
 #include <Graphics/GraphicVariables.h>
 
 namespace Bed

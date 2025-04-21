@@ -2,7 +2,7 @@
 
 //TODO: Completely restructure this, no gobal variables!!
 
-#include "Shader.h"
+#include "ShaderAsset.h"
 #include "Renderer.h"
 #include "StorageBuffer.h"
 
@@ -11,7 +11,7 @@
 namespace Bed
 {
     //3D
-    extern Bed::Shader* shader3D;
+    extern Bed::ShaderAsset* shader3D;
     extern Bed::VertexBuffer* vb3D;
     extern Bed::IndexBuffer* ib3D;
     extern Bed::VertexArray* va3D;
@@ -20,13 +20,13 @@ namespace Bed
     extern Bed::StorageBuffer* spotLightBuffer;
 
     //2D
-    extern Bed::Shader* shader2D;
+    extern Bed::ShaderAsset* shader2D;
     extern Bed::VertexBuffer* vb2D;
     extern Bed::IndexBuffer* ib2D;
     extern Bed::VertexArray* va2D;
 
     //UI
-    extern Bed::Shader* shaderUI;
+    extern Bed::ShaderAsset* shaderUI;
     extern Bed::VertexBuffer* vbUI;
     extern Bed::IndexBuffer* ibUI;
     extern Bed::VertexArray* vaUI;
