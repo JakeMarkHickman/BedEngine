@@ -10,6 +10,13 @@ Bed::IndexBuffer::IndexBuffer(unsigned int size) : m_Count(size)
     GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(unsigned int), nullptr, GL_DYNAMIC_DRAW));
 }
 
+Bed::IndexBuffer::IndexBuffer(const void* data, unsigned int size) : m_Count(size)
+{
+    GLCall(glCreateBuffers(1, &m_RendererID));
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID));
+    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW));
+}
+
 Bed::IndexBuffer::~IndexBuffer()
 {
     GLCall(glDeleteBuffers(1, &m_RendererID));

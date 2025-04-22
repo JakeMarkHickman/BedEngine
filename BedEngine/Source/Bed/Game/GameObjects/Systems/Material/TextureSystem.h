@@ -27,8 +27,6 @@ namespace Bed
                     texture->TextureSlot = Bed::TextureManager::GetSlot(texture->TexturePath);
                 }
 
-                shader3D->Bind();
-
                 texture->TextureAsset->Bind(texture->TextureSlot);
             }
         }

@@ -2,19 +2,44 @@
 
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
-#include <Components/Material/Material.h>
-
-//TODO: Remove this
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
 
 namespace Bed
 {
-    //TODO: This needs to look much better as textures and location currently clash
-    //TODO: highly inefficent batch entities based on model
-    //TODO: Make cleaner as there is alot of uploading to the GPU currently
-    void StaticMeshSystem(Bed::World& world)
+    void UISystem(Bed::World& world)
     {
+        //TODO: ui ugly refactor and ui moves based on all elements
+
+        Bed::Vertex v0;
+        v0.m_Position = { 0.0f, 0.0f, 0.0f };
+        v0.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v0.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v0.m_TexCoords = { 0.0f,  0.0f };
+        v0.m_TexID = 0;
+
+        Bed::Vertex v1;
+        v1.m_Position = { 1.0f, 0.0f, 0.0f };
+        v1.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v1.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v1.m_TexCoords = { 1.0f,  0.0f };
+        v1.m_TexID = 0;
+
+        Bed::Vertex v2;
+        v2.m_Position = { 1.0f, 1.0f, 0.0f };
+        v2.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v2.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v2.m_TexCoords = { 1.0f,  1.0f };
+        v2.m_TexID = 0;
+
+        Bed::Vertex v3;
+        v3.m_Position = { 0.0f, 1.0f, 0.0f };
+        v3.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v3.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v3.m_TexCoords = { 0.0f,  1.0f };
+        v3.m_TexID = 0;
+
+        std::vector<Bed::Vertex> verts = { v0, v1, v2, v3 };
+        std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
+
         unsigned int totalVertsBefore = 0;
         unsigned int totalIndicesBefore = 0;
 
@@ -23,21 +48,28 @@ namespace Bed
         std::vector<Bed::Vertex> allVerts;  // Collect all vertices for dynamic allocation
         std::vector<unsigned int> allIndices;  // Collect all indices for dynamic allocation
 
+        shaderUI->Bind();
+
+        //TODO: Use screen size
+        shaderUI->SetUniformMat4f("u_Projection", glm::orthoLH(-2.0f * 2, 2.0f * 2, -1.5f * 2, 1.5f * 2, -1.0f, 1.0f));
+        shaderUI->SetUniformMat4f("u_View", glm::mat4(1.0f));
+
         for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if (world.HasComponents<Bed::StaticMesh>(i))
+            if(world.HasComponents<Bed::UIElement>(i))
             {
-                Bed::StaticMesh* StaticMesh = world.GetComponent<Bed::StaticMesh>(i);
+                Bed::UIElement* element = world.GetComponent<Bed::UIElement>(i);
 
                 if(!world.HasComponents<Bed::Transform>(i))
                 {
-                    world.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 1.0f));
+                    world.AttachComponents(i, Bed::Transform(1.0f, 0.0f, 0.1f));
                 }
 
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
-                
-                const auto& verts = StaticMesh->Mesh.GetVertices();
-                const auto& indices = StaticMesh->Mesh.GetIndices();
+
+                glm::mat4 model = transform->GetMatrix();
+
+                shaderUI->SetUniformMat4f("u_Model", model);
 
                 std::vector<Bed::Vertex> transformedVerts = verts;
                 std::vector<unsigned int> modifiedIndices = indices;
@@ -75,8 +107,7 @@ namespace Bed
             }
         }
 
-        Bed::shader3D->Bind();
-        Bed::vb3D->PopulateBuffer(allVerts.data(), allVerts.size() * sizeof(Bed::Vertex), 0);
-        Bed::ib3D->PopulateBuffer(allIndices.data(), allIndices.size() * sizeof(unsigned int), 0);
-    }
+        Bed::vbUI->PopulateBuffer(allVerts.data(), allVerts.size() * sizeof(Bed::Vertex), 0);
+        Bed::ibUI->PopulateBuffer(allIndices.data(), allIndices.size() * sizeof(unsigned int), 0);
+    };
 }

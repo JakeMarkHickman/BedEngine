@@ -166,11 +166,6 @@ namespace Bed
 
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
-            //Vertex array object
-            va3D = new Bed::VertexArray();
-            vb3D = new Bed::VertexBuffer(30000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
-            ib3D = new Bed::IndexBuffer(40000);
-
             //TODO: Make this dynamic
             struct PointData
             {
@@ -209,41 +204,21 @@ namespace Bed
             directionalLightBuffer = new Bed::StorageBuffer(10 * sizeof(DirectionalData)); // should give 10 directional lights
             spotLightBuffer = new Bed::StorageBuffer(10 * sizeof(SpotData)); // should give 10 spot lights
 
-            va2D = new Bed::VertexArray();
-            vb2D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
-            ib2D = new Bed::IndexBuffer(4000);
-
-            vaUI = new Bed::VertexArray();
-            vbUI = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
-            ibUI = new Bed::IndexBuffer(4000);
-
-            VertexBufferLayout vertLayout3D;
-            vertLayout3D.Push<float>(3); // Position: 3 Floats (x, y, z)
-            vertLayout3D.Push<float>(3); // Normal: 3 Floats (x, y, z)
-            vertLayout3D.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
-            vertLayout3D.Push<float>(2); // TextureCoord: 2 Floats (x, y)
-            vertLayout3D.Push<float>(1); // Texture ID: 1 Float (ID)
-            va3D->AddBuffer(vb3D, vertLayout3D);
-
-            VertexBufferLayout vertLayout2D;
-            vertLayout2D.Push<float>(3); // Position: 3 Floats (x, y, z)
-            vertLayout2D.Push<float>(3); // Normal: 3 Floats (x, y, z)
-            vertLayout2D.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
-            vertLayout2D.Push<float>(2); // TextureCoord: 2 Floats (x, y)
-            vertLayout2D.Push<float>(1); // Texture ID: 1 Float (ID)
-            va2D->AddBuffer(vb2D, vertLayout2D);
-
-            //TODO: UI doesnt need normal
-            VertexBufferLayout vertLayoutUI;
-            vertLayoutUI.Push<float>(3); // Position: 3 Floats (x, y, z)
-            vertLayoutUI.Push<float>(3); // Normal: 3 Floats (x, y, z)
-            vertLayoutUI.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
-            vertLayoutUI.Push<float>(2); // TextureCoord: 2 Floats (x, y)
-            vertLayoutUI.Push<float>(1); // Texture ID: 1 Float (ID)
-            vaUI->AddBuffer(vbUI, vertLayoutUI);
-
             //3D Shader
             {
+                //Vertex array object
+                va3D = new Bed::VertexArray();
+                vb3D = new Bed::VertexBuffer(30000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
+                ib3D = new Bed::IndexBuffer(40000);
+
+                VertexBufferLayout vertLayout3D;
+                vertLayout3D.Push<float>(3); // Position: 3 Floats (x, y, z)
+                vertLayout3D.Push<float>(3); // Normal: 3 Floats (x, y, z)
+                vertLayout3D.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
+                vertLayout3D.Push<float>(2); // TextureCoord: 2 Floats (x, y)
+                vertLayout3D.Push<float>(1); // Texture ID: 1 Float (ID)
+                va3D->AddBuffer(vb3D, vertLayout3D);
+
                 shader3D = new Bed::OpenShader("Assets/Resources/Shaders/Bed3D.shader");
                 shader3D->Bind();
 
@@ -261,14 +236,51 @@ namespace Bed
 
             //2D Shader
             {
+                va2D = new Bed::VertexArray();
+                vb2D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
+                ib2D = new Bed::IndexBuffer(4000);
+
+                VertexBufferLayout vertLayout2D;
+                vertLayout2D.Push<float>(3); // Position: 3 Floats (x, y, z)
+                vertLayout2D.Push<float>(3); // Normal: 3 Floats (x, y, z)
+                vertLayout2D.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
+                vertLayout2D.Push<float>(2); // TextureCoord: 2 Floats (x, y)
+                vertLayout2D.Push<float>(1); // Texture ID: 1 Float (ID)
+                va2D->AddBuffer(vb2D, vertLayout2D);
+
                 shader2D = new Bed::OpenShader("Assets/Resources/Shaders/Bed2D.shader");
                 shader2D->Bind();
+
+                int samplers[32] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                    21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
+                    31};
+                shader2D->SetUniform1iv("u_Textures", 32, samplers);
             }
             
             //UI Shader
             {
+                vaUI = new Bed::VertexArray();
+                vbUI = new Bed::VertexBuffer(4000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
+                ibUI = new Bed::IndexBuffer(6000);
+
+                //TODO: UI doesnt need normal
+                VertexBufferLayout vertLayoutUI;
+                vertLayoutUI.Push<float>(3); // Position: 3 Floats (x, y, z)
+                vertLayoutUI.Push<float>(3); // Normal: 3 Floats (x, y, z)
+                vertLayoutUI.Push<float>(4); // Colour: 4 Floats (r, g, b, a)
+                vertLayoutUI.Push<float>(2); // TextureCoord: 2 Floats (x, y)
+                vertLayoutUI.Push<float>(1); // Texture ID: 1 Float (ID)
+                vaUI->AddBuffer(vbUI, vertLayoutUI);
+
                 shaderUI = new Bed::OpenShader("Assets/Resources/Shaders/BedUI.shader");
                 shaderUI->Bind();
+
+                int samplers[32] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                    21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
+                    31};
+                shaderUI->SetUniform1iv("u_Textures", 32, samplers);
             }
 
             return true;

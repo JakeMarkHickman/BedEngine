@@ -8,6 +8,7 @@ namespace Bed
     {  
     public:
         IndexBuffer(unsigned int size);
+        IndexBuffer(const void* data, unsigned int size);
         ~IndexBuffer();
 
         void Bind() const;

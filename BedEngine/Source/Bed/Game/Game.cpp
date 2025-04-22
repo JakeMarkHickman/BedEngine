@@ -12,8 +12,10 @@
 #include <Components/Collision/AABBCollision.h>
 #include <Components/Material/Texture.h>
 #include <Components/Material/Material.h>
-#include <Bed/Game/GameObjects/Components/Enviroment/Fog.h>
+#include <Components/Enviroment/Fog.h>
 #include <Bed/Game/GameObjects/Components/PlayerController.h>
+
+#include <Bed/Game/GameObjects/Components/UI/UIElement.h>
 
 #include <Systems/CameraSystem.h>
 #include <Systems/StaticMeshSystem.h>
@@ -24,15 +26,26 @@
 #include <Systems/Collision/AABBCollisionSystem.h>
 #include <Systems/Material/TextureSystem.h>
 #include <Systems/Material/MaterialSystem.h>
-#include <Bed/Game/GameObjects/Systems/Enviroment/FogSystem.h>
+#include <Systems/Enviroment/FogSystem.h>
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
 #include <Bed/Game/GameObjects/Systems/MovementSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
+#include <Bed/Game/GameObjects/Systems/UI/UISystem.h>
 
 Bed::Game::Game()
 {
     //World 1
     uint64_t world1 = m_ecs.CreateWorld();
+
+    uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
+    m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.1f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+                                        Bed::UIElement(),
+                                        Bed::Texture("Assets/Resources/Textures/256xWhite.png"));
+
+    uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
+    m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(1.0f, 0.0f, 0.1f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+                                        Bed::UIElement(),
+                                        Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"));
 
     uint64_t w1Player = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
@@ -91,6 +104,7 @@ Bed::Game::Game()
 
     m_ecs.AddSystem(world1, Bed::CameraSystem);
     m_ecs.AddSystem(world1, Bed::TextureSystem);
+    m_ecs.AddSystem(world1, Bed::UISystem);
     m_ecs.AddSystem(world1, Bed::StaticMeshSystem);
     m_ecs.AddSystem(world1, Bed::FogSystem);
     m_ecs.AddSystem(world1, Bed::AmbientLightSystem);
