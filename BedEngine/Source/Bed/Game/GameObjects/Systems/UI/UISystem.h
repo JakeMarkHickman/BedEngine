@@ -10,28 +10,28 @@ namespace Bed
         //TODO: ui ugly refactor and ui moves based on all elements
 
         Bed::Vertex v0;
-        v0.m_Position = { 0.0f, 0.0f, 0.0f };
+        v0.m_Position = { -0.5f, -0.5f, 0.0f };
         v0.m_Normal = { 0.0f, 0.0f, 0.0f };
         v0.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
         v0.m_TexCoords = { 0.0f,  0.0f };
         v0.m_TexID = 0;
 
         Bed::Vertex v1;
-        v1.m_Position = { 1.0f, 0.0f, 0.0f };
+        v1.m_Position = { 0.5f, -0.5f, 0.0f };
         v1.m_Normal = { 0.0f, 0.0f, 0.0f };
         v1.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
         v1.m_TexCoords = { 1.0f,  0.0f };
         v1.m_TexID = 0;
 
         Bed::Vertex v2;
-        v2.m_Position = { 1.0f, 1.0f, 0.0f };
+        v2.m_Position = { 0.5f, 0.5f, 0.0f };
         v2.m_Normal = { 0.0f, 0.0f, 0.0f };
         v2.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
         v2.m_TexCoords = { 1.0f,  1.0f };
         v2.m_TexID = 0;
 
         Bed::Vertex v3;
-        v3.m_Position = { 0.0f, 1.0f, 0.0f };
+        v3.m_Position = { -0.5f, 0.5f, 0.0f };
         v3.m_Normal = { 0.0f, 0.0f, 0.0f };
         v3.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
         v3.m_TexCoords = { 0.0f,  1.0f };
@@ -53,6 +53,7 @@ namespace Bed
         //TODO: Use screen size
         shaderUI->SetUniformMat4f("u_Projection", glm::orthoLH(-2.0f * 2, 2.0f * 2, -1.5f * 2, 1.5f * 2, -1.0f, 1.0f));
         shaderUI->SetUniformMat4f("u_View", glm::mat4(1.0f));
+        shaderUI->SetUniformMat4f("u_Model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)));
 
         for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
@@ -67,10 +68,6 @@ namespace Bed
 
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
 
-                glm::mat4 model = transform->GetMatrix();
-
-                shaderUI->SetUniformMat4f("u_Model", model);
-
                 std::vector<Bed::Vertex> transformedVerts = verts;
                 std::vector<unsigned int> modifiedIndices = indices;
 
@@ -78,8 +75,8 @@ namespace Bed
                 for (auto& vert : transformedVerts)
                 {
                     // Apply the transformation matrix to each vertex position
-                    glm::vec4 transformedPosition = transform->GetMatrix() * glm::vec4(vert.m_Position.x, vert.m_Position.y, vert.m_Position.z, 1.0f);  // Matrix-vector multiplication
-                    vert.m_Position = Bed::Vector3(transformedPosition.x, transformedPosition.y, transformedPosition.z);
+                    glm::vec4 transformedPosition = transform->GetMatrix() * glm::vec4(vert.m_Position.x, vert.m_Position.y, 0.0f, 1.0f);  // Matrix-vector multiplication
+                    vert.m_Position = Bed::Vector3(transformedPosition.x, transformedPosition.y, 0.0f);
                     
                     //TODO: change this to texture component
                     if(world.HasComponents<Bed::Texture>(i))
