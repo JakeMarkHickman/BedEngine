@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Math/Transform.h>
-
 namespace Bed
 {
     void StressTestSystem(Bed::World& world)

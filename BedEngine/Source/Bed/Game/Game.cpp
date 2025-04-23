@@ -6,25 +6,25 @@
 #include <Components/Input/Input.h>
 #include <Components/Camera.h>
 #include <Components/StaticMesh.h>
-#include <Components/LightSources/AmbientLight.h>
-#include <Components/LightSources/DirectionalLight.h>
-#include <Components/LightSources/PointLight.h>
-#include <Components/LightSources/SpotLight.h>
+#include <Components/Lighting/AmbientLight.h>
+#include <Components/Lighting/DirectionalLight.h>
+#include <Components/Lighting/PointLight.h>
+#include <Components/Lighting/SpotLight.h>
 #include <Components/Collision/AABBCollision.h>
 #include <Components/Material/Texture.h>
 #include <Components/Material/Material.h>
 #include <Components/Enviroment/Fog.h>
-#include <Bed/Game/GameObjects/Components/PlayerController.h>
+#include <Components/Tag/PlayerTag.h>
 
 #include <Bed/Game/GameObjects/Components/UI/UIElement.h>
 
 #include <Systems/Input/InputSystem.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/StaticMeshSystem.h>
-#include <Systems/LightSources/AmbientLightSystem.h>
-#include <Systems/LightSources/DirectionalLightSystem.h>
-#include <Systems/LightSources/PointLightSystem.h>
-#include <Systems/LightSources/SpotLightSystem.h>
+#include <Systems/Lighting/AmbientLightSystem.h>
+#include <Systems/Lighting/DirectionalLightSystem.h>
+#include <Systems/Lighting/PointLightSystem.h>
+#include <Systems/Lighting/SpotLightSystem.h>
 #include <Systems/Collision/AABBCollisionSystem.h>
 #include <Systems/Material/TextureSystem.h>
 #include <Systems/Material/MaterialSystem.h>
@@ -54,14 +54,14 @@ Bed::Game::Game()
                                         Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                         Bed::Texture("Assets/Resources/Textures/TestBedEngineIcon.png"),
                                         Bed::Input(),
-                                        Bed::PlayerController(),
+                                        Bed::PlayerTag(),
                                         Bed::AABBCollision(-1.0f, 1.0f));
                                         
     uint64_t w1Camera = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Camera, Bed::Transform(Bed::Vector3(0.0f, 5.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                            Bed::Camera(Bed::ProjectionType::Perspective),
                                            Bed::Input(),
-                                           Bed::PlayerController());
+                                           Bed::PlayerTag());
 
     uint64_t w1Ent1 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Ent1, Bed::Transform(Bed::Vector3(-2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),

@@ -6,8 +6,6 @@
 #include <unordered_map>
 #include <GLFW/glfw3.h>
 
-#include <Components/Input/Input.h>
-
 namespace Bed
 {
     void InputSystem(Bed::World& world)

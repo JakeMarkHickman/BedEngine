@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Graphics/TextureManager.h>
-
 //TODO: This needs to change
 #include <Graphics/GraphicVariables.h>
 

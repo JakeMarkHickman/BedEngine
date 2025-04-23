@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Bed/Game/GameObjects/Components/PlayerController.h>
-#include <Components/Input/Input.h>
 #include <Components/Velocity.h>
 
 #include <Graphics/GraphicVariables.h>
@@ -12,7 +10,7 @@ namespace Bed
     {
         for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(world.HasComponents<Bed::Input, Bed::PlayerController>(i))
+            if(world.HasComponents<Bed::Input, Bed::PlayerTag>(i))
             {
                 if(!world.HasComponents<Bed::Velocity>(i))
                 {

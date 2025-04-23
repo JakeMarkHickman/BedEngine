@@ -2,7 +2,6 @@
 
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
-#include <Components/Material/Material.h>
 
 //TODO: Remove this
 #include <glm.hpp>

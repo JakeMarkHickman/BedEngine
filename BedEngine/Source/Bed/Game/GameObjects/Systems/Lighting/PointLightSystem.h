@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Components/LightSources/PointLight.h>
-#include <Math/Transform.h>
 #include <vector>
 #include <Graphics/GraphicVariables.h>
 

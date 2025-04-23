@@ -1,9 +1,6 @@
 #pragma once
 
-#include <Math/Transform.h>
 #include <Math/Vector/VectorMath.h>
-#include <Components/Velocity.h>
-
 #include <App/Time.h>
 
 namespace Bed

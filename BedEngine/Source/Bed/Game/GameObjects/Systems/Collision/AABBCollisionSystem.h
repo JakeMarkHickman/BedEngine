@@ -2,7 +2,6 @@
 
 #include <Bed/Game/GameObjects/Collision/Collision.h>
 #include <Bed/Game/GameObjects/Collision/AABB.h>
-#include <Components/Collision/AABBCollision.h>
 
 #include <Components/Event/CollisionResponse/CollisionEnter.h>
 #include <Components/Event/CollisionResponse/CollisionExit.h>

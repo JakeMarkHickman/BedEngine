@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Components/LightSources/AmbientLight.h>
 #include <Graphics/GraphicVariables.h>
 
 namespace Bed

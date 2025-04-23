@@ -1,6 +1,5 @@
 #pragma once
 
-#include <Components/LightSources/DirectionalLight.h>
 #include <vector>
 #include <Graphics/GraphicVariables.h>
 
