@@ -1,8 +1,7 @@
 #pragma once
 
 #include <Bed/Game/GameObjects/Components/PlayerController.h>
-#include <Bed/Input/Input.h>
-#include <Bed/ContextRegistry/ContextRegistry.h>
+#include <Components/Input/Input.h>
 #include <Components/Velocity.h>
 
 #include <Graphics/GraphicVariables.h>
@@ -11,90 +10,56 @@ namespace Bed
 {
     void PlayerControllerSystem(Bed::World& world)
     {
-        static bool DoOnce = false;
-
-        if(DoOnce)
-            return;
-
-        DoOnce = true;
-
-        Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
-        Bed::Input* input = instance.GetContext<Bed::Input>();
-
-        input->InputEvent.Subscribe([&world](Bed::InputData data){
-
-            for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        {
+            if(world.HasComponents<Bed::Input, Bed::PlayerController>(i))
             {
-                if(world.HasComponents<Bed::PlayerController>(i))
+                if(!world.HasComponents<Bed::Velocity>(i))
                 {
-                    if(!world.HasComponents<Bed::Velocity>(i))
-                    {
-                        world.AttachComponents(i, Bed::Velocity(0.0f));
-                    }
-
-                    Bed::Velocity* vel = world.GetComponent<Bed::Velocity>(i);
-
-                    if (data.Keycode == GLFW_KEY_L)
-                    {
-                        if(data.State == KeyState::Press)
-                        {
-                            shader3D->SetUniform1i("u_GlobalUnlit", true);
-                        }
-                        else if(data.State == KeyState::Released)
-                        {
-                            shader3D->SetUniform1i("u_GlobalUnlit", false);
-                        }
-                    }
-
-                    if (data.Keycode == GLFW_KEY_W)
-                    {
-                        if(data.State == KeyState::Press)
-                        {
-                            vel->Direction += Bed::Vector3(0.0f, 0.0f, 5.0f);
-                        }
-                        else if(data.State == KeyState::Released)
-                        {
-                            vel->Direction -= Bed::Vector3(0.0f, 0.0f, 5.0f);
-                        }
-                    }
-
-                    if (data.Keycode == GLFW_KEY_A)
-                    {
-                        if(data.State == KeyState::Press)
-                        {
-                            vel->Direction += Bed::Vector3(-5.0f, 0.0f, 0.0f);
-                        }
-                        else if(data.State == KeyState::Released)
-                        {
-                            vel->Direction -= Bed::Vector3(-5.0f, 0.0f, 0.0f);
-                        }
-                    }
-
-                    if (data.Keycode == GLFW_KEY_S)
-                    {
-                        if(data.State == KeyState::Press)
-                        {
-                            vel->Direction += Bed::Vector3(0.0f, 0.0f, -5.0f);
-                        }
-                        else if(data.State == KeyState::Released)
-                        {
-                            vel->Direction -= Bed::Vector3(0.0f, 0.0f, -5.0f);
-                        }
-                    }
-
-                    if (data.Keycode == GLFW_KEY_D)
-                    {
-                        if(data.State == KeyState::Press)
-                        {
-                            vel->Direction += Bed::Vector3(5.0f, 0.0f, 0.0f);
-                        }
-                        else if(data.State == KeyState::Released)
-                        {
-                            vel->Direction -= Bed::Vector3(5.0f, 0.0f, 0.0f);
-                        }
-                    }
+                    world.AttachComponents(i, Bed::Velocity(0.0f, 5.0f));
                 }
+
+                Bed::Input* input = world.GetComponent<Bed::Input>(i);
+                Bed::Velocity* vel = world.GetComponent<Bed::Velocity>(i);
+
+
+                //SHADER
+                if(input->KeyData[GLFW_KEY_L] == KeyState::Press)
+                {
+                    shader3D->SetUniform1i("u_GlobalUnlit", true);
+                }
+                else if(input->KeyData[GLFW_KEY_L] == KeyState::Released)
+                {
+                    shader3D->SetUniform1i("u_GlobalUnlit", false);
+                }
+
+                Bed::Vector3 Direction(0.0f, 0.0f, 0.0f);
+
+                //MOVEMENT
+                if(input->KeyData[GLFW_KEY_W] == KeyState::Press)
+                {
+                    Direction += Bed::Vector3(0.0f, 0.0f, 5.0f);
+                }
+
+                if(input->KeyData[GLFW_KEY_A] == KeyState::Press)
+                {
+                    Direction += Bed::Vector3(-5.0f, 0.0f, 0.0f);
+                }
+
+                if(input->KeyData[GLFW_KEY_S] == KeyState::Press)
+                {
+                    Direction += Bed::Vector3(0.0f, 0.0f, -5.0f);
+                }
+
+                if(input->KeyData[GLFW_KEY_D] == KeyState::Press)
+                {
+                    Direction += Bed::Vector3(5.0f, 0.0f, 0.0f);
+                }
+
+                vel->Direction = Direction;
             }
-        });
-    };
+        }
+    }
 }
+
+    

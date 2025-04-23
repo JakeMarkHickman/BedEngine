@@ -20,7 +20,7 @@ namespace Bed
                 Bed::Vector3 nomalisedDirection = Bed::VectorMath::Normalise(velocity->Direction);
 
                 //TODO: make this not use normalised velocity
-                transform->Position += nomalisedDirection * 5.0f * Bed::Time::GetDeltaTime();
+                transform->Position += nomalisedDirection * velocity->Speed * Bed::Time::GetDeltaTime();
             }
         }
     }

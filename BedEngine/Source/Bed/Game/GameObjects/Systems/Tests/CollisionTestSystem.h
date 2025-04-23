@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Components/Collision/CollisionResponse/CollisionEnter.h>
-
 #include <iostream>
 
 namespace Bed

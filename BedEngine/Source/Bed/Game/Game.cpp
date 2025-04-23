@@ -3,6 +3,7 @@
 #include <Math/Colour.h>
 
 #include <Math/Transform.h>
+#include <Components/Input/Input.h>
 #include <Components/Camera.h>
 #include <Components/StaticMesh.h>
 #include <Components/LightSources/AmbientLight.h>
@@ -17,6 +18,7 @@
 
 #include <Bed/Game/GameObjects/Components/UI/UIElement.h>
 
+#include <Systems/Input/InputSystem.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/StaticMeshSystem.h>
 #include <Systems/LightSources/AmbientLightSystem.h>
@@ -38,7 +40,7 @@ Bed::Game::Game()
     uint64_t world1 = m_ecs.CreateWorld();
 
     uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
-    m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(-2.0f, -2.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+    m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(-2.0f, 2.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                         Bed::UIElement(),
                                         Bed::Texture("Assets/Resources/Textures/256xWhite.png"));
 
@@ -51,12 +53,14 @@ Bed::Game::Game()
     m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                         Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                         Bed::Texture("Assets/Resources/Textures/TestBedEngineIcon.png"),
+                                        Bed::Input(),
                                         Bed::PlayerController(),
                                         Bed::AABBCollision(-1.0f, 1.0f));
                                         
     uint64_t w1Camera = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Camera, Bed::Transform(Bed::Vector3(0.0f, 5.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                            Bed::Camera(Bed::ProjectionType::Perspective),
+                                           Bed::Input(),
                                            Bed::PlayerController());
 
     uint64_t w1Ent1 = m_ecs.CreateEntity(world1);
@@ -102,6 +106,7 @@ Bed::Game::Game()
     m_ecs.AttachComponents(world1, w1Point3, Bed::Transform(Bed::Vector3(2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
                                 Bed::PointLight(Bed::Colour3(0.2f, 0.0f, 1.0f), 1.0f, 1.0f));
 
+    m_ecs.AddSystem(world1, Bed::InputSystem);
     m_ecs.AddSystem(world1, Bed::CameraSystem);
     m_ecs.AddSystem(world1, Bed::TextureSystem);
     m_ecs.AddSystem(world1, Bed::UISystem);
@@ -118,11 +123,9 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::CollisionExitTestSystem);
     m_ecs.AddSystem(world1, Bed::CollisionStayTestSystem);
     
-
     //World 2
     uint64_t world2 = m_ecs.CreateWorld();
 
-    
     uint64_t w2ent1 = m_ecs.CreateEntity(world2);
     m_ecs.AttachComponents(world2, w2ent1, Bed::Transform(Bed::Vector3(2.5, 0.0, 10.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f))/*,
                                            Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj")*/);

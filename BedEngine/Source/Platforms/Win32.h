@@ -3,7 +3,6 @@
 #include "Platform.h"
 #include <Graphics/GraphicVariables.h>
 #include <iostream>
-#include <Bed/Input/Input.h>
 
 //TODO: Remove this
 #include <Graphics/OpenGL/OpenTexture.h>
@@ -120,10 +119,11 @@ namespace Bed
             }
         };
 
+        static GLFWwindow* GetWindow() { return window; };
 
     private:
 
-        GLFWwindow* window;
+        static inline GLFWwindow* window = nullptr;
 
         bool OpenGlCreateWindow(int width, int height, const char* title)
         {
@@ -288,11 +288,6 @@ namespace Bed
 
         void OpenGLUpdateWindow()
         {
-            //TODO: Switch this to be better
-            Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
-            Bed::Input* input = instance.GetContext<Bed::Input>();
-            input->PollInput(window, 0);
-
             /* Render here */
             renderer->Clear();
 

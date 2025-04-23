@@ -1,7 +1,6 @@
 
 #include "Application.h"
 #include <Platforms/PlatformWrapper.h>
-#include <Bed/Input/Input.h>
 
 namespace Bed
 {
@@ -19,11 +18,7 @@ namespace Bed
     void Application::Update()
     {
         //TODO: This needs to be better
-        Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
-        Bed::Input poller;
-        instance.RegisterContext(poller);
-        Bed::Input* input = instance.GetContext<Bed::Input>();
-        input->Init();
+        //Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
         
         //Game Loop
         while (IsWindowOpen())

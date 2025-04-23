@@ -4,9 +4,9 @@
 #include <Bed/Game/GameObjects/Collision/AABB.h>
 #include <Components/Collision/AABBCollision.h>
 
-#include <Components/Collision/CollisionResponse/CollisionEnter.h>
-#include <Components/Collision/CollisionResponse/CollisionExit.h>
-#include <Components/Collision/CollisionResponse/CollisionStay.h>
+#include <Components/Event/CollisionResponse/CollisionEnter.h>
+#include <Components/Event/CollisionResponse/CollisionExit.h>
+#include <Components/Event/CollisionResponse/CollisionStay.h>
 
 #include <algorithm>
 #include <vector>
@@ -54,14 +54,6 @@ namespace Bed
                     curCollisions[i].push_back(j);
                     curCollisions[j].push_back(i);
                 }
-
-                /*std::cout << "Collision Box A: " << updatedCollisionA.Min.x << " " << updatedCollisionA.Max.x << "\n";
-                std::cout << "Collision Box A: " << updatedCollisionA.Min.y << " " << updatedCollisionA.Max.y << "\n";
-                std::cout << "Collision Box A: " << updatedCollisionA.Min.z << " " << updatedCollisionA.Max.z << "\n";
-
-                std::cout << "Collision Box B: " << updatedCollisionB.Min.x << " " << updatedCollisionB.Max.x << "\n";
-                std::cout << "Collision Box B: " << updatedCollisionB.Min.y << " " << updatedCollisionB.Max.y << "\n";
-                std::cout << "Collision Box B: " << updatedCollisionB.Min.z << " " << updatedCollisionB.Max.z << "\n";*/
             }
         }
 
@@ -124,7 +116,6 @@ namespace Bed
 
             if (!stayCollisions.empty())
             {
-                //TODO: Crashes (Exception thrown at 0x00007FFFD585AB6A in Playground.exe: Microsoft C++ exception: std::bad_alloc at memory location 0x0000006799D7F3F8.)
                 world.RemoveComponents<Bed::CollisionEnter, Bed::CollisionStay>(i);
                 world.AttachComponents(i, Bed::CollisionStay(stayCollisions));
             }
