@@ -19,8 +19,6 @@ namespace Bed
 
                 //TODO: some textures may change from being locked to not being locked or visa versa
 
-
-                //TODO: change this as the texture may change
                 if(texture->TextureAsset == nullptr || texture->TextureSlot != Bed::TextureManager::GetSlot(texture->TexturePath))
                 {
                     texture->TextureAsset = Bed::TextureManager::LoadTexture(texture->TexturePath);

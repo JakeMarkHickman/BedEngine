@@ -54,6 +54,21 @@ namespace Bed
                     Direction += Bed::Vector3(5.0f, 0.0f, 0.0f);
                 }
 
+                if(input->MouseData[GLFW_MOUSE_BUTTON_LEFT] == KeyState::Press)
+                {
+                    std::cout << "Left Mouse click" << "\n";
+                }
+
+                if(input->MouseData[GLFW_MOUSE_BUTTON_RIGHT] == KeyState::Press)
+                {
+                    std::cout << "Right Mouse click" << "\n";
+                }
+
+                if(input->MouseData[GLFW_MOUSE_BUTTON_MIDDLE] == KeyState::Press)
+                {
+                    std::cout << "Middle Mouse click" << "\n";
+                }
+                
                 vel->Direction = Direction;
             }
         }

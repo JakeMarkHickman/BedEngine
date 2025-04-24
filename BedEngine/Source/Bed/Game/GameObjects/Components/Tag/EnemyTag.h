@@ -2,5 +2,5 @@
 
 namespace Bed
 {
-    struct PlayerTag {};
+    struct EnemyTag {};
 }

@@ -15,6 +15,7 @@
 #include <Components/Material/Material.h>
 #include <Components/Enviroment/Fog.h>
 #include <Components/Tag/PlayerTag.h>
+#include <Components/Tag/EnemyTag.h>
 
 #include <Bed/Game/GameObjects/Components/UI/UIElement.h>
 
@@ -39,7 +40,7 @@ Bed::Game::Game()
     //World 1
     uint64_t world1 = m_ecs.CreateWorld();
 
-    /*uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
+    uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(-2.0f, 2.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                         Bed::UIElement(),
                                         Bed::Texture("Assets/Resources/Textures/256xWhite.png"));
@@ -47,7 +48,7 @@ Bed::Game::Game()
     uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(2.0f, 2.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                         Bed::UIElement(),
-                                        Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"));*/
+                                        Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"));
 
     uint64_t w1Player = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
@@ -67,13 +68,15 @@ Bed::Game::Game()
     m_ecs.AttachComponents(world1, w1Ent1, Bed::Transform(Bed::Vector3(-2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                              Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                              Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
-                                             Bed::AABBCollision(-1.0f, 1.0f));
+                                             Bed::AABBCollision(-1.0f, 1.0f),
+                                             Bed::EnemyTag());
 
     uint64_t w1Ent2 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Ent2, Bed::Transform(Bed::Vector3(2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                            Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                            Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
-                                           Bed::AABBCollision(-1.0f, 1.0f));
+                                           Bed::AABBCollision(-1.0f, 1.0f),
+                                           Bed::EnemyTag());
 
     uint64_t w1Floor = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Floor, Bed::Transform(Bed::Vector3(0.0, -2.5, 5.0), Bed::Vector3(0.0f), Bed::Vector3(50.0, 0.5, 50.0)),

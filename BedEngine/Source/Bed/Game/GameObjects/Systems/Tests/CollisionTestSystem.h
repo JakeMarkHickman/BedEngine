@@ -8,9 +8,11 @@ namespace Bed
     {
         for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(world.HasComponents<Bed::CollisionEnter>(i))
+            if(world.HasComponents<Bed::CollisionEnter, Bed::EnemyTag, Bed::Texture>(i))
             {
-                std::cout << "Entity: " << i << " Started a collision\n";
+                Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
+
+                texture->TexturePath = "Assets/Resources/Textures/TestBedEngineIcon.png";
             }
         }
     }
@@ -19,9 +21,11 @@ namespace Bed
     {
         for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(world.HasComponents<Bed::CollisionExit>(i))
+            if(world.HasComponents<Bed::CollisionExit, Bed::EnemyTag, Bed::Texture>(i))
             {
-                std::cout << "Entity: " << i << " Ended a collision\n";
+                Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
+
+                texture->TexturePath = "Assets/Resources/Textures/256xMissingTexture.png";
             }
         }
     }
@@ -30,9 +34,9 @@ namespace Bed
     {
         for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(world.HasComponents<Bed::CollisionStay>(i))
+            if(world.HasComponents<Bed::CollisionStay, Bed::EnemyTag, Bed::Texture>(i))
             {
-                std::cout << "Entity: " << i << " stayed in a collision\n";
+                
             }
         }
     }
