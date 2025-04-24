@@ -7,6 +7,7 @@
 //TODO: Remove this
 #include <Graphics/OpenGL/OpenTexture.h>
 #include <Graphics/OpenGL/OpenShader.h>
+#include <Graphics/TextureManager.h>
 
 namespace Bed
 {
@@ -164,6 +165,8 @@ namespace Bed
 
             glFrontFace(GL_CW);
 
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
             //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
             //TODO: Make this dynamic
@@ -204,6 +207,16 @@ namespace Bed
             directionalLightBuffer = new Bed::StorageBuffer(10 * sizeof(DirectionalData)); // should give 10 directional lights
             spotLightBuffer = new Bed::StorageBuffer(10 * sizeof(SpotData)); // should give 10 spot lights
 
+            int TextureSlots;
+            glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &TextureSlots);
+
+            std::cout << "Texture slots: " << TextureSlots << "\n";
+
+            int textureSlots[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
+                31};
+
             //3D Shader
             {
                 //Vertex array object
@@ -227,11 +240,7 @@ namespace Bed
                 shader3D->SetUniform1i("u_MaterialUnlit", false);
                 shader3D->SetUniform1i("u_EnableFog", false);
 
-                int samplers[32] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                                    21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
-                                    31};
-                shader3D->SetUniform1iv("u_Textures", 32, samplers);
+                shader3D->SetUniform1iv("u_Textures", 32, textureSlots);
             }
 
             //2D Shader
@@ -251,11 +260,7 @@ namespace Bed
                 shader2D = new Bed::OpenShader("Assets/Resources/Shaders/Bed2D.shader");
                 shader2D->Bind();
 
-                int samplers[32] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                    21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
-                    31};
-                shader2D->SetUniform1iv("u_Textures", 32, samplers);
+                shader2D->SetUniform1iv("u_Textures", 32, textureSlots);
             }
             
             //UI Shader
@@ -276,12 +281,27 @@ namespace Bed
                 shaderUI = new Bed::OpenShader("Assets/Resources/Shaders/BedUI.shader");
                 shaderUI->Bind();
 
-                int samplers[32] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                    21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
-                    31};
-                shaderUI->SetUniform1iv("u_Textures", 32, samplers);
+                shaderUI->SetUniform1iv("u_Textures", 32, textureSlots);
             }
+
+            //Unbind Everything
+            Bed::TextureManager::UnbindTextures();
+
+            va3D->Unbind();
+            shader3D->Unbind();
+            vb3D->Unbind();
+            ib3D->Unbind();
+            pointLightBuffer->Unbind();
+
+            va2D->Unbind();
+            shader2D->Unbind();
+            vb2D->Unbind();
+            ib2D->Unbind();
+
+            vaUI->Unbind();
+            shaderUI->Unbind();
+            vbUI->Unbind();
+            ibUI->Unbind();
 
             return true;
         }
@@ -303,6 +323,8 @@ namespace Bed
             renderer->Draw(vaUI, ibUI, shaderUI);
 
             //Unbind Everything
+            Bed::TextureManager::UnbindTextures();
+
             va3D->Unbind();
             shader3D->Unbind();
             vb3D->Unbind();

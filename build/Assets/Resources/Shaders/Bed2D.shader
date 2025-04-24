@@ -22,7 +22,7 @@ void main()
 #include "Fragment/Core/VertexLayout.glsl"
 #include "Fragment/Core/FragColour.glsl"
 
-#include "Fragment/Material/Texture.glsl"
+#include "Fragment/Material/Material.glsl"
 
 #include "Fragment/lighting/PhongLighting.glsl"
 
@@ -38,5 +38,5 @@ void main()
     vec3 result = (CalculateAmbientLight() + CalculateDiffuse(u_DiffuseLightColour, lightDir)) * unlitResult;
 
     //Output
-    o_FragColour = vec4(1.0);//vec4(result, 1.0);
+    o_FragColour = vec4(result, 1.0);
 }

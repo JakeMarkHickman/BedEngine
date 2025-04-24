@@ -75,5 +75,5 @@ void main()
     }
     
     //Output
-    o_FragColour = vec4(result, 1.0);
+    o_FragColour = vec4(result, 1.0);//vec4(vec3(v_TexID / 31.0), 1.0);
 }

@@ -8,4 +8,4 @@ out vec4 v_Pos;
 out vec3 v_Normal;
 out vec4 v_Colour;
 out vec2 v_TexCoord;
-out float v_TexID;
+flat out float v_TexID;

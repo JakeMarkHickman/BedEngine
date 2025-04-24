@@ -75,7 +75,7 @@ namespace Bed
         }
 
         Bed::shader3D->Bind();
-        Bed::vb3D->PopulateBuffer(allVerts.data(), allVerts.size() * sizeof(Bed::Vertex), 0);
-        Bed::ib3D->PopulateBuffer(allIndices.data(), allIndices.size() * sizeof(unsigned int), 0);
+        Bed::vb3D->PopulateBuffer(allVerts.data(), allVerts.size(), 0);
+        Bed::ib3D->PopulateBuffer(allIndices.data(), allIndices.size(), 0);
     }
 }

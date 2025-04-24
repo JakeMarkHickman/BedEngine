@@ -104,7 +104,7 @@ namespace Bed
             }
         }
 
-        Bed::vbUI->PopulateBuffer(allVerts.data(), allVerts.size() * sizeof(Bed::Vertex), 0);
-        Bed::ibUI->PopulateBuffer(allIndices.data(), allIndices.size() * sizeof(unsigned int), 0);
+        Bed::vbUI->PopulateBuffer(allVerts.data(), allVerts.size(), 0);
+        Bed::ibUI->PopulateBuffer(allIndices.data(), allIndices.size(), 0);
     };
 }

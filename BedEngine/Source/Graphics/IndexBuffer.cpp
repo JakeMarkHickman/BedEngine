@@ -35,5 +35,5 @@ void Bed::IndexBuffer::Unbind() const
 void Bed::IndexBuffer::PopulateBuffer(const void* indices, unsigned int size, unsigned int offset)
 {
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID));
-    GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, indices));
+    GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset * sizeof(unsigned int), size * sizeof(unsigned int), indices));
 }

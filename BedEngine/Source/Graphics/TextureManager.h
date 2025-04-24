@@ -18,7 +18,7 @@ namespace Bed
                 return m_SlotLookup[path];
             }
 
-            int BoundNum = 0;
+            int BoundNum = -1;
             
             //Assign and lock a number
             for(int i = 0; i < MAX_SLOTS; i++)
@@ -29,8 +29,8 @@ namespace Bed
                 if(m_UsedSlots[i] == "")
                 {
                     m_UsedSlots[i] = path;
-                    m_SlotLookup[path] = i + 1;
-                    BoundNum = i + 1;
+                    m_SlotLookup[path] = i;
+                    BoundNum = i;
                     break;
                 }
             }
@@ -64,16 +64,16 @@ namespace Bed
             return texture;
         }
 
-        /*static int BoundSlot(std::string path)
+        static void UnbindTextures()
         {
-            if(m_SlotLookup.find(path) != m_SlotLookup.end())
+            for(std::pair<const int, Bed::TextureAsset *> asset : m_TextureLookup)
             {
-                return 
+                asset.second->Unbind();
             }
-        }*/
+        }
 
     private:
-        static constexpr int MAX_SLOTS = 31; // number of bindable slots on the GPU
+        static constexpr int MAX_SLOTS = 32; // number of bindable slots on the GPU
 
         static inline std::string m_UsedSlots[MAX_SLOTS];
         static inline std::string m_LockedSlots[MAX_SLOTS];

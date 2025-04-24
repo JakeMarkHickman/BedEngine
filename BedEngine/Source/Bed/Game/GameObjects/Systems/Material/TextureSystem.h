@@ -21,12 +21,11 @@ namespace Bed
 
 
                 //TODO: change this as the texture may change
-                if(texture->TextureAsset == nullptr)
+                if(texture->TextureAsset == nullptr || texture->TextureSlot != Bed::TextureManager::GetSlot(texture->TexturePath))
                 {
                     texture->TextureAsset = Bed::TextureManager::LoadTexture(texture->TexturePath);
                     texture->TextureSlot = Bed::TextureManager::GetSlot(texture->TexturePath);
                 }
-
                 texture->TextureAsset->Bind(texture->TextureSlot);
             }
         }
