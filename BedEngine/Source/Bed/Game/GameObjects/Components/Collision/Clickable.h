@@ -4,6 +4,6 @@ namespace Bed
 {
     struct Clickable
     {
-        Clickable();
+        Clickable() {};
     };
 }

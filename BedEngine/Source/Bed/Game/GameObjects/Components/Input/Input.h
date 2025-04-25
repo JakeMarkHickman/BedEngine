@@ -7,7 +7,7 @@ namespace Bed
     enum class KeyState
     {
         Released,
-        Press,
+        Pressed,
         Hold
     };
 
@@ -18,5 +18,8 @@ namespace Bed
         std::unordered_map<int, KeyState> KeyData;
         std::unordered_map<int, KeyState> MouseData;
         double CursorX, CursorY;
+
+        std::unordered_map<int, KeyState> PreviousKeyData;
+        std::unordered_map<int, KeyState> PreviousMouseData;
     };
 }

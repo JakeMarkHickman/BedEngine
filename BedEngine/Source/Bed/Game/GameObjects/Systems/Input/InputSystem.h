@@ -33,7 +33,7 @@ namespace Bed
                     break;
 
                 case GLFW_PRESS:
-                    mouseState = Bed::KeyState::Press;
+                    mouseState = Bed::KeyState::Pressed;
                     break;
 
                 case GLFW_REPEAT:
@@ -61,7 +61,7 @@ namespace Bed
                     break;
 
                 case GLFW_PRESS:
-                    keyState = Bed::KeyState::Press;
+                    keyState = Bed::KeyState::Pressed;
                     break;
 
                 case GLFW_REPEAT:
@@ -81,6 +81,10 @@ namespace Bed
             if(world.HasComponents<Bed::Input>(i))
             {
                 Bed::Input* input = world.GetComponent<Bed::Input>(i);
+
+                //Store old input events
+                input->PreviousKeyData = input->KeyData;
+                input->PreviousMouseData = input->MouseData;
 
                 input->KeyData = keys;
                 input->MouseData = mice;

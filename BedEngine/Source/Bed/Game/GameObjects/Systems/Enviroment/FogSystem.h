@@ -9,7 +9,7 @@ namespace Bed
         static bool IsCurrentlyEnabled = false;
         bool SetFog = false;
 
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(int i = 0; i < world.GetAllEntities().size(); i++)
         {
             if(world.HasComponents<Bed::Fog>(i))
             {

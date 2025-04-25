@@ -22,7 +22,7 @@ namespace Bed
 
 
                 //SHADER
-                if(input->KeyData[GLFW_KEY_L] == KeyState::Press)
+                if(input->KeyData[GLFW_KEY_L] == KeyState::Pressed)
                 {
                     shader3D->SetUniform1i("u_GlobalUnlit", true);
                 }
@@ -34,41 +34,26 @@ namespace Bed
                 Bed::Vector3 Direction(0.0f, 0.0f, 0.0f);
 
                 //MOVEMENT
-                if(input->KeyData[GLFW_KEY_W] == KeyState::Press)
+                if(input->KeyData[GLFW_KEY_W] == KeyState::Pressed)
                 {
                     Direction += Bed::Vector3(0.0f, 0.0f, 5.0f);
                 }
 
-                if(input->KeyData[GLFW_KEY_A] == KeyState::Press)
+                if(input->KeyData[GLFW_KEY_A] == KeyState::Pressed)
                 {
                     Direction += Bed::Vector3(-5.0f, 0.0f, 0.0f);
                 }
 
-                if(input->KeyData[GLFW_KEY_S] == KeyState::Press)
+                if(input->KeyData[GLFW_KEY_S] == KeyState::Pressed)
                 {
                     Direction += Bed::Vector3(0.0f, 0.0f, -5.0f);
                 }
 
-                if(input->KeyData[GLFW_KEY_D] == KeyState::Press)
+                if(input->KeyData[GLFW_KEY_D] == KeyState::Pressed)
                 {
                     Direction += Bed::Vector3(5.0f, 0.0f, 0.0f);
                 }
 
-                if(input->MouseData[GLFW_MOUSE_BUTTON_LEFT] == KeyState::Press)
-                {
-                    std::cout << "Left Mouse click" << "\n";
-                }
-
-                if(input->MouseData[GLFW_MOUSE_BUTTON_RIGHT] == KeyState::Press)
-                {
-                    std::cout << "Right Mouse click" << "\n";
-                }
-
-                if(input->MouseData[GLFW_MOUSE_BUTTON_MIDDLE] == KeyState::Press)
-                {
-                    std::cout << "Middle Mouse click" << "\n";
-                }
-                
                 vel->Direction = Direction;
             }
         }

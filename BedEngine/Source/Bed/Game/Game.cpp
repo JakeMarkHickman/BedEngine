@@ -11,6 +11,7 @@
 #include <Components/Lighting/PointLight.h>
 #include <Components/Lighting/SpotLight.h>
 #include <Components/Collision/AABBCollision.h>
+#include <Components/Collision/Clickable.h>
 #include <Components/Material/Texture.h>
 #include <Components/Material/Material.h>
 #include <Components/Enviroment/Fog.h>
@@ -30,10 +31,12 @@
 #include <Systems/Material/TextureSystem.h>
 #include <Systems/Material/MaterialSystem.h>
 #include <Systems/Enviroment/FogSystem.h>
+#include <Systems/UI/UISystem.h>
+#include <Systems/Collision/ClickableSystem.h>
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
 #include <Bed/Game/GameObjects/Systems/MovementSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
-#include <Bed/Game/GameObjects/Systems/UI/UISystem.h>
+
 
 Bed::Game::Game()
 {
@@ -48,7 +51,10 @@ Bed::Game::Game()
     uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(2.0f, 2.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                         Bed::UIElement(),
-                                        Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"));
+                                        Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
+                                        Bed::Clickable(),
+                                        Bed::Input(),
+                                        Bed::EnemyTag());
 
     uint64_t w1Player = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
@@ -110,6 +116,7 @@ Bed::Game::Game()
                                 Bed::PointLight(Bed::Colour3(0.2f, 0.0f, 1.0f), 1.0f, 1.0f));
 
     m_ecs.AddSystem(world1, Bed::InputSystem);
+    m_ecs.AddSystem(world1, Bed::ClickableSystem);
     m_ecs.AddSystem(world1, Bed::CameraSystem);
     m_ecs.AddSystem(world1, Bed::TextureSystem);
     m_ecs.AddSystem(world1, Bed::UISystem);
@@ -125,6 +132,10 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::CollisionEnterTestSystem);
     m_ecs.AddSystem(world1, Bed::CollisionExitTestSystem);
     m_ecs.AddSystem(world1, Bed::CollisionStayTestSystem);
+    m_ecs.AddSystem(world1, Bed::ClickableHoverTest);
+    m_ecs.AddSystem(world1, Bed::ClickableUnhoveredTest);
+    m_ecs.AddSystem(world1, Bed::ClickableClickedTest);
+    m_ecs.AddSystem(world1, Bed::ClickableReleasedTest);
     
     //World 2
     uint64_t world2 = m_ecs.CreateWorld();

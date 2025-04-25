@@ -8,6 +8,7 @@ namespace Bed
     void UISystem(Bed::World& world)
     {
         //TODO: ui ugly refactor and ui moves based on all elements
+        //TODO: ANCHORS
 
         Bed::Vertex v0;
         v0.m_Position = { -0.5f, -0.5f, 0.0f };

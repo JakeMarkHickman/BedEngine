@@ -40,4 +40,56 @@ namespace Bed
             }
         }
     }
+
+    void ClickableHoverTest(Bed::World& world)
+    {
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        {
+            if(world.HasComponents<Bed::ClickableHovered, Bed::EnemyTag, Bed::Texture>(i))
+            {
+                Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
+
+                texture->TexturePath = "Assets/Resources/Textures/TestBedEngineIcon.png";
+            }
+        }
+    }
+
+    void ClickableUnhoveredTest(Bed::World& world)
+    {
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        {
+            if(world.HasComponents<Bed::ClickableUnhovered, Bed::EnemyTag, Bed::Texture>(i))
+            {
+                Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
+
+                texture->TexturePath = "Assets/Resources/Textures/256xMissingTexture.png";
+            }
+        }
+    }
+
+    void ClickableClickedTest(Bed::World& world)
+    {
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        {
+            if(world.HasComponents<Bed::ClickableClicked, Bed::EnemyTag, Bed::Texture>(i))
+            {
+                Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
+
+                texture->TexturePath = "Assets/Resources/Textures/256xWhite.png";
+            }
+        }
+    }
+
+    void ClickableReleasedTest(Bed::World& world)
+    {
+        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        {
+            if(world.HasComponents<Bed::ClickableReleased, Bed::EnemyTag, Bed::Texture>(i))
+            {
+                Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
+
+                texture->TexturePath = "Assets/Resources/Textures/TestBedEngineIcon.png";
+            }
+        }
+    }
 }

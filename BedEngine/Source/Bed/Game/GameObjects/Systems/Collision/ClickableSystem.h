@@ -1,0 +1,107 @@
+#pragma once
+
+#include <Components/Event/ClickableHovered.h>
+#include <Components/Event/ClickableUnhovered.h>
+#include <Components/Event/ClickableClicked.h>
+#include <Components/Event/ClickableReleased.h>
+
+#include <unordered_set>
+
+namespace Bed
+{
+    void ClickableSystem(Bed::World& world)
+    {
+        for(int i = 0; i < world.GetAllEntities().size(); i++)
+        {
+            //TODO: Make Work with 3D objects
+            //TODO: Using Input Component feels weird
+            //TODO: If changing texture persistant hovered component makes it impossible to change texture
+            if(world.HasComponents<Bed::Clickable, Bed::Transform, Bed::Input>(i))
+            {
+                Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
+                Bed::Input* input = world.GetComponent<Bed::Input>(i);
+
+                //TODO: take into account rotation
+                int x = transform->Position.x;
+                int y = transform->Position.y;
+                int w = transform->Scale.x / 2;
+                int h = transform->Scale.y / 2;
+
+                bool isHovering = (input->CursorX >= x - w && input->CursorX <= x + w &&
+                                    input->CursorY >= y - w && input->CursorY <= y + w);
+
+                //std::cout << isHovering << " : " << x - w << " " << y - w << "\n";
+
+                if(world.HasComponents<Bed::ClickableUnhovered>(i))
+                {
+                    world.RemoveComponents<Bed::ClickableUnhovered>(i);
+                }
+
+                if(!world.HasComponents<Bed::ClickableUnhovered>(i) && !isHovering)
+                {
+                    world.RemoveComponents<Bed::ClickableHovered>(i);
+                    world.AttachComponents(i, Bed::ClickableUnhovered(input->CursorX, input->CursorY));
+                }
+                
+                if(!world.HasComponents<Bed::ClickableHovered>(i) && isHovering)
+                {
+                    world.AttachComponents(i, Bed::ClickableHovered(input->CursorX, input->CursorY));
+                }
+
+                std::unordered_set<int> currentlyPressed;
+
+                for(int mouse = GLFW_MOUSE_BUTTON_1; mouse <= GLFW_MOUSE_BUTTON_LAST; mouse++)
+                {
+                    if(input->MouseData[mouse] == Bed::KeyState::Pressed)
+                    {
+                        currentlyPressed.insert(mouse);
+                    }
+                }
+
+                if(isHovering)
+                {
+                    std::unordered_set<int> newlyPressed;
+                    for(int button : currentlyPressed)
+                    {
+                        if(input->PreviousMouseData[button] != Bed::KeyState::Pressed)
+                        {
+                            newlyPressed.insert(button);
+                        }
+                    }
+
+                    if (world.HasComponents<Bed::ClickableClicked>(i))
+                    {
+                        world.RemoveComponents<Bed::ClickableClicked>(i);
+                    }
+                    
+                    if(!newlyPressed.empty())
+                    {
+                        world.AttachComponents(i, Bed::ClickableClicked(input->CursorX, input->CursorY, newlyPressed));
+                    }
+                }
+
+                if(isHovering)
+                {
+                    std::unordered_set<int> released;
+                    for(std::pair<const int, Bed::KeyState> button : input->PreviousMouseData)
+                    {
+                        if(input->PreviousMouseData[button.first] != Bed::KeyState::Released && input->MouseData[button.first] != Bed::KeyState::Pressed)
+                        {
+                            released.insert(button.first);
+                        }
+                    }
+
+                    if (world.HasComponents<Bed::ClickableReleased>(i))
+                    {
+                        world.RemoveComponents<Bed::ClickableReleased>(i);
+                    }
+                        
+                    if(!released.empty())
+                    {
+                        world.AttachComponents(i, Bed::ClickableReleased(input->CursorX, input->CursorY, released));
+                    }
+                }
+            }
+        }
+    }
+}
