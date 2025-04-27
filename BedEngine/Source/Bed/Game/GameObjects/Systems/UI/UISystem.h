@@ -3,14 +3,17 @@
 #include <Graphics/GraphicVariables.h>
 #include <Graphics/Vertex.h>
 
+//TODO: change this
+#include <Bed/Game/GameObjects/Components/UI/Anchor.h>
+
 namespace Bed
 {
     void UISystem(Bed::World& world)
     {
         //TODO: ui ugly refactor and ui moves based on all elements
-        //TODO: ANCHORS
 
         float aspect = Bed::Window::GetAspectRatio();
+        WindowSize winsize = Bed::Window::GetWindowSize();
 
         Bed::Vertex v0;
         v0.m_Position = { -0.5f, -0.5f, 0.0f };
@@ -54,7 +57,7 @@ namespace Bed
         shaderUI->Bind();
 
         //TODO: Use screen size
-        shaderUI->SetUniformMat4f("u_Projection", glm::orthoLH(-aspect * 3, aspect * 3, -1.0f * 3, 1.0f * 3, -1.0f, 1.0f));
+        shaderUI->SetUniformMat4f("u_Projection", glm::orthoLH(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f));
         shaderUI->SetUniformMat4f("u_View", glm::mat4(1.0f));
         shaderUI->SetUniformMat4f("u_Model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)));
 
@@ -64,12 +67,20 @@ namespace Bed
             {
                 Bed::UIElement* element = world.GetComponent<Bed::UIElement>(i);
 
-                if(!world.HasComponents<Bed::Transform>(i))
+                if(!world.HasComponents<Bed::Transform>(i)) // Check for Transform
                 {
                     world.AttachComponents(i, Bed::Transform(1.0f, 0.0f, 0.1f));
                 }
+                if(!world.HasComponents<Bed::Anchor>(i)) //Check for Anchor point
+                {
+                    world.AttachComponents(i, Bed::Anchor(0.0f));
+                }
 
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
+                Bed::Anchor* anchor = world.GetComponent<Bed::Anchor>(i);
+
+                float anchorXWorld = ((anchor->Position.x * 2.0f) - 1.0f) * aspect;
+                float anchorYWorld = (anchor->Position.y * 2.0f) - 1.0f;
 
                 std::vector<Bed::Vertex> transformedVerts = verts;
                 std::vector<unsigned int> modifiedIndices = indices;
@@ -79,6 +90,10 @@ namespace Bed
                 {
                     // Apply the transformation matrix to each vertex position
                     glm::vec4 transformedPosition = transform->GetMatrix() * glm::vec4(vert.m_Position.x, vert.m_Position.y, 0.0f, 1.0f);  // Matrix-vector multiplication
+
+                    transformedPosition.x += anchorXWorld;
+                    transformedPosition.y -= anchorYWorld;
+
                     vert.m_Position = Bed::Vector3(transformedPosition.x, transformedPosition.y, 0.0f);
                     
                     //TODO: change this to texture component

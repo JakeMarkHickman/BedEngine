@@ -19,6 +19,7 @@
 #include <Components/Tag/EnemyTag.h>
 
 #include <Bed/Game/GameObjects/Components/UI/UIElement.h>
+#include <Bed/Game/GameObjects/Components/UI/Anchor.h>
 
 #include <Systems/Input/InputSystem.h>
 #include <Systems/CameraSystem.h>
@@ -44,15 +45,17 @@ Bed::Game::Game()
     uint64_t world1 = m_ecs.CreateWorld();
 
     uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
-    m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(-2.0f, 2.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+    m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.1f)),
                                         Bed::UIElement(),
+                                        Bed::Anchor(0.0f),
                                         Bed::Texture("Assets/Resources/Textures/256xWhite.png"));
 
     uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
-    m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(2.0f, 2.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+    m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.1f)),
                                         Bed::UIElement(),
                                         Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                         Bed::Clickable(),
+                                        Bed::Anchor(Bed::Vector2(0.7f, 0.4f)),
                                         Bed::Input(),
                                         Bed::EnemyTag());
 

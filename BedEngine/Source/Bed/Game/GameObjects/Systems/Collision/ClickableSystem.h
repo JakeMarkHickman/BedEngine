@@ -11,6 +11,9 @@ namespace Bed
 {
     void ClickableSystem(Bed::World& world)
     {
+        float aspect = Bed::Window::GetAspectRatio();
+        WindowSize winsize = Bed::Window::GetWindowSize();
+
         for(int i = 0; i < world.GetAllEntities().size(); i++)
         {
             //TODO: Make Work with 3D objects
@@ -21,11 +24,20 @@ namespace Bed
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
                 Bed::Input* input = world.GetComponent<Bed::Input>(i);
 
+                if(!world.HasComponents<Bed::Anchor>(i)) //Check for Anchor point
+                {
+                    world.AttachComponents(i, Bed::Anchor(0.0f));
+                }
+                Bed::Anchor* anchor = world.GetComponent<Bed::Anchor>(i);
+
+                float anchorXWorld = ((anchor->Position.x * 2.0f) - 1.0f) * aspect;
+                float anchorYWorld = (anchor->Position.y * 2.0f) - 1.0f;
+
                 //TODO: take into account rotation
-                int x = transform->Position.x;
-                int y = transform->Position.y;
-                int w = transform->Scale.x / 2;
-                int h = transform->Scale.y / 2;
+                float x = transform->Position.x;
+                float y = transform->Position.y;
+                float w = transform->Scale.x / 2;
+                float h = transform->Scale.y / 2;
 
                 bool isHovering = (input->CursorX >= x - w && input->CursorX <= x + w &&
                                     input->CursorY >= y - w && input->CursorY <= y + w);
