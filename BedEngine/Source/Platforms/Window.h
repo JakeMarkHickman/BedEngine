@@ -22,6 +22,7 @@ namespace Bed
     {
     public:
         //Window(Bed::Platform* platform) { m_Platform = platform; };
+        //TODO: MINIMISING THE GAME BREAKS AS IT SETS THE WINDOW SIZE TO 0
 
         virtual bool CreateWindow(int width, int height, const char* title) = 0;
         virtual void UpdateWindow() = 0;
