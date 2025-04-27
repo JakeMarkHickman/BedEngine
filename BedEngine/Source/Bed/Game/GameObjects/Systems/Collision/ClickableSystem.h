@@ -39,10 +39,15 @@ namespace Bed
                 float w = transform->Scale.x / 2;
                 float h = transform->Scale.y / 2;
 
-                bool isHovering = (input->CursorX >= x - w && input->CursorX <= x + w &&
-                                    input->CursorY >= y - w && input->CursorY <= y + w);
+                Bed::Vector3 newPos = transform->Position + Bed::Vector3(anchorXWorld, -anchorYWorld, 0.0f);
 
-                //std::cout << isHovering << " : " << x - w << " " << y - w << "\n";
+                float cursorX = (input->CursorX / winsize.Width) * 2.0f - 1.0f;
+                float cursorY = ((winsize.Height - input->CursorY) / winsize.Height) * 2.0f - 1.0f;
+
+                cursorX *= aspect;
+
+                bool isHovering = (cursorX >= newPos.x - w && cursorX <= newPos.x + w &&
+                                    cursorY >= newPos.y - w && cursorY <= newPos.y + w);
 
                 if(world.HasComponents<Bed::ClickableUnhovered>(i))
                 {

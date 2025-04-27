@@ -45,13 +45,13 @@ Bed::Game::Game()
     uint64_t world1 = m_ecs.CreateWorld();
 
     uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
-    m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.1f)),
+    m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
                                         Bed::UIElement(),
-                                        Bed::Anchor(0.0f),
+                                        Bed::Anchor(Bed::Vector2(0.35f, 0.4f)),
                                         Bed::Texture("Assets/Resources/Textures/256xWhite.png"));
 
     uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
-    m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.1f)),
+    m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
                                         Bed::UIElement(),
                                         Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                         Bed::Clickable(),
