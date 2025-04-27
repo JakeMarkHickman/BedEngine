@@ -1,16 +1,16 @@
 #pragma once
 
 //TODO: THIS IS FUCKING BAD CHANGE WHEN REFACTORING PLATFORMS
-#include <Platforms/Win32.h>
+#include <Platforms/Windows/GLFWWindow.h>
 
 #include <unordered_map>
-#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3.h>
 
 namespace Bed
 {
     void InputSystem(Bed::World& world)
     {
-        GLFWwindow* window = Bed::Win32::GetWindow();
+        GLFWwindow* window = Bed::GLFWWindow::GetWindow();
 
         std::unordered_map<int, Bed::KeyState> keys;
         std::unordered_map<int, Bed::KeyState> mice;

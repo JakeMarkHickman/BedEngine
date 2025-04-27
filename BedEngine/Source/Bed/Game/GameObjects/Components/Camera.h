@@ -14,5 +14,8 @@ namespace Bed
         Camera(Bed::ProjectionType projectionType) : ProjectionType(projectionType) {};
 
         Bed::ProjectionType ProjectionType = Bed::ProjectionType::Perspective;
+
+        float FOV = 90.0f;
+        float Zoom = -10.0f;
     };
 }

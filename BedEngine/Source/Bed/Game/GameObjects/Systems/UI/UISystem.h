@@ -10,6 +10,8 @@ namespace Bed
         //TODO: ui ugly refactor and ui moves based on all elements
         //TODO: ANCHORS
 
+        float aspect = Bed::Window::GetAspectRatio();
+
         Bed::Vertex v0;
         v0.m_Position = { -0.5f, -0.5f, 0.0f };
         v0.m_Normal = { 0.0f, 0.0f, 0.0f };
@@ -52,7 +54,7 @@ namespace Bed
         shaderUI->Bind();
 
         //TODO: Use screen size
-        shaderUI->SetUniformMat4f("u_Projection", glm::orthoLH(-2.0f * 2, 2.0f * 2, -1.5f * 2, 1.5f * 2, -1.0f, 1.0f));
+        shaderUI->SetUniformMat4f("u_Projection", glm::orthoLH(-aspect * 3, aspect * 3, -1.0f * 3, 1.0f * 3, -1.0f, 1.0f));
         shaderUI->SetUniformMat4f("u_View", glm::mat4(1.0f));
         shaderUI->SetUniformMat4f("u_Model", glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)));
 

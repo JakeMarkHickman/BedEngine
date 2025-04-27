@@ -1,13 +1,18 @@
 
 #include "Application.h"
-#include <Platforms/PlatformWrapper.h>
+
+#include <Platforms/PlatformFactory.h>
+#include <Platforms/WindowFactory.h>
 
 namespace Bed
 {
     void Application::Run()
     {
+        m_Platform = Bed::PlatformFactory::CreatePlatform(GraphicsAPI::OpenGL);
+        m_Window = Bed::WindowFactory::CreatePlatform(m_Platform);
+
         //TODO: make a system to automatically recognise monitor size and scale correctly
-        if(!CreateWindow(800, 550, m_ApplicationName, GraphicsAPI::OpenGL)) // Check to make sure the Window is created
+        if(!m_Window->CreateWindow(800, 450, m_ApplicationName)) // Check to make sure the Window is created
         {
             return; // Return if the Window wasnt created
         }
@@ -21,16 +26,16 @@ namespace Bed
         //Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
         
         //Game Loop
-        while (IsWindowOpen())
+        while (m_Window->IsWindowOpen())
         {
             m_Time.CalculateDeltaTime();
 
             //std::cout << Time::GetDeltaTime() << "\n";
 
             m_Game.Update();
-            UpdateWindow(); // Update the platform App
+            m_Window->UpdateWindow(); // Update the platform App
         }
         
-        CloseWindow(); // Close the window
+        m_Window->CloseWindow(); // Close the window
     } 
 }

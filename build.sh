@@ -61,6 +61,8 @@ EcsCpps="$Bed/ECS/ECS.cpp $Bed/ECS/ComponentManager.cpp $Bed/ECS/EntityManager.c
 
 MathCpp="$Math/Matrix/Matrix3x3.cpp"
 
+PlatformSpecficCpps=""
+
 EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
             $App/Time.cpp
             $GraphicsCpp
@@ -81,6 +83,8 @@ GameCpp="Playground/Source/App.cpp"
 if [[ "$uname" == "Linux" ]]; then           # This checks if the version is Linux
     echo Linux is currently unsupported
 
+    PlatformSpecficCpps=""
+
     # Set Variables
     GamePredef="$GamePredef -DBED_LINUX_PLATFORM"
     EnginePredef="$EnginePredef -DBED_LINUX_PLATFORM"
@@ -90,6 +94,8 @@ elif [[ "$uname" == "Darwin" ]]; then
 
     echo Mac is currently unsupported
 
+    PlatformSpecficCpps=""
+
     # Set Variables
     GamePredef="$GamePredef -DBED_MAC_PLATFORM"
     EnginePredef="$EnginePredef -DBED_MAC_PLATFORM"
@@ -98,6 +104,8 @@ elif [[ "$uname" == "Darwin" ]]; then
 else
 
     echo Building for Windows...
+
+    PlatformSpecficCpps=$Platforms/Windows/GLFWWindow.cpp
 
     # Set Variables
     EngineLibs="$EngineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
@@ -112,7 +120,7 @@ fi
 
 # Build the Engine 
 echo Building Engine DLL...
-clang++ -shared $EngineIncludes $EngineLibs $EngineFlags $EnginePredef -o"$buildPath/$EngineOutputFile" $EngineCpp
+clang++ -shared $EngineIncludes $EngineLibs $EngineFlags $EnginePredef -o"$buildPath/$EngineOutputFile" $EngineCpp $PlatformSpecficCpps
 
 # Build the Game
 echo Building Game...

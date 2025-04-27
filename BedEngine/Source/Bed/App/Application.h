@@ -5,7 +5,8 @@
 #include <Bed/Core.h>
 #include <Bed/Game/Game.h>
 
-#include <Bed/ContextRegistry/ContextRegistry.h>
+#include <Platforms/Platform.h>
+#include <Platforms/Window.h>
 
 namespace Bed
 {
@@ -45,6 +46,9 @@ namespace Bed
 
         Bed::Game m_Game;
         Bed::Time m_Time;
+
+        Bed::Platform* m_Platform = nullptr;
+        Bed::Window* m_Window = nullptr;
     }; 
 
     Application* CreateApplication();
