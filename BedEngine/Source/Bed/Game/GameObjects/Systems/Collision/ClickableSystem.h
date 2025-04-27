@@ -19,15 +19,10 @@ namespace Bed
             //TODO: Make Work with 3D objects
             //TODO: Using Input Component feels weird
             //TODO: If changing texture persistant hovered component makes it impossible to change texture
-            if(world.HasComponents<Bed::Clickable, Bed::Transform, Bed::Input>(i))
+            if(world.HasComponents<Bed::Clickable, Bed::Transform, Bed::Input, Bed::Anchor>(i))
             {
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
                 Bed::Input* input = world.GetComponent<Bed::Input>(i);
-
-                if(!world.HasComponents<Bed::Anchor>(i)) //Check for Anchor point
-                {
-                    world.AttachComponents(i, Bed::Anchor(0.0f));
-                }
                 Bed::Anchor* anchor = world.GetComponent<Bed::Anchor>(i);
 
                 float anchorXWorld = ((anchor->Position.x * 2.0f) - 1.0f) * aspect;
