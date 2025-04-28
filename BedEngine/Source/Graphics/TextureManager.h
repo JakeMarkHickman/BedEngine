@@ -48,7 +48,7 @@ namespace Bed
             return 0;
         }
 
-        static Bed::TextureAsset* LoadTexture(std::string path)
+        static Bed::TextureAsset* LoadTexture(std::string path, TextureFiltering textureFiltering = TextureFiltering::Bilinear)
         {
             int Slot = AssignSlot(path);
 
@@ -58,7 +58,7 @@ namespace Bed
             }
 
             //TODO: change this based on renderer and selected texture storage (eg. bindless textures)
-            Bed::TextureAsset* texture = new OpenTexture(path);
+            Bed::TextureAsset* texture = new OpenTexture(path, textureFiltering);
             m_TextureLookup[Slot] = texture;
 
             return texture;

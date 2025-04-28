@@ -105,6 +105,25 @@ namespace Bed
                     }
                 }
 
+                //TODO: Just a test
+                if(world.HasComponents<Bed::Sprite>(i))
+                {
+                    Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
+                    if (transformedVerts.size() == 3)
+                    {
+                        transformedVerts[0].m_TexCoords = Bed::Vector2(sprite->UVTopLeft.x, sprite->UVBottomRight.y); // Bottom Left
+                        transformedVerts[1].m_TexCoords = Bed::Vector2(sprite->UVBottomRight.x, sprite->UVBottomRight.y); // Bottom Right
+                        transformedVerts[2].m_TexCoords = Bed::Vector2(sprite->UVTopLeft.x, sprite->UVTopLeft.y); // Top Left
+                    }
+                    else if (transformedVerts.size() == 4)
+                    {
+                        transformedVerts[0].m_TexCoords = Bed::Vector2(sprite->UVTopLeft.x, sprite->UVBottomRight.y); // Bottom Left
+                        transformedVerts[1].m_TexCoords = Bed::Vector2(sprite->UVBottomRight.x, sprite->UVBottomRight.y); // Bottom Right
+                        transformedVerts[2].m_TexCoords = Bed::Vector2(sprite->UVBottomRight.x, sprite->UVTopLeft.y); // Top Right
+                        transformedVerts[3].m_TexCoords = Bed::Vector2(sprite->UVTopLeft.x, sprite->UVTopLeft.y); // Top Left
+                    }
+                }
+
                 for (auto& ind : modifiedIndices)
                 {
                     ind += totalVertsBefore;
