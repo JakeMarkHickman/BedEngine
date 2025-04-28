@@ -6,16 +6,37 @@
 #include "OpenDebugger.h"
 
 
-Bed::OpenTexture::OpenTexture(const std::string& path) : m_RendererID(0), Bed::TextureAsset(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BitsPerPixel(0)
+Bed::OpenTexture::OpenTexture(const std::string& path, TextureFiltering textureFiltering = TextureFiltering::Bilinear) : m_RendererID(0), Bed::TextureAsset(path, textureFiltering), m_LocalBuffer(nullptr), m_BitsPerPixel(0)
 {
+    m_Width = 0;
+    m_Height = 0;
+
     stbi_set_flip_vertically_on_load(1);
     m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BitsPerPixel, 4);
 
     GLCall(glGenTextures(1, &m_RendererID));
     GLCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
 
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    int filter;
+
+    switch(m_TextureFiltering)
+    {
+        case TextureFiltering::Nearest:
+            filter = GL_NEAREST;
+            break;
+        case TextureFiltering::Bilinear:
+            filter = GL_LINEAR;
+            break;
+        case TextureFiltering::Trilinear:
+            filter = GL_LINEAR_MIPMAP_LINEAR;
+            break;
+        default:
+            filter = GL_LINEAR;
+            break;
+    }
+
+    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter));
+    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 

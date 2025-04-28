@@ -21,8 +21,9 @@ namespace Bed
 
                 if(texture->TextureAsset == nullptr || texture->TextureSlot != Bed::TextureManager::GetSlot(texture->TexturePath))
                 {
-                    texture->TextureAsset = Bed::TextureManager::LoadTexture(texture->TexturePath);
+                    texture->TextureAsset = Bed::TextureManager::LoadTexture(texture->TexturePath, texture->TextureFiltering);
                     texture->TextureSlot = Bed::TextureManager::GetSlot(texture->TexturePath);
+                    texture->TextureSize = Bed::Vector2(texture->TextureAsset->GetWidth(), texture->TextureAsset->GetHeight());
                 }
                 texture->TextureAsset->Bind(texture->TextureSlot);
             }

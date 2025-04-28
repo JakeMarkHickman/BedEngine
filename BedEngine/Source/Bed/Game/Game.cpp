@@ -13,13 +13,15 @@
 #include <Components/Collision/AABBCollision.h>
 #include <Components/Collision/Clickable.h>
 #include <Components/Material/Texture.h>
+#include <Components/Material/Sprite.h>
 #include <Components/Material/Material.h>
 #include <Components/Enviroment/Fog.h>
 #include <Components/Tag/PlayerTag.h>
 #include <Components/Tag/EnemyTag.h>
+#include <Components/UI/UIElement.h>
+#include <Components/UI/Anchor.h>
+#include <Components/Utility/Timer.h>
 
-#include <Bed/Game/GameObjects/Components/UI/UIElement.h>
-#include <Bed/Game/GameObjects/Components/UI/Anchor.h>
 
 #include <Systems/Input/InputSystem.h>
 #include <Systems/CameraSystem.h>
@@ -30,13 +32,16 @@
 #include <Systems/Lighting/SpotLightSystem.h>
 #include <Systems/Collision/AABBCollisionSystem.h>
 #include <Systems/Material/TextureSystem.h>
+#include <Systems/Material/SpriteSystem.h>
 #include <Systems/Material/MaterialSystem.h>
 #include <Systems/Enviroment/FogSystem.h>
 #include <Systems/UI/UISystem.h>
 #include <Systems/Collision/ClickableSystem.h>
+#include <Systems/Utility/TimerSystem.h>
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
 #include <Bed/Game/GameObjects/Systems/MovementSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
+#include <Bed/Game/GameObjects/Systems/Tests/AnimTestSystem.h>
 
 
 Bed::Game::Game()
@@ -48,7 +53,10 @@ Bed::Game::Game()
     m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
                                         Bed::UIElement(),
                                         Bed::Anchor(Bed::Vector2(0.35f, 0.4f)),
-                                        Bed::Texture("Assets/Resources/Textures/256xWhite.png"));
+                                        Bed::Texture("Assets/Resources/Textures/LittleGuy.png", TextureFiltering::Nearest),
+                                        Bed::Sprite(),
+                                        Bed::Timer(1.0f, true, true),
+                                        Bed::EnemyTag());
 
     uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
@@ -122,6 +130,7 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::ClickableSystem);
     m_ecs.AddSystem(world1, Bed::CameraSystem);
     m_ecs.AddSystem(world1, Bed::TextureSystem);
+    m_ecs.AddSystem(world1, Bed::SpriteSystem);
     m_ecs.AddSystem(world1, Bed::UISystem);
     m_ecs.AddSystem(world1, Bed::StaticMeshSystem);
     m_ecs.AddSystem(world1, Bed::FogSystem);
@@ -132,6 +141,7 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::PlayerControllerSystem);
     m_ecs.AddSystem(world1, Bed::MovementSystem);
     m_ecs.AddSystem(world1, Bed::AABBCollisionSystem);
+    m_ecs.AddSystem(world1, Bed::TimerSystem);
     m_ecs.AddSystem(world1, Bed::CollisionEnterTestSystem);
     m_ecs.AddSystem(world1, Bed::CollisionExitTestSystem);
     m_ecs.AddSystem(world1, Bed::CollisionStayTestSystem);
@@ -139,6 +149,7 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::ClickableUnhoveredTest);
     m_ecs.AddSystem(world1, Bed::ClickableClickedTest);
     m_ecs.AddSystem(world1, Bed::ClickableReleasedTest);
+    m_ecs.AddSystem(world1, Bed::AnimTestSystem);
     
     //World 2
     uint64_t world2 = m_ecs.CreateWorld();
