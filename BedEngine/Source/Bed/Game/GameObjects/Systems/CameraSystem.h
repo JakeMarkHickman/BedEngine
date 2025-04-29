@@ -27,9 +27,6 @@ namespace Bed
 
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
 
-                //Bind Shader
-                shader3D->Bind();
-
                 switch(cam->ProjectionType)
                 {
                     case Bed::ProjectionType::Orthographic:
@@ -47,10 +44,18 @@ namespace Bed
                 //Set mvp
                 view = glm::lookAtLH(camPos, targetPos, upVec);
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));// model Pos
+                
+                shader3D->Bind();
                 shader3D->SetUniformMat4f("u_Projection", proj);
                 shader3D->SetUniformMat4f("u_View", view);
                 shader3D->SetUniformMat4f("u_Model", model);
                 shader3D->SetUniform3f("u_CamPos", transform->Position);
+
+                shader2D->Bind();
+                shader2D->SetUniformMat4f("u_Projection", proj);
+                shader2D->SetUniformMat4f("u_View", view);
+                shader2D->SetUniformMat4f("u_Model", model);
+                shader2D->SetUniform3f("u_CamPos", transform->Position);
             }
         }
     }

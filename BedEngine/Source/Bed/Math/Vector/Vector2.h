@@ -6,7 +6,7 @@
 
 namespace Bed
 {
-    struct BED_API Vector2
+    struct Vector2
     {
         Vector2() {};
         Vector2(float value) : x(value), y(value) {};

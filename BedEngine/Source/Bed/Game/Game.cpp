@@ -21,6 +21,9 @@
 #include <Components/UI/Anchor.h>
 #include <Components/Utility/Timer.h>
 
+#include <Bed/Game/GameObjects/Components/Material/TileMap.h>
+#include <Bed/Game/GameObjects/Systems/Material/TileMapSystem.h>
+
 
 #include <Systems/Input/InputSystem.h>
 #include <Systems/CameraSystem.h>
@@ -45,8 +48,24 @@
 
 Bed::Game::Game()
 {
+    std::vector<int> map = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2,
+                             0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 
+                             0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+                             4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                             0, 0, 0, 0, 1, 1, 1, 5, 5, 5,
+                             0, 0, 0, 0, 1, 1, 1, 2, 2, 2,
+                             0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 
+                             0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+                             4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
+                             0, 0, 0, 0, 1, 1, 1, 5, 5, 5};
+
     //World 1
     uint64_t world1 = m_ecs.CreateWorld();
+
+    uint64_t w1Map = m_ecs.CreateEntity(world1);
+    m_ecs.AttachComponents(world1, w1Map, Bed::Transform(0.0f, 0.0f, 1.0f),
+                                            Bed::Texture("Assets/Resources/Textures/SpriteTest.png"),
+                                            Bed::TileMap(map));
 
     uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
@@ -54,7 +73,7 @@ Bed::Game::Game()
                                         Bed::Anchor(Bed::Vector2(0.35f, 0.4f)),
                                         Bed::Texture("Assets/Resources/Textures/LittleGuy.png", TextureFiltering::Nearest),
                                         Bed::Sprite(),
-                                        Bed::Timer(1.0f, true, true),
+                                        Bed::Timer(0.5f, true, true),
                                         Bed::EnemyTag());
 
     uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
@@ -130,6 +149,7 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::CameraSystem);
     m_ecs.AddSystem(world1, Bed::TextureSystem);
     m_ecs.AddSystem(world1, Bed::SpriteSystem);
+    m_ecs.AddSystem(world1, Bed::TileMapSystem);
     m_ecs.AddSystem(world1, Bed::UISystem);
     m_ecs.AddSystem(world1, Bed::StaticMeshSystem);
     m_ecs.AddSystem(world1, Bed::FogSystem);

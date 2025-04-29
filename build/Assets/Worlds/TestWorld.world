@@ -1,13 +1,56 @@
 {
  	"World" : {
-		"WorldName" : "TestWorld",
+		"WorldName" : "World1",
 		"Entities" : [
 			{
+				"Name": "HUD1",
+				"Tags": [ "Enemy" ],
+				"Components" : {
+					"Bed::Transform" : {
+						"Position" : [0.0, 0.0, 0.0],
+						"Rotation" : [0.0, 0.0, 0.0],
+						"Scale" : [0.3, 0.3, 0.3]
+					},
+					"Bed::UIElement" : {},
+					"Bed::Anchor" : {
+						"Position" : [0.35, 0.4]
+					},
+					"Bed::Texture" : {
+						"Path" : "Assets/Resources/Textures/LittleGuy.png",
+						"Filtering" : "Nearest"
+					},
+					"Bed::Sprite" : {},
+					"Bed::Timer" : {
+						"Duration" : 0.5,
+						"Active" : true,
+						"Looping" : true
+					}
+				}
+			},
+			{
+				"Name" : "HUD2",
+				"Tags": [ "Enemy" ],
+				"Components" : {
+					"Bed::Transform" : {
+						"Position" : [0.0, 0.0, 0.0],
+						"Rotation" : [0.0, 0.0, 0.0],
+						"Scale" : [0.3, 0.3, 0.3]
+					},
+					"Bed::UIElement" : {},
+					"Bed::Anchor" : {
+						"Position" : [0.7, 0.4]
+					},
+					"Bed::Texture" : {
+						"Path" : "Assets/Resources/Textures/256xMissingTexture.png"
+					},
+					"Bed::Clickable" : {},
+					"Bed::Input" : {}
+				}
+
+			},
+			{
 				"Name" : "Player",
-				"Tags" : [
-					"Player",
-					"Entity"
-				],
+				"Tags" : [ "Player" ],
 				"Components" : {
 					"Bed::Transform" : {
 						"Position" : [0.0, 0.0, 5.0],
@@ -15,9 +58,16 @@
 						"Scale" : [1.0, 1.0, 1.0]
 					},
 					"Bed::StaticMesh" : {
-						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
+						"Path" : "Assets/Resources/Meshes/Cube.obj"
 					},
-					"Bed::PlayerController" : {}
+					"Bed::Texture" : {
+						"Path" : "Assets/Resources/Textures/TestBedEngineIcon.png"
+					},
+					"Bed::Input" : {},
+					"Bed::AABBCollision" : {
+						"Min" : -1.0,
+						"Max" : 1.0
+					}
 				}
 			},
 			{
@@ -31,14 +81,13 @@
 					},
 					"Bed::Camera" : {
 						"Projection" : "Bed::RenderType::Perspective"
-					}
+					},
+					"Bed::Input" : {}
 				}
 			},
 			{
 				"Name" : "Ent1",
-				"Tags" : [
-					"Entity"
-				],
+				"Tags" : [ "Enemy" ],
 				"Components" : {
 					"Bed::Transform" : {
 						"Position" : [-2.5, 0.0, 5.0],
@@ -46,15 +95,20 @@
 						"Scale" : [1.0, 1.0, 1.0]
 					},
 					"Bed::StaticMesh" : {
-						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
+						"Path" : "Assets/Resources/Meshes/Cube.obj"
+					},
+					"Bed::Texture" : {
+						"Path" : "Assets/Resources/Textures/256xMissingTexture.png"
+					},
+					"Bed::AABBCollision" : {
+						"Min" : -1.0,
+						"Max" : 1.0
 					}
 				}
 			},
 			{
 				"Name" : "Ent2",
-				"Tags" : [
-					"Entity"
-				],
+				"Tags" : [ "Enemy" ],
 				"Components" : {
 					"Bed::Transform" : {
 						"Position" : [2.5, 0.0, 5.0],
@@ -62,7 +116,14 @@
 						"Scale" : [1.0, 1.0, 1.0]
 					},
 					"Bed::StaticMesh" : {
-						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
+						"Path" : "Assets/Resources/Meshes/Cube.obj"
+					},
+					"Bed::Texture" : {
+						"Path" : "Assets/Resources/Textures/256xMissingTexture.png"
+					},
+					"Bed::AABBCollision" : {
+						"Min" : -1.0,
+						"Max" : 1.0
 					}
 				}
 			},
@@ -75,7 +136,20 @@
 						"Scale" : [20.0, 0.5, 20.0]
 					},
 					"Bed::StaticMesh" : {
-						"Mesh" : "Assets/Resources/Meshes/Cube.obj"
+						"Path" : "Assets/Resources/Meshes/Cube.obj"
+					},
+					"Bed::Texture" : {
+						"Path" : "Assets/Resources/Textures/256xWhite.png"
+					}
+				}
+			},
+			{
+				"Name" : "Fog",
+				"Components" : {
+					"Bed::Fog" : {
+						"Colour" : [1.0, 1.0, 1.0],
+						"Near" : 10.0,
+						"Far" : 45.0
 					}
 				}
 			},
@@ -160,9 +234,30 @@
 			}
 		],
 		"Systems" : [
-			"StaticMeshSystem",
-			"AmbientLightSystem",
-			"CameraSystem"
+			"Bed::InputSystem",
+    			"Bed::ClickableSystem",
+  			"Bed::CameraSystem",
+			"Bed::TextureSystem",
+    			"Bed::SpriteSystem",
+    			"Bed::UISystem",
+    			"Bed::StaticMeshSystem",
+    			"Bed::FogSystem",
+    			"Bed::AmbientLightSystem",
+    			"Bed::SpotLightSystem",
+    			"Bed::PointLightSystem",
+    			"Bed::DirectionalLightSystem",
+    			"Bed::PlayerControllerSystem",
+    			"Bed::MovementSystem",;
+    			"Bed::AABBCollisionSystem",
+    			"Bed::TimerSystem",;
+    			"Bed::CollisionEnterTestSystem",
+    			"Bed::CollisionExitTestSystem",
+    			"Bed::CollisionStayTestSystem",
+    			"Bed::ClickableHoverTest",
+    			"Bed::ClickableUnhoveredTest",
+    			"Bed::ClickableClickedTest",
+    			"Bed::ClickableReleasedTest",
+    			"Bed::AnimTestSystem"
 		]
  	}
 }
