@@ -1,6 +1,8 @@
 #shader vertex
 #version 450 core
 
+#define INSTANCING
+
 #include "Vertex/Core/VertexLayout.glsl"
 #include "Vertex/Core/ModelViewProjection.glsl"
 
@@ -8,7 +10,7 @@ void main()
 {
     v_Colour = a_Colour;
     v_TexCoord = a_TexCoord;
-    v_TexID = a_TexID;
+    v_TexID = GetTextureID();
     gl_Position = Transform(a_Position);
 }
 

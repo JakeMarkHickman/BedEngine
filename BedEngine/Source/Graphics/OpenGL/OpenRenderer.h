@@ -1,18 +1,17 @@
 #pragma once
 
-#include <Graphics/VertexArray.h>
-#include <Graphics/IndexBuffer.h>
-#include <Graphics/ShaderAsset.h>
+#include <Graphics/Renderer.h>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 namespace Bed
 {
-    class OpenRenderer
+    class OpenRenderer : public Bed::Renderer
     {
     public:
-        static void Draw(const VertexArray* va, const IndexBuffer* ib, const ShaderAsset* shader);
-        static void Clear();
+        void Draw(const VertexArray* va, const IndexBuffer* ib, const ShaderAsset* shader) const override;
+        void DrawInstanced(const VertexArray* va, const IndexBuffer* ib, const InstanceBuffer* ivb, const ShaderAsset* shader) const override;
+        void Clear() const override;
     };
 }

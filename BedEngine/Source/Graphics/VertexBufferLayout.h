@@ -10,6 +10,7 @@ namespace Bed
         unsigned int type;
         unsigned int count;
         unsigned char normalised;
+        unsigned int Offset;
 
         static unsigned int GetSizeOfType(unsigned int type)
         {
@@ -37,22 +38,37 @@ namespace Bed
         template<>
         void Push<float>(unsigned int count)
         {
-            m_Elements.push_back({ GL_FLOAT, count, GL_FALSE });
+            m_Elements.push_back({ GL_FLOAT, count, GL_FALSE, m_Stride });
             m_Stride += count * Bed::VertexBufferLayoutElement::GetSizeOfType(GL_FLOAT);
         }
 
         template<>
         void Push<unsigned int>(unsigned int count)
         {
-            m_Elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
+            m_Elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE, m_Stride });
             m_Stride += count * Bed::VertexBufferLayoutElement::GetSizeOfType(GL_UNSIGNED_INT);
         }
 
         template<>
         void Push<unsigned char>(unsigned int count)
         {
-            m_Elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
+            m_Elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE, m_Stride });
             m_Stride += count * Bed::VertexBufferLayoutElement::GetSizeOfType(GL_UNSIGNED_BYTE);
+        }
+
+        void PushMat4()
+        {
+            size_t offset = m_Stride;
+            for (int i = 0; i < 4; ++i)
+            {
+                m_Elements.push_back({
+                    GL_FLOAT,
+                    4,
+                    GL_FALSE,
+                    static_cast<unsigned int>(offset + sizeof(float) * i * 4)
+                });
+            }
+            m_Stride += sizeof(float) * 16;
         }
 
         inline const std::vector<VertexBufferLayoutElement> GetElements() const& { return m_Elements; }

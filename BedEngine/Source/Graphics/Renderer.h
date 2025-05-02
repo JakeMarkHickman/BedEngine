@@ -2,6 +2,7 @@
 
 #include "VertexArray.h"
 #include "IndexBuffer.h"
+#include "InstanceBuffer.h"
 #include "ShaderAsset.h"
 
 namespace Bed
@@ -9,7 +10,8 @@ namespace Bed
     class Renderer
     {
     public:
-        void Draw(const VertexArray* va, const IndexBuffer* ib, const ShaderAsset* shader) const;
-        void Clear() const;
+        virtual void Draw(const VertexArray* va, const IndexBuffer* ib, const ShaderAsset* shader) const {};
+        virtual void DrawInstanced(const VertexArray* va, const IndexBuffer* ib, const InstanceBuffer* ivb, const ShaderAsset* shader) const {};
+        virtual void Clear() const {};
     };
 }

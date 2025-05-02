@@ -4,6 +4,7 @@
 #include <Graphics/GraphicVariables.h>
 
 //TODO: Remove this
+#include <Graphics/OpenGL/OpenRenderer.h>
 #include <Graphics/OpenGL/OpenTexture.h>
 #include <Graphics/OpenGL/OpenShader.h>
 #include <Graphics/TextureManager.h>

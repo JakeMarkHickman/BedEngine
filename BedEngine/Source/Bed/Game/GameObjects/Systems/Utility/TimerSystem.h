@@ -31,7 +31,7 @@ namespace Bed
                         }
 
                         timer->Elapsed = 0.0f;
-                        
+
                         world.AttachComponents(i, Bed::TimerCompleted());
                     }
                 }

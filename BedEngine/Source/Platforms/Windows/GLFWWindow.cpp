@@ -49,6 +49,9 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
+    
+    renderer = new Bed::OpenRenderer();
+
     //TODO: Make this dynamic
     struct PointData
     {
@@ -145,9 +148,48 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
             
     //UI Shader
     {
+        Bed::Vertex v0;
+        v0.m_Position = { -0.5f, -0.5f, 0.0f };
+        v0.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v0.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v0.m_TexCoords = { 0.0f,  0.0f };
+        v0.m_TexID = 0;
+
+        Bed::Vertex v1;
+        v1.m_Position = { 0.5f, -0.5f, 0.0f };
+        v1.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v1.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v1.m_TexCoords = { 1.0f,  0.0f };
+        v1.m_TexID = 0;
+
+        Bed::Vertex v2;
+        v2.m_Position = { 0.5f, 0.5f, 0.0f };
+        v2.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v2.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v2.m_TexCoords = { 1.0f,  1.0f };
+        v2.m_TexID = 0;
+
+        Bed::Vertex v3;
+        v3.m_Position = { -0.5f, 0.5f, 0.0f };
+        v3.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v3.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v3.m_TexCoords = { 0.0f,  1.0f };
+        v3.m_TexID = 0;
+
+        struct UIInstanceData
+        {
+            glm::mat4 MatTransform;
+            float TextureID;
+        };
+
+        std::vector<Bed::Vertex> verts = { v0, v1, v2, v3 };
+        std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
+
         vaUI = new Bed::VertexArray();
+        ivaUI = new Bed::InstanceArray();
         vbUI = new Bed::VertexBuffer(4000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
         ibUI = new Bed::IndexBuffer(6000);
+        ivbUI = new Bed::InstanceBuffer(100, sizeof(UIInstanceData)); //100 instances
 
         //TODO: UI doesnt need normal
         VertexBufferLayout vertLayoutUI;
@@ -157,6 +199,14 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
         vertLayoutUI.Push<float>(2); // TextureCoord: 2 Floats (x, y)
         vertLayoutUI.Push<float>(1); // Texture ID: 1 Float (ID)
         vaUI->AddBuffer(vbUI, vertLayoutUI);
+
+        VertexBufferLayout InstanceLayoutUI;
+        InstanceLayoutUI.PushMat4();
+        InstanceLayoutUI.Push<float>(1); // Texture ID: 1 Float (ID)
+        ivaUI->AddBuffer(ivbUI, InstanceLayoutUI, 5);
+
+        vbUI->PopulateBuffer(verts.data(), verts.size(), 0);
+        ibUI->PopulateBuffer(indices.data(), indices.size(), 0);
 
         shaderUI = new Bed::OpenShader("Assets/Resources/Shaders/BedUI.shader");
         shaderUI->Bind();
@@ -182,6 +232,7 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     shaderUI->Unbind();
     vbUI->Unbind();
     ibUI->Unbind();
+    ivbUI->Unbind();
 
     return true;
 }
@@ -205,6 +256,7 @@ void Bed::GLFWWindow::UpdateWindow()
 
     glDisable(GL_DEPTH_TEST);
     renderer->Draw(vaUI, ibUI, shaderUI);
+    renderer->DrawInstanced(vaUI, ibUI, ivbUI, shaderUI);
 
     //Unbind Everything
     Bed::TextureManager::UnbindTextures();
@@ -224,6 +276,7 @@ void Bed::GLFWWindow::UpdateWindow()
     shaderUI->Unbind();
     vbUI->Unbind();
     ibUI->Unbind();
+    ivbUI->Unbind();
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);

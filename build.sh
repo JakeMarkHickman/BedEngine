@@ -41,9 +41,9 @@ EnginePredef="-std=c++17 -Wno-c++17-extensions -DBED_BUILD_DLL"             # De
 
 #CPPs
 GraphicsCpp="$Graphics/VertexBuffer.cpp $Graphics/IndexBuffer.cpp
-            $Graphics/VertexArray.cpp $Graphics/Renderer.cpp
-            $Graphics/ShaderAsset.cpp $Graphics/GraphicVariables.cpp 
-            $Graphics/StorageBuffer.cpp"
+            $Graphics/VertexArray.cpp $Graphics/ShaderAsset.cpp 
+            $Graphics/GraphicVariables.cpp $Graphics/InstanceArray.cpp
+            $Graphics/StorageBuffer.cpp $Graphics/InstanceBuffer.cpp"
 
 OpenGLCpp="$Graphics/OpenGL/OpenRenderer.cpp $Graphics/OpenGL/OpenShader.cpp $Graphics/OpenGL/OpenTexture.cpp"
 

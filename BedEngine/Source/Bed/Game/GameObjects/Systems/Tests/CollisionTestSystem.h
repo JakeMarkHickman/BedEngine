@@ -71,7 +71,7 @@ namespace Bed
 
     void ClickableClickedTest(Bed::World& world)
     {
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(int i = 0; i < world.GetAllEntities().size(); i++)
         {
             if(world.HasComponents<Bed::ClickableClicked, Bed::EnemyTag, Bed::Texture>(i))
             {

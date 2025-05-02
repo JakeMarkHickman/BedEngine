@@ -49,8 +49,6 @@ namespace Bed
     
                         float U1 = ((tileX + 1) * tileMap->TileSize.x) / texture->TextureSize.x;
                         float V1 = 1.0f - ((tileY + 1) * tileMap->TileSize.y) / texture->TextureSize.y;
-
-                        std::cout << U0 << " " << V0 << " : " << U1 << " " << V1 << "\n";
                     }
                 }
             }

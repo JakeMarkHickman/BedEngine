@@ -1,6 +1,8 @@
 #shader vertex
 #version 450 core
 
+//#define INSTANCING
+
 #include "Vertex/Core/VertexLayout.glsl"
 #include "Vertex/Core/ModelViewProjection.glsl"
 

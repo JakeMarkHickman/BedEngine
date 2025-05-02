@@ -6,6 +6,13 @@
 
 Bed::Mesh::Mesh(std::string path)
 {
+    LoadFile(path);
+}
+
+
+
+void Bed::Mesh::LoadFile(std::string path)
+{
     //TODO: This currently only uses OBJ files. this will soon need to be expaneded!
     //TODO: OBJ loading and other file extention loading methods will need to be abstracted
 

@@ -1,18 +1,18 @@
 #pragma once
 
-#include "VertexBuffer.h"
 #include "VertexBufferLayout.h"
 #include "Vertex.h"
+#include "InstanceBuffer.h"
 
 namespace Bed
 {
-    class VertexArray
+    class InstanceArray
     {
     public:
-        VertexArray();
-        ~VertexArray();
+        InstanceArray();
+        ~InstanceArray();
 
-        void AddBuffer(const Bed::VertexBuffer* vb, const Bed::VertexBufferLayout& layout);
+        void AddBuffer(const Bed::InstanceBuffer* ivb, const Bed::VertexBufferLayout& layout, unsigned int baseIndex);
 
         void PopulateBuffer(const void* verts, unsigned int offset);
 

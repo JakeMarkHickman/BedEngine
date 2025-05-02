@@ -18,6 +18,7 @@ namespace Bed
         std::vector<unsigned int> GetIndices() { return m_Indices; };
         
     private:
+        void LoadFile(std::string path);
         void LoadPositions(std::string line);
         void LoadUVWs(std::string line);
         void LoadVertexNormals(std::string line);

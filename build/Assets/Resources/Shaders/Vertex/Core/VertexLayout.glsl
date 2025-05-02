@@ -3,6 +3,19 @@ layout(location = 1) in vec3 a_Normal;
 layout(location = 2) in vec4 a_Colour;
 layout(location = 3) in vec2 a_TexCoord;
 layout(location = 4) in float a_TexID;
+//layout 5, 6, 7 and 8 is given to instancing
+#ifdef INSTANCING
+    layout(location = 9) in float a_InstanceTexID;
+    float GetTextureID()
+    {
+        return a_InstanceTexID;
+    }
+#else
+    float GetTextureID()
+    {
+        return a_TexID;
+    }
+#endif
 
 out vec4 v_Pos;
 out vec3 v_Normal;

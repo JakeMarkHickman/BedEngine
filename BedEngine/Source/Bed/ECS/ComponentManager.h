@@ -91,7 +91,6 @@ namespace Bed
             {
                 return false;
             }
-
             return true;
         }
 
