@@ -35,10 +35,10 @@ namespace Bed
                 int frameY = frame / framesPerRow;
     
                 sprite->UVTopLeft.x = (frameX * sprite->SpriteSize.x) / textureWidth;
-                sprite->UVTopLeft.y = 1.0f - (frameY * sprite->SpriteSize.y) / textureHeight;
+                sprite->UVTopLeft.y = (frameY * sprite->SpriteSize.y) / textureHeight;
     
                 sprite->UVBottomRight.x = ((frameX + 1) * sprite->SpriteSize.x) / textureWidth;
-                sprite->UVBottomRight.y = 1.0f - ((frameY + 1) * sprite->SpriteSize.y) / textureHeight;
+                sprite->UVBottomRight.y = ((frameY + 1) * sprite->SpriteSize.y) / textureHeight;
             }
         }
     }

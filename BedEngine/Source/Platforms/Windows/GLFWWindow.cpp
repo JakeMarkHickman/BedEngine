@@ -180,6 +180,8 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
         {
             glm::mat4 MatTransform;
             float TextureID;
+            Bed::Vector2 UVMin;
+            Bed::Vector2 UVMax;
         };
 
         std::vector<Bed::Vertex> verts = { v0, v1, v2, v3 };
@@ -203,6 +205,8 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
         VertexBufferLayout InstanceLayoutUI;
         InstanceLayoutUI.PushMat4();
         InstanceLayoutUI.Push<float>(1); // Texture ID: 1 Float (ID)
+        InstanceLayoutUI.Push<float>(2); // UVMin
+        InstanceLayoutUI.Push<float>(2); // UVMax
         ivaUI->AddBuffer(ivbUI, InstanceLayoutUI, 5);
 
         vbUI->PopulateBuffer(verts.data(), verts.size(), 0);

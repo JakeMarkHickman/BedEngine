@@ -10,10 +10,23 @@ layout(location = 4) in float a_TexID;
     {
         return a_InstanceTexID;
     }
+
+    layout(location = 10) in vec2 a_UVMin;
+    layout(location = 11) in vec2 a_UVMax;
+    vec2 GetTextureCoordinate()
+    {
+        return mix(a_UVMin, a_UVMax, a_TexCoord);
+    }
+
 #else
     float GetTextureID()
     {
         return a_TexID;
+    }
+
+    vec2 GetTextureCoordinate()
+    {
+        return a_TexCoord;
     }
 #endif
 

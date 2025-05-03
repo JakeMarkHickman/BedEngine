@@ -12,6 +12,8 @@ namespace Bed
     {
         glm::mat4 MatTransform;
         float TextureID;
+        Bed::Vector2 UVMin;
+        Bed::Vector2 UVMax;
     };
 
     void UISystem(Bed::World& world)
@@ -58,6 +60,20 @@ namespace Bed
                 instance.MatTransform[3].y -= anchorYWorld;
 
                 instance.TextureID = texture->TextureSlot;
+
+                Bed::Vector2 Min(0.0f, 0.0f);
+                Bed::Vector2 Max(1.0f, 1.0f);
+
+                if(world.HasComponents<Bed::Sprite>(i))
+                {
+                    Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
+                    
+                    Min = sprite->UVTopLeft;
+                    Max = sprite->UVBottomRight;
+                }
+
+                instance.UVMin = Min;
+                instance.UVMax = Max;
 
                 instances.push_back(instance);
             }
