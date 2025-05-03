@@ -11,8 +11,8 @@ void main()
     v_Pos = ModelTransform(a_Position);
     v_Normal = a_Normal;
     v_Colour = a_Colour;
-    v_TexCoord = a_TexCoord;
-    v_TexID = a_TexID;
+    v_TexCoord = GetTextureCoordinate();
+    v_TexID = GetTextureID();
 
     gl_Position = Transform(a_Position);
 }

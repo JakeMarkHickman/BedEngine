@@ -100,6 +100,45 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
         21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
         31};
 
+    Bed::Vertex v0;
+        v0.m_Position = { -0.5f, -0.5f, 0.0f };
+        v0.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v0.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v0.m_TexCoords = { 0.0f,  0.0f };
+        v0.m_TexID = 0;
+
+    Bed::Vertex v1;
+        v1.m_Position = { 0.5f, -0.5f, 0.0f };
+        v1.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v1.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v1.m_TexCoords = { 1.0f,  0.0f };
+        v1.m_TexID = 0;
+
+    Bed::Vertex v2;
+        v2.m_Position = { 0.5f, 0.5f, 0.0f };
+        v2.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v2.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v2.m_TexCoords = { 1.0f,  1.0f };
+        v2.m_TexID = 0;
+
+    Bed::Vertex v3;
+        v3.m_Position = { -0.5f, 0.5f, 0.0f };
+        v3.m_Normal = { 0.0f, 0.0f, 0.0f };
+        v3.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v3.m_TexCoords = { 0.0f,  1.0f };
+        v3.m_TexID = 0;
+
+    std::vector<Bed::Vertex> verts = { v0, v1, v2, v3 };
+    std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
+
+    struct InstanceData
+    {
+        glm::mat4 MatTransform;
+        float TextureID;
+        Bed::Vector2 UVMin;
+        Bed::Vector2 UVMax;
+    };
+
     //3D Shader
     {
         //Vertex array object
@@ -131,6 +170,8 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
         va2D = new Bed::VertexArray();
         vb2D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
         ib2D = new Bed::IndexBuffer(4000);
+        ibUI = new Bed::IndexBuffer(6000);
+        ivbUI = new Bed::InstanceBuffer(100, sizeof(InstanceData)); //100 instances
 
         VertexBufferLayout vertLayout2D;
         vertLayout2D.Push<float>(3); // Position: 3 Floats (x, y, z)
@@ -140,6 +181,16 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
         vertLayout2D.Push<float>(1); // Texture ID: 1 Float (ID)
         va2D->AddBuffer(vb2D, vertLayout2D);
 
+        vb2D->PopulateBuffer(verts.data(), verts.size(), 0);
+        ib2D->PopulateBuffer(indices.data(), indices.size(), 0);
+
+        VertexBufferLayout InstanceLayout2D;
+        InstanceLayout2D.PushMat4();
+        InstanceLayout2D.Push<float>(1); // Texture ID: 1 Float (ID)
+        InstanceLayout2D.Push<float>(2); // UVMin
+        InstanceLayout2D.Push<float>(2); // UVMax
+        iva2D->AddBuffer(ivb2D, InstanceLayout2D, 5);
+
         shader2D = new Bed::OpenShader("Assets/Resources/Shaders/Bed2D.shader");
         shader2D->Bind();
 
@@ -148,50 +199,11 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
             
     //UI Shader
     {
-        Bed::Vertex v0;
-        v0.m_Position = { -0.5f, -0.5f, 0.0f };
-        v0.m_Normal = { 0.0f, 0.0f, 0.0f };
-        v0.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
-        v0.m_TexCoords = { 0.0f,  0.0f };
-        v0.m_TexID = 0;
-
-        Bed::Vertex v1;
-        v1.m_Position = { 0.5f, -0.5f, 0.0f };
-        v1.m_Normal = { 0.0f, 0.0f, 0.0f };
-        v1.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
-        v1.m_TexCoords = { 1.0f,  0.0f };
-        v1.m_TexID = 0;
-
-        Bed::Vertex v2;
-        v2.m_Position = { 0.5f, 0.5f, 0.0f };
-        v2.m_Normal = { 0.0f, 0.0f, 0.0f };
-        v2.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
-        v2.m_TexCoords = { 1.0f,  1.0f };
-        v2.m_TexID = 0;
-
-        Bed::Vertex v3;
-        v3.m_Position = { -0.5f, 0.5f, 0.0f };
-        v3.m_Normal = { 0.0f, 0.0f, 0.0f };
-        v3.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
-        v3.m_TexCoords = { 0.0f,  1.0f };
-        v3.m_TexID = 0;
-
-        struct UIInstanceData
-        {
-            glm::mat4 MatTransform;
-            float TextureID;
-            Bed::Vector2 UVMin;
-            Bed::Vector2 UVMax;
-        };
-
-        std::vector<Bed::Vertex> verts = { v0, v1, v2, v3 };
-        std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
-
         vaUI = new Bed::VertexArray();
         ivaUI = new Bed::InstanceArray();
         vbUI = new Bed::VertexBuffer(4000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
         ibUI = new Bed::IndexBuffer(6000);
-        ivbUI = new Bed::InstanceBuffer(100, sizeof(UIInstanceData)); //100 instances
+        ivbUI = new Bed::InstanceBuffer(100, sizeof(InstanceData)); //100 instances
 
         //TODO: UI doesnt need normal
         VertexBufferLayout vertLayoutUI;
@@ -202,15 +214,15 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
         vertLayoutUI.Push<float>(1); // Texture ID: 1 Float (ID)
         vaUI->AddBuffer(vbUI, vertLayoutUI);
 
+        vbUI->PopulateBuffer(verts.data(), verts.size(), 0);
+        ibUI->PopulateBuffer(indices.data(), indices.size(), 0);
+
         VertexBufferLayout InstanceLayoutUI;
         InstanceLayoutUI.PushMat4();
         InstanceLayoutUI.Push<float>(1); // Texture ID: 1 Float (ID)
         InstanceLayoutUI.Push<float>(2); // UVMin
         InstanceLayoutUI.Push<float>(2); // UVMax
         ivaUI->AddBuffer(ivbUI, InstanceLayoutUI, 5);
-
-        vbUI->PopulateBuffer(verts.data(), verts.size(), 0);
-        ibUI->PopulateBuffer(indices.data(), indices.size(), 0);
 
         shaderUI = new Bed::OpenShader("Assets/Resources/Shaders/BedUI.shader");
         shaderUI->Bind();
