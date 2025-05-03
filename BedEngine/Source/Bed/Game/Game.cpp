@@ -12,7 +12,7 @@
 #include <Components/Collision/AABBCollision.h>
 #include <Components/Collision/Clickable.h>
 #include <Components/Material/Texture.h>
-#include <Components/Material/Sprite.h>
+#include <Components/Material/SubTexture.h>
 #include <Components/Material/Material.h>
 #include <Components/Enviroment/Fog.h>
 #include <Components/Tag/PlayerTag.h>
@@ -34,7 +34,7 @@
 #include <Systems/Lighting/SpotLightSystem.h>
 #include <Systems/Collision/AABBCollisionSystem.h>
 #include <Systems/Material/TextureSystem.h>
-#include <Systems/Material/SpriteSystem.h>
+#include <Systems/Material/SubTextureSystem.h>
 #include <Systems/Material/MaterialSystem.h>
 #include <Systems/Enviroment/FogSystem.h>
 #include <Systems/UI/UISystem.h>
@@ -72,7 +72,7 @@ Bed::Game::Game()
                                         Bed::UIElement(),
                                         Bed::Anchor(Bed::Vector2(0.35f, 0.5f)),
                                         Bed::Texture("Assets/Resources/Textures/LittleGuy.png", TextureFiltering::Nearest),
-                                        Bed::Sprite(),
+                                        Bed::SubTexture(),
                                         Bed::Timer(0.5f, true, true),
                                         Bed::EnemyTag());
 
@@ -147,7 +147,7 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::ClickableSystem);
     m_ecs.AddSystem(world1, Bed::CameraSystem);
     m_ecs.AddSystem(world1, Bed::TextureSystem);
-    m_ecs.AddSystem(world1, Bed::SpriteSystem);
+    m_ecs.AddSystem(world1, Bed::SubTextureSystem);
     m_ecs.AddSystem(world1, Bed::TileMapSystem);
     m_ecs.AddSystem(world1, Bed::UISystem);
     m_ecs.AddSystem(world1, Bed::StaticMeshSystem);

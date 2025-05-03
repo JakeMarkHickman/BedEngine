@@ -64,12 +64,12 @@ namespace Bed
                 Bed::Vector2 Min(0.0f, 0.0f);
                 Bed::Vector2 Max(1.0f, 1.0f);
 
-                if(world.HasComponents<Bed::Sprite>(i))
+                if(world.HasComponents<Bed::SubTexture>(i))
                 {
-                    Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
+                    Bed::SubTexture* subTexture = world.GetComponent<Bed::SubTexture>(i);
                     
-                    Min = sprite->UVTopLeft;
-                    Max = sprite->UVBottomRight;
+                    Min = subTexture->UVTopLeft;
+                    Max = subTexture->UVBottomRight;
                 }
 
                 instance.UVMin = Min;

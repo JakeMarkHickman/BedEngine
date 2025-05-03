@@ -6,13 +6,13 @@ namespace Bed
     {
         for(int i = 0; i < world.GetAllEntities().size(); i++)
         {
-            if(world.HasComponents<Bed::TimerCompleted, Bed::Sprite, Bed::EnemyTag>(i))
+            if(world.HasComponents<Bed::TimerCompleted, Bed::SubTexture, Bed::EnemyTag>(i))
             {
-                Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
+                Bed::SubTexture* subTexture = world.GetComponent<Bed::SubTexture>(i);
 
-                sprite->FrameIndex++;
+                subTexture->FrameIndex++;
 
-                sprite->FrameIndex = sprite->FrameIndex % sprite->LastFrame;
+                subTexture->FrameIndex = subTexture->FrameIndex % subTexture->LastFrame;
             }
         }
     }
