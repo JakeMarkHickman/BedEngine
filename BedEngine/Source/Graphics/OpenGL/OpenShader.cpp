@@ -42,6 +42,7 @@ void Bed::OpenShader::SetUniform3f(const std::string& name, Bed::Vector3 value)
 
 void Bed::OpenShader::SetUniform3f(const std::string& name, Bed::Colour3 value)
 {
+    std::cout << name << "\n";
     GLCall(glUniform3f(GetUniformLocation(name), value.r, value.g, value.b));
 }
 

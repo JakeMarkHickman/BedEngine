@@ -237,12 +237,16 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     shader3D->Unbind();
     vb3D->Unbind();
     ib3D->Unbind();
+    ivb3D->Unbind();
     pointLightBuffer->Unbind();
+    directionalLightBuffer->Unbind();
+    spotLightBuffer->Unbind();
 
     va2D->Unbind();
     shader2D->Unbind();
     vb2D->Unbind();
     ib2D->Unbind();
+    ivb2D->Unbind();
 
     vaUI->Unbind();
     shaderUI->Unbind();
@@ -269,6 +273,7 @@ void Bed::GLFWWindow::UpdateWindow()
 
     glEnable(GL_DEPTH_TEST);
     renderer->Draw(va2D, ib2D, shader2D);
+    renderer->DrawInstanced(va2D, ib2D, ivb2D, shader2D);
 
     glDisable(GL_DEPTH_TEST);
     renderer->Draw(vaUI, ibUI, shaderUI);
@@ -281,12 +286,16 @@ void Bed::GLFWWindow::UpdateWindow()
     shader3D->Unbind();
     vb3D->Unbind();
     ib3D->Unbind();
+    ivb3D->Unbind();
     pointLightBuffer->Unbind();
+    directionalLightBuffer->Unbind();
+    spotLightBuffer->Unbind();
 
     va2D->Unbind();
     shader2D->Unbind();
     vb2D->Unbind();
     ib2D->Unbind();
+    ivb2D->Unbind();
 
     vaUI->Unbind();
     shaderUI->Unbind();

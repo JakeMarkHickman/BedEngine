@@ -4,7 +4,6 @@
 #include <Math/Transform.h>
 #include <Components/Input/Input.h>
 #include <Components/Camera.h>
-#include <Components/StaticMesh.h>
 #include <Components/Lighting/AmbientLight.h>
 #include <Components/Lighting/DirectionalLight.h>
 #include <Components/Lighting/PointLight.h>
@@ -17,7 +16,9 @@
 #include <Components/Enviroment/Fog.h>
 #include <Components/Tag/PlayerTag.h>
 #include <Components/Tag/EnemyTag.h>
-#include <Components/UI/UIElement.h>
+#include <Components/Renderer/UIElement.h>
+#include <Components/Renderer/StaticMesh.h>
+#include <Components/Renderer/Sprite.h>
 #include <Components/UI/Anchor.h>
 #include <Components/Utility/Timer.h>
 
@@ -27,7 +28,6 @@
 
 #include <Systems/Input/InputSystem.h>
 #include <Systems/CameraSystem.h>
-#include <Systems/StaticMeshSystem.h>
 #include <Systems/Lighting/AmbientLightSystem.h>
 #include <Systems/Lighting/DirectionalLightSystem.h>
 #include <Systems/Lighting/PointLightSystem.h>
@@ -37,7 +37,9 @@
 #include <Systems/Material/SubTextureSystem.h>
 #include <Systems/Material/MaterialSystem.h>
 #include <Systems/Enviroment/FogSystem.h>
-#include <Systems/UI/UISystem.h>
+#include <Systems/Renderer/UISystem.h>
+#include <Systems/Renderer/StaticMeshSystem.h>
+#include <Systems/Renderer/SpriteSystem.h>
 #include <Systems/Collision/ClickableSystem.h>
 #include <Systems/Utility/TimerSystem.h>
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
@@ -69,8 +71,7 @@ Bed::Game::Game()
 
     uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
     m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
-                                        Bed::UIElement(),
-                                        Bed::Anchor(Bed::Vector2(0.35f, 0.5f)),
+                                        Bed::Sprite(),
                                         Bed::Texture("Assets/Resources/Textures/LittleGuy.png", TextureFiltering::Nearest),
                                         Bed::SubTexture(),
                                         Bed::Timer(0.5f, true, true),
@@ -151,6 +152,7 @@ Bed::Game::Game()
     m_ecs.AddSystem(world1, Bed::TileMapSystem);
     m_ecs.AddSystem(world1, Bed::UISystem);
     m_ecs.AddSystem(world1, Bed::StaticMeshSystem);
+    m_ecs.AddSystem(world1, Bed::SpriteSystem);
     m_ecs.AddSystem(world1, Bed::FogSystem);
     m_ecs.AddSystem(world1, Bed::AmbientLightSystem);
     m_ecs.AddSystem(world1, Bed::SpotLightSystem);

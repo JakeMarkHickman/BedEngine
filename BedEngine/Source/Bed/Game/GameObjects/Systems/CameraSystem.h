@@ -54,7 +54,7 @@ namespace Bed
                 shader2D->Bind();
                 shader2D->SetUniformMat4f("u_Projection", proj);
                 shader2D->SetUniformMat4f("u_View", view);
-                shader2D->SetUniformMat4f("u_Model", model);
+                shader2D->SetUniformMat4f("u_Model", model); // TODO: kept for backup
             }
         }
     }
