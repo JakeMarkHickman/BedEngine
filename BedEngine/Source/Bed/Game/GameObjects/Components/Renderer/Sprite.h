@@ -2,8 +2,5 @@
 
 namespace Bed
 {
-    struct Sprite
-    {
-
-    };
+    struct Sprite {};
 }

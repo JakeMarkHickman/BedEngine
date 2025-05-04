@@ -40,5 +40,5 @@ void main()
     vec3 result = (CalculateAmbientLight() + CalculateDiffuse(u_DiffuseLightColour, lightDir)) * unlitResult;
 
     //Output
-    o_FragColour = vec4(result, 1.0);
+    o_FragColour = vec4(unlitResult, 1.0);//vec4(result, 1.0);
 }

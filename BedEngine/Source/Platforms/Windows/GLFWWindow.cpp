@@ -170,8 +170,8 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
         va2D = new Bed::VertexArray();
         vb2D = new Bed::VertexBuffer(3000); // Store 3000 Bed::Vertex (pos, colour, texCoords, texID)
         ib2D = new Bed::IndexBuffer(4000);
-        ibUI = new Bed::IndexBuffer(6000);
-        ivbUI = new Bed::InstanceBuffer(100, sizeof(InstanceData)); //100 instances
+        ib2D = new Bed::IndexBuffer(6000);
+        ivb2D = new Bed::InstanceBuffer(100, sizeof(InstanceData)); //100 instances
 
         VertexBufferLayout vertLayout2D;
         vertLayout2D.Push<float>(3); // Position: 3 Floats (x, y, z)

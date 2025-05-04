@@ -9,6 +9,8 @@ namespace Bed
         static bool IsCurrentlyEnabled = false;
         bool SetFog = false;
 
+        shader3D->Bind();
+
         for(int i = 0; i < world.GetAllEntities().size(); i++)
         {
             if(world.HasComponents<Bed::Fog>(i))

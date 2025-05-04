@@ -20,9 +20,44 @@ namespace Bed
 
         for(int i = 0; i < world.GetAllEntities().size(); i++)
         {
+            if(world.HasComponents<Bed::Sprite>(i))
+            {
+                Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
 
+                if(!world.HasComponents<Bed::Transform>(i)) // Check for Transform
+                {
+                    world.AttachComponents(i, Bed::Transform(0.0f, 0.0f, 0.1f));
+                }
+                if(!world.HasComponents<Bed::Texture>(i)) // Check for Texture
+                {
+                    world.AttachComponents(i, Bed::Texture());
+                }
+
+                Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
+                Bed::Texture* texture = world.GetComponent<Bed::Texture>(i);
+
+                SpriteInstanceData instance;
+                instance.MatTransform = transform->GetMatrix();
+                instance.TextureID = texture->TextureSlot;
+
+                Bed::Vector2 Min(0.0f, 0.0f);
+                Bed::Vector2 Max(1.0f, 1.0f);
+
+                if(world.HasComponents<Bed::SubTexture>(i))
+                {
+                    Bed::SubTexture* subTexture = world.GetComponent<Bed::SubTexture>(i);
+                    
+                    Min = subTexture->UVTopLeft;
+                    Max = subTexture->UVBottomRight;
+                }
+
+                instance.UVMin = Min;
+                instance.UVMax = Max;
+
+                instances.push_back(instance);
+            }
         }
 
-        Bed::ivbUI->PopulateBuffer(instances.data(), instances.size());
+        Bed::ivb2D->PopulateBuffer(instances.data(), instances.size());
     }
 }

@@ -69,8 +69,8 @@ Bed::Game::Game()
                                             Bed::Texture("Assets/Resources/Textures/SpriteTest.png"),
                                             Bed::TileMap(map));*/
 
-    uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
-    m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
+    uint64_t w1Sprite = m_ecs.CreateEntity(world1);
+    m_ecs.AttachComponents(world1, w1Sprite, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                         Bed::Sprite(),
                                         Bed::Texture("Assets/Resources/Textures/LittleGuy.png", TextureFiltering::Nearest),
                                         Bed::SubTexture(),

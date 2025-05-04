@@ -30,7 +30,7 @@ namespace Bed
                 switch(cam->ProjectionType)
                 {
                     case Bed::ProjectionType::Orthographic:
-                        proj = glm::orthoLH(-aspect * cam->Zoom, aspect * cam->Zoom, -1.0f * cam->Zoom, 1.0f * cam->Zoom, 0.1f, 500.0f); // Camera Screen Size
+                        proj = glm::orthoLH(-aspect * cam->Zoom, aspect * cam->Zoom, -1.0f * cam->Zoom, 1.0f * cam->Zoom, -1.0f, 500.0f); // Camera Screen Size
                         break;
                     case Bed::ProjectionType::Perspective:
                         proj = glm::perspectiveLH(glm::radians(cam->FOV), aspect, 0.1f, 100.0f); // Use Left Handed rule
@@ -55,6 +55,7 @@ namespace Bed
                 shader2D->SetUniformMat4f("u_Projection", proj);
                 shader2D->SetUniformMat4f("u_View", view);
                 shader2D->SetUniformMat4f("u_Model", model); // TODO: kept for backup
+                shader2D->SetUniform3f("u_CamPos", transform->Position);
             }
         }
     }
