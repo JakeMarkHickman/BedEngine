@@ -182,18 +182,3 @@ namespace Bed
         }
     };
 }
-
-#include <Meta.h>
-
-namespace meta
-{
-    template<>
-    inline auto registerMembers<Bed::Vector3>()
-    {
-        return members(
-            member("x", &Bed::Vector3::x),
-            member("y", &Bed::Vector3::y),
-            member("z", &Bed::Vector3::z)
-        );
-    }
-}
