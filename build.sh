@@ -4,6 +4,7 @@
 
 #Build Path
 buildPath="build"                           # The path to build to
+StaticBuild=true
 
 #Locations
 Dependencies="BedEngine/Dependencies"
@@ -19,7 +20,7 @@ Source="BedEngine/Source"
 
 #Output
 GameOutputFile="Playground"                     # No extention as we will set it after we know what OS we are building for
-EngineOutputFile="BedEngine.dll"            # The engine will always be a dynamic lib
+EngineOutputFile=""                # The engine will always be a dynamic lib
 
 #Includes
 GameIncludes="-I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/glm -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include"
@@ -37,7 +38,7 @@ EngineFlags=""                              # Flags for the engine
 
 #Preprocessor Definitions
 GamePredef="-std=c++17 -Wno-c++17-extensions"                                   # Definitions for the game
-EnginePredef="-std=c++17 -Wno-c++17-extensions -DBED_BUILD_DLL"             # Definitions for the engine
+EnginePredef="-std=c++17 -Wno-c++17-extensions"             # Definitions for the engine
 
 #CPPs
 GraphicsCpp="$Graphics/VertexBuffer.cpp $Graphics/IndexBuffer.cpp
@@ -77,9 +78,7 @@ EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
 
 GameCpp="Playground/Source/App.cpp"
 
-
 #Check what system is being used
-
 if [[ "$uname" == "Linux" ]]; then           # This checks if the version is Linux
     echo Linux is currently unsupported
 
@@ -108,7 +107,7 @@ else
     PlatformSpecficCpps=$Platforms/Windows/GLFWWindow.cpp
 
     # Set Variables
-    EngineLibs="$EngineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32 BedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
+    EngineLibs="$EngineLibs -LBedEngine/Dependencies/GLEW/lib/Release/x64 -lglew32s"
     GamePredef="$GamePredef -DBED_WINDOWS_PLATFORM"
 
     GameFlags="$GameFlags -Wl,/subsystem:console"
@@ -119,8 +118,30 @@ else
 fi
 
 # Build the Engine 
-echo Building Engine DLL...
-clang++ -shared $EngineIncludes $EngineLibs $EngineFlags $EnginePredef -o"$buildPath/$EngineOutputFile" $EngineCpp $PlatformSpecficCpps
+if $StaticBuild; then
+    echo Bulding Static
+    mkdir -p "$buildPath/obj"
+
+    EnginePredef="$EnginePredef"
+    EngineOutputFile="BedEngine.lib"
+    EngineFlags="$EngineFlags -c"
+
+    for cpp in $EngineCpp $PlatformSpecficCpps; do
+        objname=$(basename "$cpp" .cpp).o
+        clang++ $EngineIncludes $EngineLibs $EngineFlags $EnginePredef "$cpp" -o "$buildPath/obj/$objname"
+    done
+
+    llvm-ar rcs "$buildPath/$EngineOutputFile" "$buildPath/obj/"*.o
+else
+    echo Bulding Dynamic
+    EngineLibs="$EngineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32"
+    EnginePredef="$EnginePredef -DBED_BUILD_DLL -DENGINE_DLL"
+    GamePredef="$GamePredef -DENGINE_DLL"
+    EngineOutputFile="BedEngine.dll"
+    EngineFlags="$EngineFlags -shared"
+
+    clang++ $EngineIncludes $EngineLibs $EngineFlags $EnginePredef -o"$buildPath/$EngineOutputFile" $EngineCpp $PlatformSpecficCpps
+fi
 
 # Build the Game
 echo Building Game...
