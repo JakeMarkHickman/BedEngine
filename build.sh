@@ -29,7 +29,7 @@ EngineIncludes="-I$Source -I$Inclusions -I$Dependencies/GLFW/include
                 -I$Dependencies/glm -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include"
 
 #Libarys
-GameLibs="$buildPath/BedEngine.lib"             # Libs for the game
+GameLibs=""             # Libs for the game
 EngineLibs=""                               # Libs for the engine
 
 #flags
@@ -107,21 +107,27 @@ else
     PlatformSpecficCpps=$Platforms/Windows/GLFWWindow.cpp
 
     # Set Variables
-    EngineLibs="$EngineLibs -LBedEngine/Dependencies/GLEW/lib/Release/x64 -lglew32s"
+    EngineLibs="$EngineLibs BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -luser32 -lkernel32 -lgdi32 -lwinmm -lshell32 -lBedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
     GamePredef="$GamePredef -DBED_WINDOWS_PLATFORM"
 
     GameFlags="$GameFlags -Wl,/subsystem:console"
     
-    EnginePredef="$EnginePredef -DBED_WINDOWS_PLATFORM -DGLEW_STATIC"
+    EnginePredef="$EnginePredef -DBED_WINDOWS_PLATFORM -DGLEW_STATIC -DGLFW_STATIC"
     GameOutputFile="$GameOutputFile.exe"
 
 fi
 
-# Build the Engine 
+# Build the Engine
 if $StaticBuild; then
-    echo Bulding Static
-    mkdir -p "$buildPath/obj"
+    echo Building Static
+    mkdir -p "$buildPath/Static/obj"
 
+    buildPath="$buildPath/Static"
+
+    GameLibs="-DGLFW_STATIC $EngineLibs"
+    GamePredef="$EnginePredef"
+
+    EngineLibs=""
     EnginePredef="$EnginePredef"
     EngineOutputFile="BedEngine.lib"
     EngineFlags="$EngineFlags -c"
@@ -133,8 +139,12 @@ if $StaticBuild; then
 
     llvm-ar rcs "$buildPath/$EngineOutputFile" "$buildPath/obj/"*.o
 else
-    echo Bulding Dynamic
-    EngineLibs="$EngineLibs -luser32 BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -lUser32 -lGdi32 -lShell32"
+    echo Building Dynamic
+    mkdir -p "$buildPath/Dynamic"
+
+    buildPath="$buildPath/Dynamic"
+
+    EngineLibs="$EngineLibs"
     EnginePredef="$EnginePredef -DBED_BUILD_DLL -DENGINE_DLL"
     GamePredef="$GamePredef -DENGINE_DLL"
     EngineOutputFile="BedEngine.dll"
@@ -142,6 +152,8 @@ else
 
     clang++ $EngineIncludes $EngineLibs $EngineFlags $EnginePredef -o"$buildPath/$EngineOutputFile" $EngineCpp $PlatformSpecficCpps
 fi
+
+GameLibs="$GameLibs $buildPath/BedEngine.lib"
 
 # Build the Game
 echo Building Game...

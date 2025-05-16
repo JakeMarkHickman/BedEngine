@@ -1,0 +1,5 @@
+<UIncarn> <!-- Type of data that is inputed -->
+	<Canvas ScalingMode="Screen"> <!-- Could use "Element" (scales on other elements)-->
+		<Button Text="TestButton" Transform.Position=".5%, .5%"/> <!-- .5% specifies scalable while "800, 500" would be pixles -->
+	</Canvas>
+</UIncarn>

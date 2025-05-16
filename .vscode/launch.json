@@ -6,7 +6,7 @@
             "name": "Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/build/Playground",
+            "program": "${workspaceRoot}/build/Static/Playground",
             "args": [],
             "cwd": "${workspaceRoot}/build",
             "console": "integratedTerminal"

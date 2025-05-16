@@ -1,0 +1,2 @@
+uniform float u_ambientLightStrength;
+uniform vec3 u_ambientLightColour;
