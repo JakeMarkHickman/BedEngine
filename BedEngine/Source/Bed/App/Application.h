@@ -24,10 +24,17 @@ namespace Bed
             }
         };
 
+        //TODO: This is just a test for now to develop first game!
+        void SetGame(Bed::Game* game)
+        {
+            m_Game = game;
+        }
+
         const char* GetApplicationName()
         {
             return m_ApplicationName;
         };
+
 
     protected:
         // TODO: Add variables that are able to be modified to 
@@ -44,8 +51,8 @@ namespace Bed
     private:
         void Update();
 
-        Bed::Game m_Game;
         Bed::Time m_Time;
+        Bed::Game* m_Game = nullptr;
 
         Bed::Platform* m_Platform = nullptr;
         Bed::Window* m_Window = nullptr;

@@ -16,10 +16,14 @@ namespace Bed
 
         Bed::GameSession GetGameSession() { return m_GameSession; };
 
+        virtual void BeginPlay() {};
         void Update();
+
+    protected:
+
+        Bed::ECS m_ecs;
 
     private:
         Bed::GameSession m_GameSession;
-        Bed::ECS m_ecs;
     };
 }

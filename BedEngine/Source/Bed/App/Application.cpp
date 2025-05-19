@@ -24,6 +24,8 @@ namespace Bed
     {
         //TODO: This needs to be better
         //Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
+
+        m_Game->BeginPlay();
         
         //Game Loop
         while (m_Window->IsWindowOpen())
@@ -32,7 +34,7 @@ namespace Bed
 
             //std::cout << Time::GetDeltaTime() << "\n";
 
-            m_Game.Update();
+            m_Game->Update();
             m_Window->UpdateWindow(); // Update the platform App
         }
         
