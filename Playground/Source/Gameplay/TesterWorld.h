@@ -53,7 +53,7 @@
 
 namespace World
 {
-    class GameWorld : public Bed::Game
+    class TestWorld : public Bed::Game
     {
     protected:
         virtual void BeginPlay() override {

@@ -1,7 +1,7 @@
 
 #include <App/BedEngineApplication.h>
 
-#include "Gameplay/TesterWorld.h"
+#include "Gameplay/Overworld.h"
 
 // TODO: Make this able to be editied by the editor when creating project
 
@@ -16,7 +16,7 @@ Bed::Application* CreateApplication()
     const char* Name = "Playground";
     App->SetApplicationName(Name);
 
-    World::GameWorld* gameWorld = new World::GameWorld();
+    Game::Overworld* gameWorld = new Game::Overworld();
 
     App->SetGame(gameWorld);
 

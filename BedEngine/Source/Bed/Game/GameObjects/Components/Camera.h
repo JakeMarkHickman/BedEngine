@@ -16,6 +16,6 @@ namespace Bed
         Bed::ProjectionType ProjectionType = Bed::ProjectionType::Perspective;
 
         float FOV = 90.0f;
-        float Zoom = -10.0f;
+        float Zoom = -5.0f;
     };
 }
