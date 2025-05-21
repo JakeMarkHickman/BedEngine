@@ -27,7 +27,7 @@ namespace Game
             uint64_t player = m_ecs.CreateEntity(overworld);
             m_ecs.AttachComponents(overworld, player, Bed::Transform(0.0f, 0.0f, 1.0f),
                                                         Bed::Sprite(),
-                                                        Bed::Texture("Assets/Resources/Textures/LittleGuy.png", Bed::TextureFiltering::Nearest),
+                                                        Bed::Texture("../Assets/Resources/Textures/LittleGuy.png", Bed::TextureFiltering::Nearest),
                                                         Bed::SubTexture());
 
             uint64_t camera = m_ecs.CreateEntity(overworld);

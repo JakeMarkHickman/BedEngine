@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Bed/Game/GameObjects/Collision/AABB.h>
+#include <Bed/Game/GameObjects/Physics/Collision/AABB.h>
 
 namespace Bed
 {
