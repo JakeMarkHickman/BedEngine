@@ -22,7 +22,6 @@ namespace Bed
     {
     public:
         //Window(Bed::Platform* platform) { m_Platform = platform; };
-        //TODO: MINIMISING THE GAME BREAKS AS IT SETS THE WINDOW SIZE TO 0
 
         virtual bool CreateWindow(int width, int height, const char* title) = 0;
         virtual void UpdateWindow() = 0;
@@ -39,7 +38,7 @@ namespace Bed
             m_WindowTitle = title;
         };
 
-        static float GetAspectRatio() { return (float)m_WindowSize.Width / (float)m_WindowSize.Height; };
+        static float GetAspectRatio() { return (m_WindowSize.Height <= 0.0f || m_WindowSize.Width <= 0.0f) ? 0.1f : (float)m_WindowSize.Width / (float)m_WindowSize.Height; };
         static WindowSize GetWindowSize() { return m_WindowSize; };
         static const char* GetWindowTitle() { return m_WindowTitle; };
 

@@ -26,7 +26,7 @@ namespace Bed
                 }
 
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
-
+                
                 switch(cam->ProjectionType)
                 {
                     case Bed::ProjectionType::Orthographic:
