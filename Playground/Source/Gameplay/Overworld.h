@@ -24,15 +24,20 @@ namespace Game
         virtual void BeginPlay() override {
             uint64_t overworld = m_ecs.CreateWorld();
 
-            uint64_t player = m_ecs.CreateEntity(overworld);
+            /*uint64_t player = m_ecs.CreateEntity(overworld);
             m_ecs.AttachComponents(overworld, player, Bed::Transform(0.0f, 0.0f, 1.0f),
                                                         Bed::Sprite(),
-                                                        Bed::Texture("../Assets/Resources/Textures/LittleGuy.png", Bed::TextureFiltering::Nearest),
-                                                        Bed::SubTexture());
+                                                        Bed::Texture("Assets/Resources/Textures/LittleGuy.png", Bed::TextureFiltering::Nearest),
+                                                        Bed::SubTexture());*/
 
             uint64_t camera = m_ecs.CreateEntity(overworld);
             m_ecs.AttachComponents(overworld, camera, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                                         Bed::Camera(Bed::ProjectionType::Orthographic));
+
+            uint64_t logo = m_ecs.CreateEntity(overworld);
+            m_ecs.AttachComponents(overworld, logo, Bed::Transform(0.0f, 0.0f, 5.0f),
+                                                        Bed::Sprite(),
+                                                        Bed::Texture("Assets/Resources/Textures/BedEngineLogo.png"));                                            
 
             m_ecs.AddSystem(overworld, Bed::TextureSystem);
             m_ecs.AddSystem(overworld, Bed::SpriteSystem);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Bed/Game/GameObjects/Collision/Collision.h>
-#include <Bed/Game/GameObjects/Collision/AABB.h>
+#include <Bed/Game/GameObjects/Physics/Collision/Collision.h>
+#include <Bed/Game/GameObjects/Physics/Collision/AABB.h>
 
 #include <Components/Event/CollisionResponse/CollisionEnter.h>
 #include <Components/Event/CollisionResponse/CollisionExit.h>

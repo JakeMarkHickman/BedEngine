@@ -51,7 +51,7 @@
 #include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/AnimTestSystem.h>
 
-namespace World
+namespace Test
 {
     class TestWorld : public Bed::Game
     {
@@ -74,21 +74,27 @@ namespace World
 
             /*uint64_t w1Map = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Map, Bed::Transform(0.0f, 0.0f, 1.0f),
-                                                    Bed::Texture("../Assets/Resources/Textures/SpriteTest.png"),
+                                                    Bed::Texture("Assets/Resources/Textures/SpriteTest.png"),
                                                     Bed::TileMap(map));*/
 
             uint64_t w1Sprite = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Sprite, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
                                                 Bed::Sprite(),
-                                                Bed::Texture("../Assets/Resources/Textures/LittleGuy.png", Bed::TextureFiltering::Nearest),
+                                                Bed::Texture("Assets/Resources/Textures/LittleGuy.png", Bed::TextureFiltering::Nearest),
                                                 Bed::SubTexture(),
                                                 Bed::Timer(0.5f, true, true),
                                                 Bed::EnemyTag());
 
+            uint64_t w1Logo = m_ecs.CreateEntity(world1);
+            m_ecs.AttachComponents(world1, w1Logo, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.4f)),
+                                                    Bed::UIElement(),
+                                                    Bed::Texture("Assets/Resources/Textures/BedEngineLogo.png"),
+                                                    Bed::Anchor(Bed::Vector2(0.07f, 0.1f)));
+
             uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
                                                     Bed::UIElement(),
-                                                    Bed::Texture("../Assets/Resources/Textures/256xMissingTexture.png"),
+                                                    Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::Clickable(),
                                                     Bed::Anchor(Bed::Vector2(0.7f, 0.5f)),
                                                     Bed::Input(),
@@ -96,8 +102,8 @@ namespace World
 
             uint64_t w1Player = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                                    Bed::StaticMesh("../Assets/Resources/Meshes/Cube.obj"),
-                                                    Bed::Texture("../Assets/Resources/Textures/TestBedEngineIcon.png"),
+                                                    Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
+                                                    Bed::Texture("Assets/Resources/Textures/TestBedEngineIcon.png"),
                                                     Bed::Input(),
                                                     Bed::PlayerTag(),
                                                     Bed::AABBCollision(-1.0f, 1.0f));
@@ -110,22 +116,22 @@ namespace World
 
             uint64_t w1Ent1 = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Ent1, Bed::Transform(Bed::Vector3(-2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                                    Bed::StaticMesh("../Assets/Resources/Meshes/Cube.obj"),
-                                                    Bed::Texture("../Assets/Resources/Textures/256xMissingTexture.png"),
+                                                    Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
+                                                    Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::AABBCollision(-1.0f, 1.0f),
                                                     Bed::EnemyTag());
 
             uint64_t w1Ent2 = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Ent2, Bed::Transform(Bed::Vector3(2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                                    Bed::StaticMesh("../Assets/Resources/Meshes/Cube.obj"),
-                                                    Bed::Texture("../Assets/Resources/Textures/256xMissingTexture.png"),
+                                                    Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
+                                                    Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::AABBCollision(-1.0f, 1.0f),
                                                     Bed::EnemyTag());
 
             uint64_t w1Floor = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Floor, Bed::Transform(Bed::Vector3(0.0, -2.5, 5.0), Bed::Vector3(0.0f), Bed::Vector3(50.0, 0.5, 50.0)),
-                                                    Bed::StaticMesh("../Assets/Resources/Meshes/Cube.obj"),
-                                                    Bed::Texture("../Assets/Resources/Textures/256xWhite.png"));
+                                                    Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
+                                                    Bed::Texture("Assets/Resources/Textures/256xWhite.png"));
 
             uint64_t w1Fog = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Fog, Bed::Fog(Bed::Colour3(0.0f, 0.0f, 0.0f), 10.0f, 45.0f));
@@ -184,7 +190,7 @@ namespace World
 
             uint64_t w2ent1 = m_ecs.CreateEntity(world2);
             m_ecs.AttachComponents(world2, w2ent1, Bed::Transform(Bed::Vector3(2.5, 0.0, 10.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                                Bed::StaticMesh("../Assets/Resources/Meshes/Cube.obj"));
+                                                Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"));
 
             m_ecs.AddSystem(world2, Bed::StaticMeshSystem);*/
         };
