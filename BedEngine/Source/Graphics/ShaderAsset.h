@@ -9,6 +9,7 @@
 #include <glm.hpp>
 
 // TODO: Make this file able to be used with diffrent Renderers
+// TODO: BMP has easier reading than PNG and JPEG
 
 namespace Bed
 {
