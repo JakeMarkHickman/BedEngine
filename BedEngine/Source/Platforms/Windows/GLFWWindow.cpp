@@ -135,8 +135,8 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     {
         glm::mat4 MatTransform;
         float TextureID;
-        Bed::Vector2 UVMin;
-        Bed::Vector2 UVMax;
+        Pillow::Vector2f UVMin;
+        Pillow::Vector2f UVMax;
     };
 
     //3D Shader

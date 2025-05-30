@@ -12,12 +12,12 @@ namespace Pillow
     {
         Vector2() : x(T{0}), y(T{0}) {};
         Vector2(T value) : x(value), y(value) {};
-        Vector2(T x, T y, T z) : x(x), y(y) {};
+        Vector2(T x, T y) : x(x), y(y) {};
         Vector2(const Vector2& value) : x(value.x), y(value.y) {};
 
         T x;
         T y;
-
+        
         // ==
         template<Arithmetic U>
         bool operator==(const Vector2<U>& other) const 

@@ -8,8 +8,8 @@ namespace Bed
     {
         glm::mat4 MatTransform;
         float TextureID;
-        Bed::Vector2 UVMin;
-        Bed::Vector2 UVMax;
+        Pillow::Vector2f UVMin;
+        Pillow::Vector2f UVMax;
     };
 
     void SpriteSystem(World& world)
@@ -40,8 +40,8 @@ namespace Bed
                 instance.MatTransform = transform->GetMatrix();
                 instance.TextureID = texture->TextureSlot;
 
-                Bed::Vector2 Min(0.0f, 0.0f);
-                Bed::Vector2 Max(1.0f, 1.0f);
+                Pillow::Vector2f Min(0.0f, 0.0f);
+                Pillow::Vector2f Max(1.0f, 1.0f);
 
                 if(world.HasComponents<Bed::SubTexture>(i))
                 {

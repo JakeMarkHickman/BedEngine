@@ -36,7 +36,7 @@ namespace Bed
                         int tileID = tileMap->MapTiles[y * tileMap->MapSize.x + x];
                         if(tileID < 0) continue;
 
-                        Bed::Vector2 tilePosition = Bed::Vector2(transform->Position.x, transform->Position.y) + Bed::Vector2(x * tileMap->TileSize.x, y * tileMap->TileSize.y);
+                        Pillow::Vector2f tilePosition = Pillow::Vector2f(transform->Position.x, transform->Position.y) + Pillow::Vector2f(x * tileMap->TileSize.x, y * tileMap->TileSize.y);
 
                         int tilesPerRow = texture->TextureSize.x / tileMap->TileSize.x;
                         int tileX = tileID % tilesPerRow;

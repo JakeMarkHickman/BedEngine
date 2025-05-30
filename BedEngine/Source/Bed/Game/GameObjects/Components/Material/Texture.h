@@ -14,7 +14,7 @@ namespace Bed
 
         std::string TexturePath;
 
-        Bed::Vector2 TextureSize;
+        Pillow::Vector2f TextureSize;
 
         TextureFiltering TextureFiltering;
         Bed::TextureAsset* TextureAsset = nullptr;

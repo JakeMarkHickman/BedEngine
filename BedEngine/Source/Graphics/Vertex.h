@@ -11,7 +11,7 @@ namespace Bed
         Pillow::Vector3f m_Position;
         Pillow::Vector3f m_Normal;
         Bed::Vector4 m_Colour;
-        Bed::Vector2 m_TexCoords;
+        Pillow::Vector2f m_TexCoords;
         float m_TexID;
 
         bool operator==(const Vertex& other) const {

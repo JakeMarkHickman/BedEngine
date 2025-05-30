@@ -30,7 +30,7 @@ void Bed::OpenShader::SetUniform1f(const std::string& name, float value)
     GLCall(glUniform1f(GetUniformLocation(name), value));
 }
 
-void Bed::OpenShader::SetUniform2f(const std::string& name, Bed::Vector2 value)
+void Bed::OpenShader::SetUniform2f(const std::string& name, Pillow::Vector2f value)
 {
     GLCall(glUniform2f(GetUniformLocation(name), value.x, value.y));
 }

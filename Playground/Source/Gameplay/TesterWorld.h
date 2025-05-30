@@ -89,14 +89,14 @@ namespace Test
             m_ecs.AttachComponents(world1, w1Logo, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(0.4f)),
                                                     Bed::UIElement(),
                                                     Bed::Texture("Assets/Resources/Textures/BedEngineLogo.png"),
-                                                    Bed::Anchor(Bed::Vector2(0.07f, 0.1f)));
+                                                    Bed::Anchor(Pillow::Vector2f(0.07f, 0.1f)));
 
             uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(0.3f)),
                                                     Bed::UIElement(),
                                                     Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::Clickable(),
-                                                    Bed::Anchor(Bed::Vector2(0.7f, 0.5f)),
+                                                    Bed::Anchor(Pillow::Vector2f(0.7f, 0.5f)),
                                                     Bed::Input(),
                                                     Bed::EnemyTag());
 

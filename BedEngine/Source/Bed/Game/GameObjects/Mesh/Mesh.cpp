@@ -51,7 +51,7 @@ void Bed::Mesh::LoadPositions(std::string line)
 void Bed::Mesh::LoadUVWs(std::string line)
 {
     std::istringstream data(line.substr(3)); // Skip the "vt "
-    Bed::Vector2 UVW(0.0f, 0.0f);
+    Pillow::Vector2f UVW(0.0f, 0.0f);
 
     data >> UVW.x >> UVW.y;
     m_UVs.push_back(UVW);
@@ -86,7 +86,7 @@ void Bed::Mesh::LoadFaces(std::string line)
         vert.m_Position = m_Positions[vi - 1];
         vert.m_Normal = m_Normals[ni - 1];
         vert.m_Colour = Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-        vert.m_TexCoords = (ti > 0) ? m_UVs[ti - 1] : Bed::Vector2(0.0f, 0.0f);
+        vert.m_TexCoords = (ti > 0) ? m_UVs[ti - 1] : Pillow::Vector2f(0.0f, 0.0f);
         vert.m_TexID = 0.0f;
 
         // Find if vertex already exists

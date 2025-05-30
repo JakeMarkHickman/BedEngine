@@ -25,7 +25,7 @@ namespace Bed
         void LoadFaces(std::string line);
 
         std::vector<Pillow::Vector3f> m_Positions;
-        std::vector<Bed::Vector2> m_UVs;
+        std::vector<Pillow::Vector2f> m_UVs;
         std::vector<Pillow::Vector3f> m_Normals;
         
         std::vector<Bed::Vertex> m_Vertices;
