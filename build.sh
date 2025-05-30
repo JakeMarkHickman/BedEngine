@@ -6,6 +6,12 @@
 buildPath="build"                           # The path to build to
 StaticBuild=true
 
+SharedDependencies="-IPillowMath/include"
+
+#TODO: THIS IS THE PHYSICS ENGINE LIB BUILD
+
+
+#TODO: THIS IS THE GAME ENGINE AND GAME
 #Locations
 Dependencies="BedEngine/Dependencies"
 Source="BedEngine/Source"
@@ -23,8 +29,8 @@ GameOutputFile="Playground"                     # No extention as we will set it
 EngineOutputFile=""                # The engine will always be a dynamic lib
 
 #Includes
-GameIncludes="-I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/glm -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include"
-EngineIncludes="-I$Source -I$Inclusions -I$Dependencies/GLFW/include
+GameIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/glm -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include"
+EngineIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/GLFW/include
                 -I$Dependencies/GLEW/include -I$Dependencies/stb_image
                 -I$Dependencies/glm -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include"
 
@@ -33,12 +39,12 @@ GameLibs=""             # Libs for the game
 EngineLibs=""                               # Libs for the engine
 
 #flags
-GameFlags="-fuse-ld=lld-link"                   # Flags for the game
-EngineFlags=""                              # Flags for the engine
+GameFlags="-fuse-ld=lld-link -std=c++20 -Wno-c++20-extensions"                      # Flags for the game
+EngineFlags="-std=c++20 -Wno-c++20-extensions"                                      # Flags for the engine
 
 #Preprocessor Definitions
-GamePredef="-std=c++17 -Wno-c++17-extensions"                                   # Definitions for the game
-EnginePredef="-std=c++17 -Wno-c++17-extensions"             # Definitions for the engine
+GamePredef=""                                                                       # Definitions for the game
+EnginePredef=""                                                                     # Definitions for the engine
 
 #CPPs
 GraphicsCpp="$Graphics/VertexBuffer.cpp $Graphics/IndexBuffer.cpp

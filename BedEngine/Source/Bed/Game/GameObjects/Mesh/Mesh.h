@@ -24,9 +24,9 @@ namespace Bed
         void LoadVertexNormals(std::string line);
         void LoadFaces(std::string line);
 
-        std::vector<Bed::Vector3> m_Positions;
+        std::vector<Pillow::Vector3f> m_Positions;
         std::vector<Bed::Vector2> m_UVs;
-        std::vector<Bed::Vector3> m_Normals;
+        std::vector<Pillow::Vector3f> m_Normals;
         
         std::vector<Bed::Vertex> m_Vertices;
         std::vector<unsigned int> m_Indices;

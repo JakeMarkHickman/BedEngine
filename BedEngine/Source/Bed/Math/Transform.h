@@ -2,7 +2,7 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 
-#include "Vector/Vector3.h"
+#include <Math/Vector/Vector3.h>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -17,17 +17,17 @@ namespace Bed
         Transform() {};
         Transform(float value) : Position(value), Rotation(value), Scale(value), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(value) {};
         Transform(float position, float rotation, float scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(scale) {};
-        Transform(Bed::Vector3 value) : Position(value), Rotation(value), Scale(value), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(value) {};
-        Transform(Bed::Vector3 position, Bed::Vector3 rotation, Bed::Vector3 scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(scale) {};
+        Transform(Pillow::Vector3f value) : Position(value), Rotation(value), Scale(value), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(value) {};
+        Transform(Pillow::Vector3f position, Pillow::Vector3f rotation, Pillow::Vector3f scale) : Position(position), Rotation(rotation), Scale(scale), LocalPosition(0.0f), LocalRotation(0.0f), LocalScale(scale) {};
 
         // TODO: change rotation to a quarternion
-        Bed::Vector3 Position;
-        Bed::Vector3 Rotation;
-        Bed::Vector3 Scale;
+        Pillow::Vector3f Position;
+        Pillow::Vector3f Rotation;
+        Pillow::Vector3f Scale;
 
-        Bed::Vector3 LocalPosition;
-        Bed::Vector3 LocalRotation;
-        Bed::Vector3 LocalScale;
+        Pillow::Vector3f LocalPosition;
+        Pillow::Vector3f LocalRotation;
+        Pillow::Vector3f LocalScale;
 
         glm::mat4 GetMatrix() const
         {

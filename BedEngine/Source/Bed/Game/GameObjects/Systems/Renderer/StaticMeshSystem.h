@@ -46,7 +46,7 @@ namespace Bed
                 {
                     // Apply the transformation matrix to each vertex position
                     glm::vec4 transformedPosition = transform->GetMatrix() * glm::vec4(vert.m_Position.x, vert.m_Position.y, vert.m_Position.z, 1.0f);  // Matrix-vector multiplication
-                    vert.m_Position = Bed::Vector3(transformedPosition.x, transformedPosition.y, transformedPosition.z);
+                    vert.m_Position = Pillow::Vector3f(transformedPosition.x, transformedPosition.y, transformedPosition.z);
 
                     if(world.HasComponents<Bed::Texture>(i))
                     {

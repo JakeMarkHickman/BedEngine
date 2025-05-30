@@ -14,7 +14,7 @@ namespace Bed
                 Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
                 Bed::Velocity* velocity = world.GetComponent<Bed::Velocity>(i);
 
-                Bed::Vector3 nomalisedDirection = Bed::VectorMath::Normalise(velocity->Direction);
+                Pillow::Vector3f nomalisedDirection = Pillow::VectorMath::Normalise(velocity->Direction);
 
                 //TODO: make this not use normalised velocity
                 transform->Position += nomalisedDirection * velocity->Speed * Bed::Time::GetDeltaTime();

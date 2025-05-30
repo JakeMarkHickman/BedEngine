@@ -8,8 +8,8 @@ namespace Bed
     {
         Vertex() {};
 
-        Bed::Vector3 m_Position;
-        Bed::Vector3 m_Normal;
+        Pillow::Vector3f m_Position;
+        Pillow::Vector3f m_Normal;
         Bed::Vector4 m_Colour;
         Bed::Vector2 m_TexCoords;
         float m_TexID;

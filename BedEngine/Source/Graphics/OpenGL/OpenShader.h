@@ -21,7 +21,7 @@ namespace Bed
         // set uniforms
         virtual void SetUniform1f(const std::string& name, float value) override;
         virtual void SetUniform2f(const std::string& name, Bed::Vector2 value) override;
-        virtual void SetUniform3f(const std::string& name, Bed::Vector3 value) override;
+        virtual void SetUniform3f(const std::string& name, Pillow::Vector3f value) override;
         virtual void SetUniform3f(const std::string& name, Bed::Colour3 value) override;
         virtual void SetUniform4f(const std::string& name, Bed::Vector4 value) override;
         virtual void SetUniform4f(const std::string& name, Bed::Colour4 value) override;

@@ -76,7 +76,7 @@ namespace Bed
             if(world.HasComponents<Bed::ClickableClicked, Bed::EnemyTag, Bed::Texture>(i))
             {
                 uint64_t ent = world.CreateEntity();
-                world.AttachComponents(ent, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+                world.AttachComponents(ent, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 5.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
                 Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                 Bed::Texture("Assets/Resources/Textures/TestBedEngineIcon.png"),
                 Bed::Input(),

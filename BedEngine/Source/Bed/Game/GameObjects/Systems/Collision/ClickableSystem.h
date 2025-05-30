@@ -34,7 +34,7 @@ namespace Bed
                 float w = transform->Scale.x / 2;
                 float h = transform->Scale.y / 2;
 
-                Bed::Vector3 newPos = transform->Position + Bed::Vector3(anchorXWorld, -anchorYWorld, 0.0f);
+                Pillow::Vector3f newPos = transform->Position + Pillow::Vector3f(anchorXWorld, -anchorYWorld, 0.0f);
 
                 float cursorX = (input->CursorX / winsize.Width) * 2.0f - 1.0f;
                 float cursorY = ((winsize.Height - input->CursorY) / winsize.Height) * 2.0f - 1.0f;

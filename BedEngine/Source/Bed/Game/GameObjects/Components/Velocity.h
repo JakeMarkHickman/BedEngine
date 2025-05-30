@@ -7,9 +7,9 @@ namespace Bed
     struct Velocity
     {
         Velocity() : Direction(0.0f), Speed(0.0f) {};
-        Velocity(Bed::Vector3 direction, float speed) : Direction(direction), Speed(speed) {};
+        Velocity(Pillow::Vector3f direction, float speed) : Direction(direction), Speed(speed) {};
 
-        Bed::Vector3 Direction;
+        Pillow::Vector3f Direction;
         float Speed;
     };
 }

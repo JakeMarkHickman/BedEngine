@@ -8,7 +8,7 @@ namespace Bed
 
     struct PointData
     {
-        Bed::Vector3 Position;
+        Pillow::Vector3f Position;
         float Padding1; // padding is needed for vectors
         Bed::Colour3 Colour;
         float Padding2;

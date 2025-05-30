@@ -8,11 +8,11 @@ namespace Bed
 
     struct SpotData
     {
-        Bed::Vector3 Position;
+        Pillow::Vector3f Position;
         float Padding1;
         Bed::Colour3 Colour;
         float Padding2;
-        Bed::Vector3 Direction;
+        Pillow::Vector3f Direction;
         float Padding3;
         float Strength;
         float CutOff;

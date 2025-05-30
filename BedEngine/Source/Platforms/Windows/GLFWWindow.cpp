@@ -55,9 +55,9 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     //TODO: Make this dynamic
     struct PointData
     {
-        Bed::Vector3 Position;
+        Pillow::Vector3f Position;
         float Padding1;
-        Bed::Vector3 Colour;
+        Pillow::Vector3f Colour;
         float Padding2;
         float Strength;
         float Radius;
@@ -65,20 +65,20 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     };
     struct DirectionalData
     {
-        Bed::Vector3 Colour;
+        Pillow::Vector3f Colour;
         float Padding1;
-        Bed::Vector3 Direction;
+        Pillow::Vector3f Direction;
         float Padding2;
         float Strength;
         float Padding3;
     };
     struct SpotData
     {
-        Bed::Vector3 Position;
+        Pillow::Vector3f Position;
         float Padding1;
-        Bed::Vector3 Colour;
+        Pillow::Vector3f Colour;
         float Padding2;
-        Bed::Vector3 Direction;
+        Pillow::Vector3f Direction;
         float Padding3;
         float Strength;
         float CutOff;

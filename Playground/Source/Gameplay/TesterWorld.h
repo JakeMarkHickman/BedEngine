@@ -78,7 +78,7 @@ namespace Test
                                                     Bed::TileMap(map));*/
 
             uint64_t w1Sprite = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Sprite, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+            m_ecs.AttachComponents(world1, w1Sprite, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
                                                 Bed::Sprite(),
                                                 Bed::Texture("Assets/Resources/Textures/LittleGuy.png", Bed::TextureFiltering::Nearest),
                                                 Bed::SubTexture(),
@@ -86,13 +86,13 @@ namespace Test
                                                 Bed::EnemyTag());
 
             uint64_t w1Logo = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Logo, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.4f)),
+            m_ecs.AttachComponents(world1, w1Logo, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(0.4f)),
                                                     Bed::UIElement(),
                                                     Bed::Texture("Assets/Resources/Textures/BedEngineLogo.png"),
                                                     Bed::Anchor(Bed::Vector2(0.07f, 0.1f)));
 
             uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 0.0f), Bed::Vector3(0.0f), Bed::Vector3(0.3f)),
+            m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(0.3f)),
                                                     Bed::UIElement(),
                                                     Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::Clickable(),
@@ -101,7 +101,7 @@ namespace Test
                                                     Bed::EnemyTag());
 
             uint64_t w1Player = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+            m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 5.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
                                                     Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                                     Bed::Texture("Assets/Resources/Textures/TestBedEngineIcon.png"),
                                                     Bed::Input(),
@@ -109,27 +109,27 @@ namespace Test
                                                     Bed::AABBCollision(-1.0f, 1.0f));
                                                 
             uint64_t w1Camera = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Camera, Bed::Transform(Bed::Vector3(0.0f, 5.0f, -5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+            m_ecs.AttachComponents(world1, w1Camera, Bed::Transform(Pillow::Vector3f(0.0f, 5.0f, -5.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
                                                         Bed::Camera(Bed::ProjectionType::Perspective),
                                                         Bed::Input(),
                                                         Bed::PlayerTag());
 
             uint64_t w1Ent1 = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Ent1, Bed::Transform(Bed::Vector3(-2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+            m_ecs.AttachComponents(world1, w1Ent1, Bed::Transform(Pillow::Vector3f(-2.5, 0.0, 5.0), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
                                                     Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                                     Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::AABBCollision(-1.0f, 1.0f),
                                                     Bed::EnemyTag());
 
             uint64_t w1Ent2 = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Ent2, Bed::Transform(Bed::Vector3(2.5, 0.0, 5.0), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
+            m_ecs.AttachComponents(world1, w1Ent2, Bed::Transform(Pillow::Vector3f(2.5, 0.0, 5.0), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
                                                     Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                                     Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::AABBCollision(-1.0f, 1.0f),
                                                     Bed::EnemyTag());
 
             uint64_t w1Floor = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Floor, Bed::Transform(Bed::Vector3(0.0, -2.5, 5.0), Bed::Vector3(0.0f), Bed::Vector3(50.0, 0.5, 50.0)),
+            m_ecs.AttachComponents(world1, w1Floor, Bed::Transform(Pillow::Vector3f(0.0, -2.5, 5.0), Pillow::Vector3f(0.0f), Pillow::Vector3f(50.0, 0.5, 50.0)),
                                                     Bed::StaticMesh("Assets/Resources/Meshes/Cube.obj"),
                                                     Bed::Texture("Assets/Resources/Textures/256xWhite.png"));
 
@@ -140,22 +140,22 @@ namespace Test
             m_ecs.AttachComponents(world1, w1Ambient, Bed::AmbientLight());
             
             uint64_t w1Directional = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Ambient, Bed::DirectionalLight(Bed::Colour3(1.0f, 1.0f, 1.0f), Bed::Vector3(0.0f, -1.0f, 1.0f), 0.5f));
+            m_ecs.AttachComponents(world1, w1Ambient, Bed::DirectionalLight(Bed::Colour3(1.0f, 1.0f, 1.0f), Pillow::Vector3f(0.0f, -1.0f, 1.0f), 0.5f));
 
             uint64_t w1Spot = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Spot, Bed::Transform(Bed::Vector3(0.0f, 3.0f, 5.0f), Bed::Vector3(0.0f), Bed::Vector3(1.0f)),
-                                        Bed::SpotLight(Bed::Colour3(1.0f, 0.0f, 0.0f), Bed::Vector3(0.0f, -1.0f, 0.0f), 1.0f, 28.0f, 30.0f, 2.0f));
+            m_ecs.AttachComponents(world1, w1Spot, Bed::Transform(Pillow::Vector3f(0.0f, 3.0f, 5.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
+                                        Bed::SpotLight(Bed::Colour3(1.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f, -1.0f, 0.0f), 1.0f, 28.0f, 30.0f, 2.0f));
 
             uint64_t w1Point1 = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Point1, Bed::Transform(Bed::Vector3(0.0f, 0.0f, 3.0f), 0.0f, 1.0f),
+            m_ecs.AttachComponents(world1, w1Point1, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 3.0f), 0.0f, 1.0f),
                                         Bed::PointLight(1.0f, 1.0f, 1.0f));
 
             uint64_t w1Point2 = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Point2, Bed::Transform(Bed::Vector3(-2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
+            m_ecs.AttachComponents(world1, w1Point2, Bed::Transform(Pillow::Vector3f(-2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
                                         Bed::PointLight(Bed::Colour3(0.11f, 0.8f, 0.6f), 1.0f, 1.0f));
 
             uint64_t w1Point3 = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Point3, Bed::Transform(Bed::Vector3(2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
+            m_ecs.AttachComponents(world1, w1Point3, Bed::Transform(Pillow::Vector3f(2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
                                         Bed::PointLight(Bed::Colour3(0.2f, 0.0f, 1.0f), 1.0f, 1.0f));
 
             m_ecs.AddSystem(world1, Bed::InputSystem);

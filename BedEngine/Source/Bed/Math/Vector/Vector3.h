@@ -4,7 +4,7 @@
 
 //TODO: Make this compatable with Colour
 
-namespace Bed
+/*namespace Bed
 {
     struct BED_API Vector3
     {
@@ -181,4 +181,4 @@ namespace Bed
             return Vector3(x - other.x, y - other.y, z - other.z);
         }
     };
-}
+}*/

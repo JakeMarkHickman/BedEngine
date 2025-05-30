@@ -8,7 +8,7 @@ namespace Bed
     {
         AABBCollision() : BoundingBox() {};
         AABBCollision(float min, float max) : BoundingBox(min, max) {};
-        AABBCollision(Bed::Vector3 min, Bed::Vector3 max) : BoundingBox(min, max) {};
+        AABBCollision(Pillow::Vector3f min, Pillow::Vector3f max) : BoundingBox(min, max) {};
 
         AABB BoundingBox;
     };

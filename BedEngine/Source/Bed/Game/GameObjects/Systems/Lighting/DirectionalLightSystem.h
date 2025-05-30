@@ -9,7 +9,7 @@ namespace Bed
     {
         Bed::Colour3 Colour;
         float Padding1;
-        Bed::Vector3 Direction;
+        Pillow::Vector3f Direction;
         float Padding2;
         float Strength;
         float Padding3;

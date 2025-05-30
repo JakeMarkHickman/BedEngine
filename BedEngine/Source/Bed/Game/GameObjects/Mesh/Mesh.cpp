@@ -42,7 +42,7 @@ void Bed::Mesh::LoadFile(std::string path)
 void Bed::Mesh::LoadPositions(std::string line)
 {
     std::istringstream data(line.substr(2)); // Skip the "v "
-    Bed::Vector3 position(0.0f, 0.0f, 0.0f);
+    Pillow::Vector3f position(0.0f, 0.0f, 0.0f);
 
     data >> position.x >> position.y >> position.z;
     m_Positions.push_back(position);
@@ -60,7 +60,7 @@ void Bed::Mesh::LoadUVWs(std::string line)
 void Bed::Mesh::LoadVertexNormals(std::string line)
 {
     std::istringstream data(line.substr(3)); // Skip the "vn "
-    Bed::Vector3 normal(0.0f, 0.0f, 0.0f);
+    Pillow::Vector3f normal(0.0f, 0.0f, 0.0f);
 
     data >> normal.x >> normal.y >> normal.z;
     m_Normals.push_back(normal);
