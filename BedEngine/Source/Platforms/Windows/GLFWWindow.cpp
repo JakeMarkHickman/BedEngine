@@ -103,28 +103,28 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     Bed::Vertex v0;
         v0.m_Position = { -0.5f, -0.5f, 0.0f };
         v0.m_Normal = { 0.0f, 0.0f, 0.0f };
-        v0.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v0.m_Colour = { Pillow::Vector4f(1.0f, 1.0f, 1.0f, 1.0f) };
         v0.m_TexCoords = { 0.0f,  0.0f };
         v0.m_TexID = 0;
 
     Bed::Vertex v1;
         v1.m_Position = { 0.5f, -0.5f, 0.0f };
         v1.m_Normal = { 0.0f, 0.0f, 0.0f };
-        v1.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v1.m_Colour = { Pillow::Vector4f(1.0f, 1.0f, 1.0f, 1.0f) };
         v1.m_TexCoords = { 1.0f,  0.0f };
         v1.m_TexID = 0;
 
     Bed::Vertex v2;
         v2.m_Position = { 0.5f, 0.5f, 0.0f };
         v2.m_Normal = { 0.0f, 0.0f, 0.0f };
-        v2.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v2.m_Colour = { Pillow::Vector4f(1.0f, 1.0f, 1.0f, 1.0f) };
         v2.m_TexCoords = { 1.0f,  1.0f };
         v2.m_TexID = 0;
 
     Bed::Vertex v3;
         v3.m_Position = { -0.5f, 0.5f, 0.0f };
         v3.m_Normal = { 0.0f, 0.0f, 0.0f };
-        v3.m_Colour = { Bed::Vector4(1.0f, 1.0f, 1.0f, 1.0f) };
+        v3.m_Colour = { Pillow::Vector4f(1.0f, 1.0f, 1.0f, 1.0f) };
         v3.m_TexCoords = { 0.0f,  1.0f };
         v3.m_TexID = 0;
 

@@ -10,7 +10,7 @@ namespace Bed
     class ECS
     {
     public:
-        ECS() { m_WorldPool = new Bed::MemoryPool(sizeof(Bed::World), 10); }; //TODO: Why am i using a vector?
+        ECS() { m_WorldPool = new Bed::MemoryPool(sizeof(Bed::World), 10); };
         ~ECS() {};
 
         uint64_t CreateWorld();

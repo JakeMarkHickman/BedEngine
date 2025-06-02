@@ -1,8 +1,5 @@
 #pragma once
 
-#include <concepts>
-#include <type_traits>
-
 #include "../PillowCore.h"
 
 namespace Pillow
@@ -280,7 +277,10 @@ namespace Pillow
         };
     };
 
+    //Creates a 3 float Vector
     using Vector3f = Vector3<float>;
+    //Creates a 3 integer Vector
     using Vector3i = Vector3<int>;
+    //Creates a 3 double Vector
     using Vector3d = Vector3<double>;
 }

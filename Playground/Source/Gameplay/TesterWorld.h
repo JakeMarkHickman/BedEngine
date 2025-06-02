@@ -6,6 +6,10 @@
 
 #include <Math/Colour.h>
 #include <Math/Transform.h>
+#include <Math/Matrix.h>
+
+#include <NonEuclidean/Hyperbolic.h>
+
 #include <Components/Input/Input.h>
 #include <Components/Camera.h>
 #include <Components/Lighting/AmbientLight.h>
@@ -185,6 +189,14 @@ namespace Test
             m_ecs.AddSystem(world1, Bed::ClickableReleasedTest);
             m_ecs.AddSystem(world1, Bed::AnimTestSystem);
             
+
+            Pillow::Mat4f mat = Pillow::Mat4f::Identity();
+
+            std::cout << mat.ToString() << "\n";
+
+            std::cout << "Hyperbolic point = " << Pillow::Hyperbolic::WarpOnAxis(1.0f, 2.0f) << "\n";
+
+
             //World 2
             /*uint64_t world2 = m_ecs.CreateWorld();
 

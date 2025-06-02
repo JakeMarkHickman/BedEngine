@@ -10,7 +10,7 @@ namespace Bed
 
         Pillow::Vector3f m_Position;
         Pillow::Vector3f m_Normal;
-        Bed::Vector4 m_Colour;
+        Pillow::Vector4f m_Colour; // TODO: Change to colour
         Pillow::Vector2f m_TexCoords;
         float m_TexID;
 

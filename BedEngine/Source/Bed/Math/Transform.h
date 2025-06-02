@@ -3,11 +3,13 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include <Math/Vector/Vector3.h>
+#include <Math/Matrix.h>
 
 #include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
 #include <gtc/quaternion.hpp>
 #include <gtx/quaternion.hpp>
+
+#include <Bed/Core.h>
 
 namespace Bed
 {

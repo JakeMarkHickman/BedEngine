@@ -34,7 +34,7 @@ namespace Bed
         virtual void SetUniform2f(const std::string& name, Pillow::Vector2f value) {};
         virtual void SetUniform3f(const std::string& name, Pillow::Vector3f value) {};
         virtual void SetUniform3f(const std::string& name, Bed::Colour3 value) {};
-        virtual void SetUniform4f(const std::string& name, Bed::Vector4 value) {};
+        virtual void SetUniform4f(const std::string& name, Pillow::Vector4f value) {};
         virtual void SetUniform4f(const std::string& name, Bed::Colour4 value) {};
 
         virtual void SetUniform1i(const std::string& name, int value) {};

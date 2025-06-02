@@ -1,8 +1,5 @@
 #pragma once
 
-#include <concepts>
-#include <type_traits>
-
 #include "../PillowCore.h"
 
 namespace Pillow

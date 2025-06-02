@@ -1,3 +1,3 @@
 #pragma once
 
-#include <Bed/Math/Vector/Vector4.h>
+#include <Vector/Vector4.h>
