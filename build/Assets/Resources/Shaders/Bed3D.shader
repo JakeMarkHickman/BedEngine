@@ -4,17 +4,36 @@
 #include "Vertex/Core/VertexLayout.glsl"
 #include "Vertex/Core/ModelViewProjection.glsl"
 #include "Vertex/Core/CameraPosition.glsl"
+#include "Vertex/NonEuclidean/NonEuclidean.glsl"
 
 void main()
 {
-    v_Pos = ModelTransform(a_Position);
+    vec4 WorldPos = ModelTransform(a_Position);
+
+    vec3 localToCamera = WorldPos.xyz - u_CamPos;
+
+    //localToCamera.x = HyperbolicWarpAxis(localToCamera.x);
+    //localToCamera.y = HyperbolicWarpAxis(localToCamera.y);
+    //localToCamera.z = HyperbolicWarpAxis(localToCamera.z);
+
+    //localToCamera.x = SphericalWarpAxis(localToCamera.x);
+    //localToCamera.y = SphericalWarpAxis(localToCamera.y);
+    //localToCamera.z = SphericalWarpAxis(localToCamera.z);
+
+    //localToCamera.x = EllipticWarpAxis(localToCamera.x);
+    //localToCamera.y = EllipticWarpAxis(localToCamera.y);
+    //localToCamera.z = EllipticWarpAxis(localToCamera.z);
+
+    WorldPos.xyz = u_CamPos + localToCamera; 
+
+    v_Pos = WorldPos;
     v_Normal = normalize(a_Normal);
     v_Colour = a_Colour;
     v_TexCoord = a_TexCoord;
     v_TexID = a_TexID;
     v_CamPos = u_CamPos;
 
-    gl_Position = Transform(a_Position);
+    gl_Position = Transform(WorldPos);
 }
 
 #shader fragment

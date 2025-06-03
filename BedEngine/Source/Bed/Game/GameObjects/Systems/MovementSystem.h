@@ -16,8 +16,16 @@ namespace Bed
 
                 Pillow::Vector3f nomalisedDirection = Pillow::VectorMath::Normalise(velocity->Direction);
 
+                //float strength = 0.01f;
+
+                //float axis = Pillow::Hyperbolic::WarpOnAxis(transform->Position.x, strength);
+
+                float speed = velocity->Speed /* axis*/;
+
+                //std::cout << speed << "\n";
+
                 //TODO: make this not use normalised velocity
-                transform->Position += nomalisedDirection * velocity->Speed * Bed::Time::GetDeltaTime();
+                transform->Position += nomalisedDirection * speed * Bed::Time::GetDeltaTime();
             }
         }
     }

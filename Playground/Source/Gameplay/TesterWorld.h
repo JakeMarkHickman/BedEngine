@@ -191,11 +191,7 @@ namespace Test
             
 
             Pillow::Mat4f mat = Pillow::Mat4f::Identity();
-
             std::cout << mat.ToString() << "\n";
-
-            std::cout << "Hyperbolic point = " << Pillow::Hyperbolic::WarpOnAxis(1.0f, 2.0f) << "\n";
-
 
             //World 2
             /*uint64_t world2 = m_ecs.CreateWorld();
