@@ -5,6 +5,8 @@
 #include <Bed/Core.h>
 #include <Bed/Game/Game.h>
 
+#include <PhysicsWorld.h>
+
 #include <Platforms/Platform.h>
 #include <Platforms/Window.h>
 
@@ -53,6 +55,8 @@ namespace Bed
 
         Bed::Time m_Time;
         Bed::Game* m_Game = nullptr;
+
+        Mattress::PhysicsWorld m_Physics;
 
         Bed::Platform* m_Platform = nullptr;
         Bed::Window* m_Window = nullptr;

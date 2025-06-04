@@ -3,6 +3,7 @@
 #include "EntityManager.h"
 #include "ComponentManager.h"
 
+#include <PhysicsWorld.h>
 #include <functional>
 
 namespace Bed
@@ -10,6 +11,7 @@ namespace Bed
     class World
     {
     public:
+        Mattress::PhysicsWorld GetWorldPhysics() { return m_Physics; };
 
         //Entities
         uint64_t CreateEntity();
@@ -61,6 +63,8 @@ namespace Bed
     private:
         Bed::EntityManager m_EntityManager;
         Bed::ComponentManager m_ComponentManager;
+
+        Mattress::PhysicsWorld m_Physics;
 
         std::vector<std::function<void(Bed::World&)>> m_Systems;
     };

@@ -10,6 +10,32 @@ SharedDependencies="-IPillowMath/include"
 
 #TODO: THIS IS THE PHYSICS ENGINE LIB BUILD
 
+Dependencies="MattressPhysicsEngine/Dependencies"
+Source="MattressPhysicsEngine/Source"
+
+Includes="$SharedDependencies -I$Source"
+Cpps="$Source/PhysicsWorld.cpp"
+Flags="-std=c++20 -Wno-c++20-extensions"
+Predef=""
+OutputFile=""
+
+if $StaticBuild; then
+    echo Physics Building Static
+    mkdir -p "$buildPath/Static/obj"
+
+    PhysicsbuildPath="$buildPath/Static"
+    OutputFile="Mattress.lib"
+    Libs=""
+    Flags="$Flags -c"
+
+    for cpp in $Cpps; do
+        objname=$(basename "$cpp" .cpp).o
+        clang++ $Includes $Libs $Flags $Predef "$cpp" -o "$PhysicsbuildPath/obj/$objname"
+    done
+
+    llvm-ar rcs "$PhysicsbuildPath/$OutputFile" "$PhysicsbuildPath/obj/"*.o
+fi
+
 
 #TODO: THIS IS THE GAME ENGINE AND GAME
 #Locations
@@ -29,18 +55,19 @@ GameOutputFile="Playground"                     # No extention as we will set it
 EngineOutputFile=""                # The engine will always be a dynamic lib
 
 #Includes
-GameIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/glm -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include"
+GameIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/glm -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include -IMattressPhysicsEngine/Source"
 EngineIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/GLFW/include
                 -I$Dependencies/GLEW/include -I$Dependencies/stb_image
-                -I$Dependencies/glm -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include"
+                -I$Dependencies/glm -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include
+                -IMattressPhysicsEngine/Source"
 
 #Libarys
 GameLibs=""             # Libs for the game
-EngineLibs=""                               # Libs for the engine
+EngineLibs="$buildPath/Static/Mattress.lib"                               # Libs for the engine
 
 #flags
 GameFlags="-fuse-ld=lld-link -std=c++20 -Wno-c++20-extensions"                      # Flags for the game
-EngineFlags="-std=c++20 -Wno-c++20-extensions"                                      # Flags for the engine
+EngineFlags="-fuse-ld=lld-link -std=c++20 -Wno-c++20-extensions"                                      # Flags for the engine
 
 #Preprocessor Definitions
 GamePredef=""                                                                       # Definitions for the game
@@ -150,7 +177,7 @@ else
 
     buildPath="$buildPath/Dynamic"
 
-    EngineLibs="$EngineLibs"
+    EngineLibs="$EngineLibs $buildPath/Mattress.lib"
     EnginePredef="$EnginePredef -DBED_BUILD_DLL -DENGINE_DLL"
     GamePredef="$GamePredef -DENGINE_DLL"
     EngineOutputFile="BedEngine.dll"

@@ -32,9 +32,25 @@ namespace Bed
         {
             m_Time.CalculateDeltaTime();
 
-            //std::cout << Time::GetDeltaTime() << "\n";
+            m_Game->Update(); //Game update
 
-            m_Game->Update();
+            /*
+                TODO: figure out some way of making Fixed time loop for all worlds at once
+                Options:
+                    Have a clock that checks inside the physics system
+                        Mattress::Physics::Tick();
+
+                    A global clock for the whole engine
+                        m_Time.GetFixedTime();
+
+                    Have the loop below inside of the physics system and worlds are added into the manager
+                    from the ECS that way its a one function call
+            */
+            for(auto& world : m_Game->GetActiveWorlds())
+            {
+                world.second->GetWorldPhysics().Step(Time::GetDeltaTime()); //Physics update
+            }
+
             m_Window->UpdateWindow(); // Update the platform App
         }
         

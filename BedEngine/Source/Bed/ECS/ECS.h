@@ -7,11 +7,14 @@
 
 namespace Bed
 {
+    //TODO: this needs cleaning up there is alot of indirection
     class ECS
     {
     public:
         ECS() { m_WorldPool = new Bed::MemoryPool(sizeof(Bed::World), 10); };
         ~ECS() {};
+
+        std::unordered_map<uint64_t, Bed::World*> GetActiveWorlds() { return m_WorldRegistry; };
 
         uint64_t CreateWorld();
         void RemoveWorld(uint64_t worldID);
