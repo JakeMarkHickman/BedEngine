@@ -8,6 +8,36 @@
 namespace Bed
 {
     //TODO: this needs cleaning up there is alot of indirection
+
+    /*  
+        TODO:
+
+            Create World from template:
+                This loads a world from JSON
+
+            Create Entity from template:
+                This loads an entity from Json
+
+            Component Sets:
+                Create a component set which will have defualt data 
+                such as:
+
+                RegisterComponentSet("name", DATA);
+
+                uint64_t entity = UseComponentSet("name");
+
+            Config to Systems:
+                Adds configuration to systems
+                such as:
+
+                .Multithreaded = true;
+                .Priority = 3;
+                ect
+
+            Query System
+
+            Large Refactor now that GradEx is done!
+    */
     class ECS
     {
     public:

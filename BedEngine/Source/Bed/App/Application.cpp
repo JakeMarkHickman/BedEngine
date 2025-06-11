@@ -49,6 +49,12 @@ namespace Bed
             for(auto& world : m_Game->GetActiveWorlds())
             {
                 world.second->GetWorldPhysics().Step(Time::GetDeltaTime()); //Physics update
+                
+                //Update Entity Positions from physics step
+                for(uint64_t i = 0; i < world.second->GetAllEntities(); i++)
+                {
+
+                }
             }
 
             m_Window->UpdateWindow(); // Update the platform App
