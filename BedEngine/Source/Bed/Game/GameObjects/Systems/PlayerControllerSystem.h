@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Components/Velocity.h>
+#include <Vector/VectorMath.h>
 
 #include <Graphics/GraphicVariables.h>
 
@@ -10,16 +10,11 @@ namespace Bed
     {
         for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
-            if(world.HasComponents<Bed::Input, Bed::PlayerTag>(i))
+            if(world.HasComponents<Bed::Input, Bed::PlayerTag, Mattress::PhysicsObject>(i))
             {
-                if(!world.HasComponents<Bed::Velocity>(i))
-                {
-                    world.AttachComponents(i, Bed::Velocity(0.0f, 5.0f));
-                }
 
                 Bed::Input* input = world.GetComponent<Bed::Input>(i);
-                Bed::Velocity* vel = world.GetComponent<Bed::Velocity>(i);
-
+                Mattress::PhysicsObject* physObj = world.GetComponent<Mattress::PhysicsObject>(i);
 
                 //SHADER
                 if(input->KeyData[GLFW_KEY_L] == KeyState::Pressed)
@@ -31,30 +26,34 @@ namespace Bed
                     shader3D->SetUniform1i("u_GlobalUnlit", false);
                 }
 
-                Pillow::Vector3f Direction(0.0f, 0.0f, 0.0f);
+                //Pillow::Vector3f direction;
 
                 //MOVEMENT
                 if(input->KeyData[GLFW_KEY_W] == KeyState::Pressed)
                 {
-                    Direction += Pillow::Vector3f(0.0f, 0.0f, 5.0f);
+                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, 0.0f, 1.0f)) * 5.0f;
+                    physObj->AddForce(Pillow::Vector3f(0.0f, 0.0f, 5.0f));
                 }
 
                 if(input->KeyData[GLFW_KEY_A] == KeyState::Pressed)
                 {
-                    Direction += Pillow::Vector3f(-5.0f, 0.0f, 0.0f);
+                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(-1.0f, 0.0f, 0.0f)) * 5.0f;
+                    physObj->AddForce(Pillow::Vector3f(-5.0f, 0.0f, 0.0f));
                 }
 
                 if(input->KeyData[GLFW_KEY_S] == KeyState::Pressed)
                 {
-                    Direction += Pillow::Vector3f(0.0f, 0.0f, -5.0f);
+                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, 0.0f, -1.0f)) * 5.0f;
+                    physObj->AddForce(Pillow::Vector3f(0.0f, 0.0f, -5.0f));
                 }
 
                 if(input->KeyData[GLFW_KEY_D] == KeyState::Pressed)
                 {
-                    Direction += Pillow::Vector3f(5.0f, 0.0f, 0.0f);
+                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(1.0f, 0.0f, 0.0f)) * 5.0f;
+                    physObj->AddForce(Pillow::Vector3f(5.0f, 0.0f, 0.0f));
                 }
 
-                vel->Direction = Direction;
+                //physObj->Velocity = direction;
             }
         }
     }

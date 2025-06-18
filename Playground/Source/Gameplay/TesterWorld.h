@@ -10,6 +10,8 @@
 
 #include <NonEuclidean/Hyperbolic.h>
 
+
+#include <PhysicsObject.h>
 #include <Components/Input/Input.h>
 #include <Components/Camera.h>
 #include <Components/Lighting/AmbientLight.h>
@@ -54,6 +56,7 @@
 #include <Bed/Game/GameObjects/Systems/MovementSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/AnimTestSystem.h>
+#include <Bed/Game/GameObjects/Systems/Physics/PhysicsRegisterSystem.h>
 
 namespace Test
 {
@@ -95,14 +98,14 @@ namespace Test
                                                     Bed::Texture("Assets/Resources/Textures/BedEngineLogo.png"),
                                                     Bed::Anchor(Pillow::Vector2f(0.07f, 0.1f)));
 
-            uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
+            /*uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(0.3f)),
                                                     Bed::UIElement(),
                                                     Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::Clickable(),
                                                     Bed::Anchor(Pillow::Vector2f(0.7f, 0.5f)),
                                                     Bed::Input(),
-                                                    Bed::EnemyTag());
+                                                    Bed::EnemyTag());*/
 
             uint64_t w1Player = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 5.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
@@ -110,12 +113,14 @@ namespace Test
                                                     Bed::Texture("Assets/Resources/Textures/TestBedEngineIcon.png"),
                                                     Bed::Input(),
                                                     Bed::PlayerTag(),
+                                                    Mattress::PhysicsObject(),
                                                     Bed::AABBCollision(-1.0f, 1.0f));
                                                 
             uint64_t w1Camera = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Camera, Bed::Transform(Pillow::Vector3f(0.0f, 5.0f, -5.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
                                                         Bed::Camera(Bed::ProjectionType::Perspective),
                                                         Bed::Input(),
+                                                        Mattress::PhysicsObject(),
                                                         Bed::PlayerTag());
 
             uint64_t w1Ent1 = m_ecs.CreateEntity(world1);
@@ -162,6 +167,7 @@ namespace Test
             m_ecs.AttachComponents(world1, w1Point3, Bed::Transform(Pillow::Vector3f(2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
                                         Bed::PointLight(Bed::Colour3(0.2f, 0.0f, 1.0f), 1.0f, 1.0f));
 
+            m_ecs.AddSystem(world1, Bed::PhysicsRegisterSystem);
             m_ecs.AddSystem(world1, Bed::InputSystem);
             m_ecs.AddSystem(world1, Bed::ClickableSystem);
             m_ecs.AddSystem(world1, Bed::CameraSystem);

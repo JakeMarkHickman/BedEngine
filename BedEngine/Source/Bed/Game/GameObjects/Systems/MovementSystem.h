@@ -7,7 +7,7 @@ namespace Bed
 {
     void MovementSystem(Bed::World& world)
     {
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        /*for(int i = 0; world.GetAllEntities().size() > i; i++)
         {
             if(world.HasComponents<Bed::Transform, Bed::Velocity>(i))
             {
@@ -20,13 +20,13 @@ namespace Bed
 
                 //float axis = Pillow::Hyperbolic::WarpOnAxis(transform->Position.x, strength);
 
-                float speed = velocity->Speed /* axis*/;
+                float speed = velocity->Speed; //axis;
 
                 //std::cout << speed << "\n";
 
                 //TODO: make this not use normalised velocity
                 transform->Position += nomalisedDirection * speed * Bed::Time::GetDeltaTime();
             }
-        }
+        }*/
     }
 }

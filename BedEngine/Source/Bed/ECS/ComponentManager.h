@@ -13,6 +13,8 @@ namespace Bed
     public:
         //TODO: Look into archietypes
         //TODO: query system 
+        //TODO: Make Pointers return const
+        //TODO: Command Buffers
 
         template<typename Component>
         void AttachComponent(uint64_t entity, Component comp)
@@ -24,6 +26,7 @@ namespace Bed
             {
                 compID = RegisterComponent(hashCode);
 
+                //TODO: Align memory pools to a cashe line (64 bytes) if pool is full or would be cut off make a new pool!
                 // MemoryPool needs to be constructed inside the vector as moving data causes a crash
                 m_ComponentPool.emplace_back(sizeof(Component), 10001); //TODO: Scale this with the amount of entities available
 

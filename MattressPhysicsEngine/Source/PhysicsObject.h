@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Vector/Vector3.h>
+#include <vector>
 
 namespace Mattress
 {
@@ -10,7 +11,7 @@ namespace Mattress
         Pillow::Vector3f Velocity;
         Pillow::Vector3f Force;
 
-        float Mass;
+        float Mass = 1.0f;
 
         float InverseMass()
         {
@@ -21,5 +22,11 @@ namespace Mattress
         {
             Force += force;
         }
+
+        std::vector<Pillow::Vector3f> Positions;
+        std::vector<Pillow::Vector3f> Velocities;
+        std::vector<Pillow::Vector3f> Forces;
+
+        std::vector<float> Masses;
     };
 }

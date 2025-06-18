@@ -1,7 +1,9 @@
 #pragma once
 
 #include <vector>
-#include <PhysicsObject.h>
+#include "PhysicsObject.h"
+#include "Collision/AABB.h"
+#include "PhysicsIntergration.h"
 
 namespace Mattress
 {
@@ -13,6 +15,10 @@ namespace Mattress
 
         void Step( float deltaTime );
     private:
+        PhysicsObject m_PhysicsData;
+
         std::vector<PhysicsObject*> m_PhysicsObjects;
+        std::vector<AABB*> m_CollisionObjects;
+        Mattress::PhysicsIntergration m_IntergrationMethod;
     };
 }

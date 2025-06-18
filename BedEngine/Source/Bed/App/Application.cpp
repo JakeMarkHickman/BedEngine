@@ -4,6 +4,8 @@
 #include <Platforms/PlatformFactory.h>
 #include <Platforms/WindowFactory.h>
 
+#include <Math/Transform.h>
+
 namespace Bed
 {
     void Application::Run()
@@ -51,9 +53,19 @@ namespace Bed
                 world.second->GetWorldPhysics().Step(Time::GetDeltaTime()); //Physics update
                 
                 //Update Entity Positions from physics step
-                for(uint64_t i = 0; i < world.second->GetAllEntities(); i++)
+                //TODO: Use quieries to test for physics data not a physics object to update
+                for(uint64_t i = 0; i < world.second->GetAllEntities().size(); i++)
                 {
+                    if(!world.second->HasComponents<Bed::Transform, Mattress::PhysicsObject>(i))
+                    {
+                        continue;
+                    }
 
+                    Bed::Transform* transform = world.second->GetComponent<Bed::Transform>(i);
+                    Mattress::PhysicsObject* phyObj = world.second->GetComponent<Mattress::PhysicsObject>(i);
+
+                    //Update the Position of the Object
+                    transform->Position = phyObj->Position;
                 }
             }
 

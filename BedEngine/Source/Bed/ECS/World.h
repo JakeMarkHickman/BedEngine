@@ -11,7 +11,7 @@ namespace Bed
     class World
     {
     public:
-        Mattress::PhysicsWorld GetWorldPhysics() { return m_Physics; };
+        Mattress::PhysicsWorld& GetWorldPhysics() { return m_Physics; };
 
         //Entities
         uint64_t CreateEntity();

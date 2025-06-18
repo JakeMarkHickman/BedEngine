@@ -20,7 +20,7 @@ namespace Bed
         virtual void BeginPlay() {};
         void Update();
 
-        std::unordered_map<uint64_t, Bed::World*> GetActiveWorlds() { return m_ecs.GetActiveWorlds(); };
+        std::unordered_map<uint64_t, Bed::World*>& GetActiveWorlds() { return m_ecs.GetActiveWorlds(); };
 
     protected:
 
