@@ -54,7 +54,7 @@ namespace Bed
                 
                 //Update Entity Positions from physics step
                 //TODO: Use quieries to test for physics data not a physics object to update
-                for(uint64_t i = 0; i < world.second->GetAllEntities().size(); i++)
+                for(uint64_t i : world.second->GetAllEntities())
                 {
                     if(!world.second->HasComponents<Bed::Transform, Mattress::PhysicsObject>(i))
                     {

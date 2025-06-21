@@ -10,12 +10,12 @@ namespace Mattress
     class PhysicsWorld
     {
     public:
+
         void AddPhysicsObject( PhysicsObject* objectToAdd );
         void RemovePhysicsObject( PhysicsObject* objectToRemove );
 
         void Step( float deltaTime );
     private:
-        PhysicsObject m_PhysicsData;
 
         std::vector<PhysicsObject*> m_PhysicsObjects;
         std::vector<AABB*> m_CollisionObjects;

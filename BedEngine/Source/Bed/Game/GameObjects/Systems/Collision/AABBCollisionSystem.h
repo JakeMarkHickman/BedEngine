@@ -15,12 +15,11 @@ namespace Bed
 {
     void AABBCollisionSystem(Bed::World& world)
     {
-        uint64_t entCount = world.GetAllEntities().size();
-
-        std::vector<std::vector<uint64_t>> curCollisions(entCount);
+        std::vector<uint64_t>& allEntities = world.GetAllEntities();
+        std::vector<std::vector<uint64_t>> curCollisions(allEntities.size());
 
         //TODO: This can be way more efficient
-        for(int i = 0; entCount > i; i++)
+        for(uint64_t i : allEntities)
         {
             if(!world.HasComponents<Bed::AABBCollision, Bed::Transform>(i))
             {
@@ -34,8 +33,13 @@ namespace Bed
             updatedCollisionA.Min = collisionA->BoundingBox.Min + transformA->Position;
             updatedCollisionA.Max = collisionA->BoundingBox.Max + transformA->Position;
 
-            for(int j = i + 1; entCount > j; j++)
+            for(uint64_t j : allEntities)
             {
+                if(i >= j) // Only Check Every entity once against counter entity
+                {
+                    continue;
+                }
+
                 if(!world.HasComponents<Bed::AABBCollision, Bed::Transform>(j))
                 {
                     continue;
@@ -56,7 +60,7 @@ namespace Bed
             }
         }
 
-        for (int i = 0; i < entCount; i++)
+        for (uint64_t i : allEntities)
         {
             if (!world.HasComponents<Bed::AABBCollision, Bed::Transform>(i))
                 continue;

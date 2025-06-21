@@ -56,8 +56,6 @@ namespace Bed
         Bed::Time m_Time;
         Bed::Game* m_Game = nullptr;
 
-        Mattress::PhysicsWorld m_Physics;
-
         Bed::Platform* m_Platform = nullptr;
         Bed::Window* m_Window = nullptr;
     }; 

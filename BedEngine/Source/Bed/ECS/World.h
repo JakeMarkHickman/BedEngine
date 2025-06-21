@@ -4,6 +4,7 @@
 #include "ComponentManager.h"
 
 #include <PhysicsWorld.h>
+#include <TuftingWorld.h>
 #include <functional>
 
 namespace Bed
@@ -16,7 +17,7 @@ namespace Bed
         //Entities
         uint64_t CreateEntity();
         void DestroyEntity(uint64_t entity);
-        std::vector<uint64_t> GetAllEntities() { return m_EntityManager.GetAllEntities(); };
+        std::vector<uint64_t>& GetAllEntities() { return m_EntityManager.GetAllEntities(); };
 
         //Components
         template<typename... Components>
@@ -65,6 +66,7 @@ namespace Bed
         Bed::ComponentManager m_ComponentManager;
 
         Mattress::PhysicsWorld m_Physics;
+        Mattress::TuftingWorld m_PhysicsWorld;
 
         std::vector<std::function<void(Bed::World&)>> m_Systems;
     };
