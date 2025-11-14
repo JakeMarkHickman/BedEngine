@@ -6,6 +6,8 @@
 #include <typeindex>
 #include <unordered_map>
 
+#include <iostream>
+
 namespace Bed
 {
     class ComponentManager
@@ -50,6 +52,15 @@ namespace Bed
             m_EntityComponents[compID].Insert(entity, allocatedComp);
         }
 
+        void RemoveAllComponents(uint64_t entity)
+        {
+            for(SparseSet<void*>& component : m_EntityComponents)
+            {
+                component.Remove(entity);
+                //TODO Need to deconstruct the component using its destructor
+            }
+        }
+
         template<typename Component>
         void RemoveComponent(uint64_t entity)
         {
@@ -88,6 +99,8 @@ namespace Bed
                 return false;
             }
 
+            //std::cout << "Has Component check\n";
+
             uint64_t compID = GetRegisteredComponentIndex(hashCode);
 
             if(!m_EntityComponents[compID].HasIndex(entity))
@@ -107,8 +120,10 @@ namespace Bed
                 return nullptr;
             }
 
+            //std::cout << "Get Component\n";
             uint64_t compID = GetRegisteredComponentIndex(hashCode);
 
+            //std::cout << "Component Gotten" << hashCode << "\n";
             return static_cast<Component*>(m_EntityComponents[compID].GetData(entity));
         }
 

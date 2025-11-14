@@ -25,7 +25,7 @@ namespace Bed
     {
         std::vector<Bed::SpotData> spotData;
 
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::SpotLight>(i))
             {

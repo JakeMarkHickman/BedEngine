@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Graphics/Vertex.h>
+//#include <Graphics/Vertex.h>
 #include <Bed/Tools/FileLoader.h>
 #include <Math/Vector.h>
 #include <Math/Transform.h>
@@ -28,7 +28,7 @@ namespace Bed
         std::vector<Pillow::Vector2f> m_UVs;
         std::vector<Pillow::Vector3f> m_Normals;
         
-        std::vector<Bed::Vertex> m_Vertices;
+        //std::vector<Bed::Vertex> m_Vertices;
         std::vector<unsigned int> m_Indices;
     };
 }

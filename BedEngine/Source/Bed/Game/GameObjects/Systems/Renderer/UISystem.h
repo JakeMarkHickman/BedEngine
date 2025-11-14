@@ -27,7 +27,7 @@ namespace Bed
         shaderUI->SetUniformMat4f("u_Projection", glm::orthoLH(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f));
         shaderUI->SetUniformMat4f("u_View", glm::mat4(1.0f));
 
-        for(int i = 0; i < world.GetAllEntities().size(); i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::UIElement>(i))
             {

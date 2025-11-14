@@ -2,5 +2,8 @@
 
 namespace Bed
 {
-    struct Sprite {};
+    struct Sprite 
+    {
+        unsigned int Handle;
+    };
 }

@@ -6,6 +6,8 @@
 #include <vector>
 #include <Bed/Singleton/Singleton.h>
 
+#include <SleepTrace.h>
+
 //TODO: make sure this correctly cleans up
 
 namespace Bed
@@ -21,8 +23,7 @@ namespace Bed
             if(IsContextRegistered(contextIndex))
             {
                 //TODO: if context already exists add another one unless specified
-
-                std::cout << "Context " << contextIndex.name() << " already exists" << "\n";
+                LOG_WARN("Context ", contextIndex.name(), " already exists");
                 return;
             }
 
@@ -31,7 +32,7 @@ namespace Bed
 
             if(!memory)
             {
-                std::cout << "Unable to allocate memory to Context registry for context " << contextIndex.name() << "\n";
+                LOG_ERROR("Unable to allocate memory to Context registry for context ", contextIndex.name());
                 return;
             }
 
@@ -48,7 +49,7 @@ namespace Bed
 
             if (!IsContextRegistered(contextIndex))
             {
-                std::cout << "Context " << contextIndex.name() << " doesn't exist" << "\n";
+                LOG_WARN("Context ", contextIndex.name(), " does not exist");
                 return;
             }
 
@@ -75,7 +76,7 @@ namespace Bed
 
             if(!IsContextRegistered(contextIndex))
             {
-                //std::cout << "Context " << contextIndex.name() << " doesn't exist" << "\n";
+                LOG_WARN("Context ", contextIndex.name(), " does not exist");
                 return nullptr;
             }
 

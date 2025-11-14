@@ -19,7 +19,7 @@ namespace Bed
     {
         std::vector<Bed::DirectionalData> directionalData;
 
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::DirectionalLight>(i))
             {

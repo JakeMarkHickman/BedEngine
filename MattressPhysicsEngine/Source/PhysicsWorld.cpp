@@ -1,10 +1,9 @@
 #include "PhysicsWorld.h"
 
-#include <iostream>
+#include <SleepTrace.h>
 
 void Mattress::PhysicsWorld::AddPhysicsObject( PhysicsObject* objectToAdd )
 {
-    std::cout << "Adding Physics Object\n";
     m_PhysicsObjects.push_back(objectToAdd);
 }
 

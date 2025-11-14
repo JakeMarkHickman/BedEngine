@@ -1,0 +1,44 @@
+#pragma once
+
+#include <vector>
+
+#include <SleepTrace.h>
+
+#include "OpenGL/OpenDebugger.h"
+#include "Mesh.h"
+#include "Coverlet.h"
+#include "Comforter.h"
+#include "Texture.h"
+#include "Vertex.h"
+#include "Camera.h"
+
+#include <Transform.h>
+
+namespace Quilt
+{
+    class Duvet
+    {
+    public:
+        static unsigned int CreateMesh(const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform);
+        static void RemoveMesh(const unsigned int& meshHandle);
+
+        static unsigned int CreateCamera(const Pillow::Transform* transform);
+
+        static void CreateTexture(const std::string texturePath, const TextureFiltering filter, const unsigned int& meshHandle);
+
+        static void SetViewPort(int width, int hight) { GLCall(glViewport(0, 0, width, hight)); };
+
+        static void Draw();
+
+    private:
+        inline static Quilt::Coverlet m_ShaderManager;
+        inline static Quilt::Comforter m_BatchManager;
+        inline static Quilt::TextureManager m_TextureManager;
+
+        inline static std::vector<Quilt::Mesh> m_MeshHandles;
+
+        inline static std::vector<Quilt::Camera> m_Cameras;
+    };
+
+    using Renderer = Duvet;
+}

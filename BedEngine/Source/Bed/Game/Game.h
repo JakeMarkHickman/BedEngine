@@ -16,6 +16,7 @@ namespace Bed
 
         Bed::GameSession GetGameSession() { return m_GameSession; };
 
+        Bed::ECS& GetECS() { return m_ecs; };
 
         virtual void BeginPlay() {};
         void Update();

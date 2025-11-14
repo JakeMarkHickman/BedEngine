@@ -22,10 +22,12 @@ namespace Bed
         std::vector<Bed::Vertex> allVerts;  // Collect all vertices for dynamic allocation
         std::vector<unsigned int> allIndices;  // Collect all indices for dynamic allocation
 
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if (world.HasComponents<Bed::StaticMesh>(i))
             {
+                //std::cout << "Entity: " << i << " has a static mesh comp\n";
+
                 Bed::StaticMesh* StaticMesh = world.GetComponent<Bed::StaticMesh>(i);
 
                 if(!world.HasComponents<Bed::Transform>(i))

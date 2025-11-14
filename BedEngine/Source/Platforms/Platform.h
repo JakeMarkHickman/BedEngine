@@ -1,17 +1,40 @@
 #pragma once
 #include <iostream>
-#include <Graphics/GraphicsAPI.h>
+//#include <Graphics/GraphicsAPI.h>
 
 namespace Bed
 {
+    enum EGraphicsAPIFlags
+    {
+        OpenGL = 1 << 0,
+        Vulkan = 1 << 1,
+        DirectX = 1 << 2,
+        Metal = 1 << 3
+    };
+
+    struct SGraphicAPIFlags
+    {
+        uint8_t m_AvailableFlags = 0;
+
+        void SetFlag(EGraphicsAPIFlags Flag)
+        {
+            m_AvailableFlags |= (int)Flag;
+        }
+
+        bool HasFlag(EGraphicsAPIFlags Flag)
+        {
+            return (m_AvailableFlags & (int)Flag) == (int)Flag;
+        }
+    };
+
     class Platform
     {
     public:
 
     protected:
-        void UseGraphicsPipeline(GraphicsAPI::EGraphicsAPIFlags Pipeline)
+        void UseGraphicsPipeline(Bed::EGraphicsAPIFlags Pipeline)
         {
-            GraphicsAPI::EGraphicsAPIFlags UsePipeline = Pipeline;
+            Bed::EGraphicsAPIFlags UsePipeline = Pipeline;
 
             if(!AvaiableFlags.HasFlag(UsePipeline) || UsePipeline == 0)
             {
@@ -22,9 +45,9 @@ namespace Bed
             m_CurrentFlag = UsePipeline;
         };
 
-        GraphicsAPI::SGraphicAPIFlags AvaiableFlags;
-        GraphicsAPI::EGraphicsAPIFlags m_DefaultFlag;
-        GraphicsAPI::EGraphicsAPIFlags m_CurrentFlag = GraphicsAPI::OpenGL;
+        Bed::SGraphicAPIFlags AvaiableFlags;
+        Bed::EGraphicsAPIFlags m_DefaultFlag;
+        Bed::EGraphicsAPIFlags m_CurrentFlag = Bed::OpenGL;
 
     private:
     }; 

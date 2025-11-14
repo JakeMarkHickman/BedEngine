@@ -1,5 +1,7 @@
 #include "GLFWWindow.h"
 
+#include <SleepTrace.h>
+
 //Bed::GLFWWindow::GLFWWindow(Bed::Platform* platform)
 //{
 //    Bed::Window::Window(platform);
@@ -50,7 +52,7 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Render objects in wireframe mode
 
     
-    renderer = new Bed::OpenRenderer();
+    /*renderer = new Bed::OpenRenderer();
 
     //TODO: Make this dynamic
     struct PointData
@@ -93,7 +95,7 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     int TextureSlots;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &TextureSlots);
 
-    std::cout << "Texture slots: " << TextureSlots << "\n";
+    LOG_INFO("Available Texture slots: " + std::to_string(TextureSlots));
 
     int textureSlots[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
         11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -252,7 +254,7 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
     shaderUI->Unbind();
     vbUI->Unbind();
     ibUI->Unbind();
-    ivbUI->Unbind();
+    ivbUI->Unbind();*/
 
     return true;
 }
@@ -264,7 +266,8 @@ void Bed::GLFWWindow::UpdateWindow()
     glfwGetWindowSize(window, &width, &height);
     ResizeWindow(width, height);
 
-    /* Render here */
+    /*
+    // Render here 
     renderer->Clear();
 
     //Render Everything
@@ -282,26 +285,30 @@ void Bed::GLFWWindow::UpdateWindow()
     //Unbind Everything
     Bed::TextureManager::UnbindTextures();
 
-    va3D->Unbind();
     shader3D->Unbind();
     vb3D->Unbind();
     ib3D->Unbind();
+    va3D->Unbind();
     ivb3D->Unbind();
+    iva3D->Unbind();
     pointLightBuffer->Unbind();
     directionalLightBuffer->Unbind();
     spotLightBuffer->Unbind();
 
-    va2D->Unbind();
     shader2D->Unbind();
     vb2D->Unbind();
     ib2D->Unbind();
+    va2D->Unbind();
     ivb2D->Unbind();
+    iva2D->Unbind();
 
-    vaUI->Unbind();
     shaderUI->Unbind();
     vbUI->Unbind();
     ibUI->Unbind();
+    vaUI->Unbind();
     ivbUI->Unbind();
+    ivaUI->Unbind();
+    */
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
@@ -317,9 +324,9 @@ bool Bed::GLFWWindow::IsWindowOpen()
 
 void Bed::GLFWWindow::CloseWindow()
 {
-    delete shader3D;
+    /*delete shader3D;
     delete shader2D;
-    delete shaderUI;
+    delete shaderUI;*/
     glfwTerminate();
 }
 
@@ -327,6 +334,7 @@ void Bed::GLFWWindow::ResizeWindow(int width, int height)
 {
     if(m_WindowSize.Width != width || m_WindowSize.Height != height)
     {
+        //TODO: make this use Quilt
         glViewport(0, 0, width, height);
         Bed::Window::ResizeWindow(width, height);
     }

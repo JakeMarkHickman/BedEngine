@@ -4,7 +4,7 @@ namespace Bed
 {
     void AnimTestSystem(Bed::World& world)
     {
-        for(int i = 0; i < world.GetAllEntities().size(); i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::TimerCompleted, Bed::SubTexture, Bed::EnemyTag>(i))
             {

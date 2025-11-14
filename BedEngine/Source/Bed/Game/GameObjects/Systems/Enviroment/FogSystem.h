@@ -11,7 +11,7 @@ namespace Bed
 
         shader3D->Bind();
 
-        for(int i = 0; i < world.GetAllEntities().size(); i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::Fog>(i))
             {

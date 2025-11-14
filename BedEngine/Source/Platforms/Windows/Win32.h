@@ -7,13 +7,13 @@ namespace Bed
     class Win32 : public Bed::Platform
     {
     public:
-        Win32(GraphicsAPI::EGraphicsAPIFlags pipeline)
+        Win32(Bed::EGraphicsAPIFlags pipeline)
         {
-            AvaiableFlags.SetFlag(GraphicsAPI::OpenGL);
-            AvaiableFlags.SetFlag(GraphicsAPI::Vulkan);
-            AvaiableFlags.SetFlag(GraphicsAPI::DirectX);
+            AvaiableFlags.SetFlag(Bed::OpenGL);
+            AvaiableFlags.SetFlag(Bed::Vulkan);
+            AvaiableFlags.SetFlag(Bed::DirectX);
 
-            m_DefaultFlag = GraphicsAPI::OpenGL; //TODO: Set this to DirectX when its available
+            m_DefaultFlag = Bed::OpenGL; //TODO: Set this to DirectX when its available
 
             UseGraphicsPipeline(pipeline);
         };

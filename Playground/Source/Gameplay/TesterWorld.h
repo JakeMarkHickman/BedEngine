@@ -1,42 +1,47 @@
 #pragma once
 
 #include <Bed/Game/Game.h>
+#include <SleepTrace.h>
 
-#include <Graphics/TextureAsset.h>
+#include <Transform.h>
+#include <Components/Input/Input.h>
+#include <Components/Renderer/Sprite.h>
+#include <Components/Material/Texture.h>
+#include <PhysicsObject.h>
+#include <Components/Tag/PlayerTag.h>
+#include <Components/Camera.h>
 
-#include <Math/Colour.h>
-#include <Math/Transform.h>
-#include <Math/Matrix.h>
+#include <Systems/Input/InputSystem.h>
+#include <Systems/Renderer/SpriteSystem.h>
+#include "Systems/SpawnerSystem.h"
+#include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
+#include <Bed/Game/GameObjects/Systems/Physics/PhysicsRegisterSystem.h>
 
+
+/*
 #include <NonEuclidean/Hyperbolic.h>
 
-
-#include <PhysicsObject.h>
-#include <Components/Input/Input.h>
-#include <Components/Camera.h>
+#include <Graphics/TextureAsset.h>
 #include <Components/Lighting/AmbientLight.h>
 #include <Components/Lighting/DirectionalLight.h>
 #include <Components/Lighting/PointLight.h>
 #include <Components/Lighting/SpotLight.h>
 #include <Components/Collision/AABBCollision.h>
 #include <Components/Collision/Clickable.h>
-#include <Components/Material/Texture.h>
 #include <Components/Material/SubTexture.h>
 #include <Components/Material/Material.h>
 #include <Components/Enviroment/Fog.h>
-#include <Components/Tag/PlayerTag.h>
 #include <Components/Tag/EnemyTag.h>
 #include <Components/Renderer/UIElement.h>
 #include <Components/Renderer/StaticMesh.h>
-#include <Components/Renderer/Sprite.h>
 #include <Components/UI/Anchor.h>
 #include <Components/Utility/Timer.h>
 
 #include <Bed/Game/GameObjects/Components/Material/TileMap.h>
 #include <Bed/Game/GameObjects/Systems/Material/TileMapSystem.h>
 
+#include "Components/Tags/Tag.h"
 
-#include <Systems/Input/InputSystem.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/Lighting/AmbientLightSystem.h>
 #include <Systems/Lighting/DirectionalLightSystem.h>
@@ -49,14 +54,11 @@
 #include <Systems/Enviroment/FogSystem.h>
 #include <Systems/Renderer/UISystem.h>
 #include <Systems/Renderer/StaticMeshSystem.h>
-#include <Systems/Renderer/SpriteSystem.h>
 #include <Systems/Collision/ClickableSystem.h>
 #include <Systems/Utility/TimerSystem.h>
-#include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
-#include <Bed/Game/GameObjects/Systems/MovementSystem.h>
-#include <Bed/Game/GameObjects/Systems/Tests/CollisionTestSystem.h>
 #include <Bed/Game/GameObjects/Systems/Tests/AnimTestSystem.h>
-#include <Bed/Game/GameObjects/Systems/Physics/PhysicsRegisterSystem.h>
+
+#include "Systems/Tests/TestCollisionSystem.h"*/
 
 namespace Test
 {
@@ -65,7 +67,7 @@ namespace Test
     protected:
         virtual void BeginPlay() override {
 
-            std::vector<int> map = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2,
+            /*std::vector<int> map = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2,
                              0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 
                              0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
                              4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
@@ -74,15 +76,46 @@ namespace Test
                              0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 
                              0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
                              4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-                             0, 0, 0, 0, 1, 1, 1, 5, 5, 5};
+                             0, 0, 0, 0, 1, 1, 1, 5, 5, 5};*/
 
             //World 1
-            uint64_t world1 = m_ecs.CreateWorld();
+            uint64_t world1 = GetECS().CreateWorld();
 
-            /*uint64_t w1Map = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Map, Bed::Transform(0.0f, 0.0f, 1.0f),
-                                                    Bed::Texture("Assets/Resources/Textures/SpriteTest.png"),
-                                                    Bed::TileMap(map));*/
+            uint64_t TestEnt = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, TestEnt, Bed::Sprite(), 
+                                                        Pillow::Transform(0.0f, 0.0f, 1.0f),
+                                                        Bed::Input(),
+                                                        Bed::PlayerTag(),
+                                                        Mattress::PhysicsObject(),
+                                                        Bed::Texture("Assets/Resources/Textures/LittleGuy.png"));
+
+            uint64_t TestCam = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, TestCam, Pillow::Transform(Pillow::Vector3f(0.0f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
+                                                        Bed::Input(),
+                                                        Bed::PlayerTag(),
+                                                        Mattress::PhysicsObject(),
+                                                        Bed::Camera());
+
+            uint64_t TestEnt2 = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, TestEnt2, Bed::Sprite(), 
+                                                        Pillow::Transform(-2.0f, 0.0f, 2.0f),
+                                                        Bed::Texture("Assets/Resources/Textures/BedEngineLogo.png"));
+
+            uint64_t TestEnt3 = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, TestEnt3, Bed::Sprite(), 
+                                                        Pillow::Transform(2.0f, 0.0f, 1.5f),
+                                                        Bed::Texture("Assets/Resources/Textures/SpriteTest.png"));
+
+            m_ecs.AddSystem(world1, Bed::InputSystem);
+            m_ecs.AddSystem(world1, Bed::SpriteSystem);
+            m_ecs.AddSystem(world1, Bed::PlayerControllerSystem);
+            m_ecs.AddSystem(world1, SpawnerSystem);
+
+            /*
+            //uint64_t w1Map = m_ecs.CreateEntity(world1);
+            //m_ecs.AttachComponents(world1, w1Map, Bed::Transform(0.0f, 0.0f, 1.0f),
+            //                                        Bed::Texture("Assets/Resources/Textures/SpriteTest.png"),
+            //                                        Bed::TileMap(map));
 
             uint64_t w1Sprite = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Sprite, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
@@ -98,14 +131,23 @@ namespace Test
                                                     Bed::Texture("Assets/Resources/Textures/BedEngineLogo.png"),
                                                     Bed::Anchor(Pillow::Vector2f(0.07f, 0.1f)));
 
-            uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
-            m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(0.3f)),
+            uint64_t w1Hud1 = m_ecs.CreateEntity(world1);
+            m_ecs.AttachComponents(world1, w1Hud1, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(0.3f)),
                                                     Bed::UIElement(),
                                                     Bed::Texture("Assets/Resources/Textures/256xMissingTexture.png"),
                                                     Bed::Clickable(),
+                                                    Bed::Anchor(Pillow::Vector2f(0.35f, 0.5f)),
+                                                    Bed::Input(),
+                                                    Test::RemoveEntityTag());
+
+            uint64_t w1Hud2 = m_ecs.CreateEntity(world1);
+            m_ecs.AttachComponents(world1, w1Hud2, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(0.3f)),
+                                                    Bed::UIElement(),
+                                                    Bed::Texture("Assets/Resources/Textures/TestBedEngineIcon.png"),
+                                                    Bed::Clickable(),
                                                     Bed::Anchor(Pillow::Vector2f(0.7f, 0.5f)),
                                                     Bed::Input(),
-                                                    Bed::EnemyTag());
+                                                    Test::AddEntityTag());
 
             uint64_t w1Player = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Player, Bed::Transform(Pillow::Vector3f(0.0f, 0.0f, 5.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
@@ -120,8 +162,7 @@ namespace Test
             m_ecs.AttachComponents(world1, w1Camera, Bed::Transform(Pillow::Vector3f(0.0f, 5.0f, -5.0f), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
                                                         Bed::Camera(Bed::ProjectionType::Perspective),
                                                         Bed::Input(),
-                                                        Mattress::PhysicsObject(),
-                                                        Bed::PlayerTag());
+                                                        Mattress::PhysicsObject());
 
             uint64_t w1Ent1 = m_ecs.CreateEntity(world1);
             m_ecs.AttachComponents(world1, w1Ent1, Bed::Transform(Pillow::Vector3f(-2.5, 0.0, 5.0), Pillow::Vector3f(0.0f), Pillow::Vector3f(1.0f)),
@@ -167,7 +208,6 @@ namespace Test
             m_ecs.AttachComponents(world1, w1Point3, Bed::Transform(Pillow::Vector3f(2.5f, 0.0f, 3.0f), 0.0f, 1.0f),
                                         Bed::PointLight(Bed::Colour3(0.2f, 0.0f, 1.0f), 1.0f, 1.0f));
 
-            m_ecs.AddSystem(world1, Bed::PhysicsRegisterSystem);
             m_ecs.AddSystem(world1, Bed::InputSystem);
             m_ecs.AddSystem(world1, Bed::ClickableSystem);
             m_ecs.AddSystem(world1, Bed::CameraSystem);
@@ -176,28 +216,26 @@ namespace Test
             m_ecs.AddSystem(world1, Bed::TileMapSystem);
             m_ecs.AddSystem(world1, Bed::UISystem);
             m_ecs.AddSystem(world1, Bed::StaticMeshSystem);
-            m_ecs.AddSystem(world1, Bed::SpriteSystem);
             m_ecs.AddSystem(world1, Bed::FogSystem);
             m_ecs.AddSystem(world1, Bed::AmbientLightSystem);
             m_ecs.AddSystem(world1, Bed::SpotLightSystem);
             m_ecs.AddSystem(world1, Bed::PointLightSystem);
             m_ecs.AddSystem(world1, Bed::DirectionalLightSystem);
-            m_ecs.AddSystem(world1, Bed::PlayerControllerSystem);
-            m_ecs.AddSystem(world1, Bed::MovementSystem);
             m_ecs.AddSystem(world1, Bed::AABBCollisionSystem);
             m_ecs.AddSystem(world1, Bed::TimerSystem);
-            m_ecs.AddSystem(world1, Bed::CollisionEnterTestSystem);
-            m_ecs.AddSystem(world1, Bed::CollisionExitTestSystem);
-            m_ecs.AddSystem(world1, Bed::CollisionStayTestSystem);
-            m_ecs.AddSystem(world1, Bed::ClickableHoverTest);
-            m_ecs.AddSystem(world1, Bed::ClickableUnhoveredTest);
-            m_ecs.AddSystem(world1, Bed::ClickableClickedTest);
-            m_ecs.AddSystem(world1, Bed::ClickableReleasedTest);
+            m_ecs.AddSystem(world1, Test::CollisionEnterTestSystem);
+            m_ecs.AddSystem(world1, Test::CollisionExitTestSystem);
+            m_ecs.AddSystem(world1, Test::CollisionStayTestSystem);
+            m_ecs.AddSystem(world1, Test::ClickableHoverTest);
+            m_ecs.AddSystem(world1, Test::ClickableUnhoveredTest);
+            m_ecs.AddSystem(world1, Test::ClickableClickedTest);
+            m_ecs.AddSystem(world1, Test::ClickableReleasedTest);
             m_ecs.AddSystem(world1, Bed::AnimTestSystem);
+            */
             
 
-            Pillow::Mat4f mat = Pillow::Mat4f::Identity();
-            std::cout << mat.ToString() << "\n";
+            //Pillow::Mat4f mat = Pillow::Mat4f::Identity();
+            //LOG_TRACE("Test Mat: " + mat.ToString());
 
             //World 2
             /*uint64_t world2 = m_ecs.CreateWorld();

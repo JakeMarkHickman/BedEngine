@@ -5,14 +5,17 @@
 #include <Bed/Core.h>
 #include <Bed/Game/Game.h>
 
+//Physics
 #include <PhysicsWorld.h>
+
+//Renderer
+#include <Duvet.h>
 
 #include <Platforms/Platform.h>
 #include <Platforms/Window.h>
 
 namespace Bed
-{
-    
+{   
     class BED_API Application
     {
     public:
@@ -55,6 +58,7 @@ namespace Bed
 
         Bed::Time m_Time;
         Bed::Game* m_Game = nullptr;
+        //Quilt::Duvet m_Renderer;
 
         Bed::Platform* m_Platform = nullptr;
         Bed::Window* m_Window = nullptr;

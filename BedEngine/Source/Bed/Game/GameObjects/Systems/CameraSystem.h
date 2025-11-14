@@ -1,7 +1,9 @@
 #pragma once
 
-#include <Graphics/GraphicVariables.h>
+
 #include <Platforms/Window.h>
+
+#include <Duvet.h>
 
 namespace Bed
 {
@@ -14,7 +16,7 @@ namespace Bed
         glm::mat4 proj;
         glm::mat4 view;
 
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::Camera>(i))
             {
@@ -50,6 +52,11 @@ namespace Bed
                 shader3D->SetUniformMat4f("u_View", view);
                 shader3D->SetUniformMat4f("u_Model", model);
                 shader3D->SetUniform3f("u_CamPos", transform->Position);
+
+                Quilt::Duvet::SetUniformMat4f("u_Projection", proj);
+                Quilt::Duvet::SetUniformMat4f("u_View", view);
+                Quilt::Duvet::SetUniformMat4f("u_Model", model);
+                //Quilt::Duvet::SetUniformMat4f("u_CamPos", transform->Position);
 
                 shader2D->Bind();
                 shader2D->SetUniformMat4f("u_Projection", proj);

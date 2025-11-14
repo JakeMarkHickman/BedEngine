@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Math/Vector/Vector3.h>
+#include <Vector/Vector3.h>
 
 namespace Bed
 {

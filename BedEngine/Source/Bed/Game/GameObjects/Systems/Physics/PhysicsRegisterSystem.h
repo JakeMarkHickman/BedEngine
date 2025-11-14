@@ -9,17 +9,17 @@ namespace Bed
     //TODO: Move this into a hook when a component gets added!
     void PhysicsRegisterSystem(Bed::World& world)
     {
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<RegisteredToPhysics>(i))
             {
                 continue;
             }
 
-            if(world.HasComponents<Bed::Transform, Mattress::PhysicsObject>(i))
+            if(world.HasComponents<Pillow::Transform, Mattress::PhysicsObject>(i))
             {
                 Mattress::PhysicsObject* physicsObject = world.GetComponent<Mattress::PhysicsObject>(i);
-                Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
+                Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(i);
 
                 physicsObject->Position = transform->Position;
 

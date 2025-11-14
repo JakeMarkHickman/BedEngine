@@ -1,10 +1,29 @@
 #pragma once
 
 #include <vector>
+#include <SleepTrace.h>
+
+#include <Duvet.h>
 
 namespace Bed
 {
-    struct SpriteInstanceData
+    void SpriteSystem(Bed::World& world)
+    {
+        for(uint64_t i : world.GetAllEntities())
+        {
+            /*Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
+
+            Quilt::Batch& batch = Quilt::Duvet::GetBatch(sprite->Handle);
+            Quilt::Mesh& mesh = Quilt::Duvet::GetMesh(sprite->Handle);
+
+            LOG_DEBUG("Entity: ", i);
+            LOG_DEBUG("Position, X: ", batch.Transforms[mesh.LocalIndex].Position.x, " Y: ", batch.Transforms[mesh.LocalIndex].Position.y, " Z: ", batch.Transforms[mesh.LocalIndex].Position.z);
+            LOG_DEBUG("Rotation, X: ", batch.Transforms[mesh.LocalIndex].Rotation.x, " Y: ", batch.Transforms[mesh.LocalIndex].Rotation.y, " Z: ", batch.Transforms[mesh.LocalIndex].Rotation.z);
+            LOG_DEBUG("Scale, X: ", batch.Transforms[mesh.LocalIndex].Scale.x, " Y: ", batch.Transforms[mesh.LocalIndex].Scale.y, " Z: ", batch.Transforms[mesh.LocalIndex].Scale.z);*/
+        }
+    }
+
+    /*struct SpriteInstanceData
     {
         glm::mat4 MatTransform;
         float TextureID;
@@ -18,7 +37,7 @@ namespace Bed
 
         shader2D->Bind();
 
-        for(int i = 0; i < world.GetAllEntities().size(); i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::Sprite>(i))
             {
@@ -59,5 +78,5 @@ namespace Bed
         }
 
         Bed::ivb2D->PopulateBuffer(instances.data(), instances.size());
-    }
+    }*/
 }

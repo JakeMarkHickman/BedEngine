@@ -5,8 +5,41 @@
 #Build Path
 buildPath="build"                           # The path to build to
 StaticBuild=true
+Debug=true
 
-SharedDependencies="-IPillowMath/include"
+SharedDependencies="-IPillowMath/include -ISleepTraceDebugger/Source"
+
+#TODO: THIS IS THE RENDER ENGINE LIB BUILD
+Dependencies="QuiltRenderEngine/Dependencies"
+GLFW="-IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/GLFW/include"
+
+Source="QuiltRenderEngine/Source"
+
+Includes="$SharedDependencies -I$Source $GLFW -I$Dependencies/stb_image"
+
+OpenGL="$Source/OpenGl"
+Cpps="$Source/Duvet.cpp $Source/Coverlet.cpp $Source/Comforter.cpp $Source/Texture.cpp $Dependencies/stb_image/stb_image.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
+Flags="-std=c++20 -Wno-c++20-extensions"
+Predef=""
+OutputFile=""
+
+if $StaticBuild; then
+    echo Renderer Building Static
+    mkdir -p "$buildPath/Static/renderer/obj"
+
+    RendererbuildPath="$buildPath/Static/renderer"
+    OutputFile="Quilt.lib"
+    Libs=""
+    Flags="$Flags -c"
+
+    for cpp in $Cpps; do
+        objname=$(basename "$cpp" .cpp).o
+        clang++ $Includes $Libs $Flags $Predef "$cpp" -o "$RendererbuildPath/obj/$objname"
+    done
+
+    llvm-ar rcs "$buildPath/Static/$OutputFile" "$RendererbuildPath/obj/"*.o
+fi
+
 
 #TODO: THIS IS THE PHYSICS ENGINE LIB BUILD
 
@@ -21,9 +54,9 @@ OutputFile=""
 
 if $StaticBuild; then
     echo Physics Building Static
-    mkdir -p "$buildPath/Static/obj"
+    mkdir -p "$buildPath/Static/physics/obj"
 
-    PhysicsbuildPath="$buildPath/Static"
+    PhysicsbuildPath="$buildPath/Static/physics"
     OutputFile="Mattress.lib"
     Libs=""
     Flags="$Flags -c"
@@ -33,7 +66,7 @@ if $StaticBuild; then
         clang++ $Includes $Libs $Flags $Predef "$cpp" -o "$PhysicsbuildPath/obj/$objname"
     done
 
-    llvm-ar rcs "$PhysicsbuildPath/$OutputFile" "$PhysicsbuildPath/obj/"*.o
+    llvm-ar rcs "$buildPath/Static/$OutputFile" "$PhysicsbuildPath/obj/"*.o
 fi
 
 
@@ -55,59 +88,42 @@ GameOutputFile="Playground"                     # No extention as we will set it
 EngineOutputFile=""                # The engine will always be a dynamic lib
 
 #Includes
-GameIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/glm -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include -IMattressPhysicsEngine/Source"
+GameIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source " #-I$Dependencies/glm
 EngineIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/GLFW/include
-                -I$Dependencies/GLEW/include -I$Dependencies/stb_image
-                -I$Dependencies/glm -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include
-                -IMattressPhysicsEngine/Source"
+                -I$Dependencies/GLEW/include -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include
+                -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source" #-I$Dependencies/glm
 
 #Libarys
 GameLibs=""             # Libs for the game
-EngineLibs="$buildPath/Static/Mattress.lib"                               # Libs for the engine
+EngineLibs="$buildPath/Static/Mattress.lib $buildPath/Static/Quilt.lib"             # Libs for the engine
 
 #flags
 GameFlags="-fuse-ld=lld-link -std=c++20 -Wno-c++20-extensions"                      # Flags for the game
-EngineFlags="-fuse-ld=lld-link -std=c++20 -Wno-c++20-extensions"                                      # Flags for the engine
+EngineFlags="-fuse-ld=lld-link -std=c++20 -Wno-c++20-extensions"                    # Flags for the engine
 
 #Preprocessor Definitions
 GamePredef=""                                                                       # Definitions for the game
 EnginePredef=""                                                                     # Definitions for the engine
 
+if $Debug; then
+    GamePredef="$GamePredef -DBED_DEBUG"
+    EnginePredef="$EnginePredef -DBED_DEBUG"
+fi
+
 #CPPs
-GraphicsCpp="$Graphics/VertexBuffer.cpp $Graphics/IndexBuffer.cpp
-            $Graphics/VertexArray.cpp $Graphics/ShaderAsset.cpp 
-            $Graphics/GraphicVariables.cpp $Graphics/InstanceArray.cpp
-            $Graphics/StorageBuffer.cpp $Graphics/InstanceBuffer.cpp"
-
-OpenGLCpp="$Graphics/OpenGL/OpenRenderer.cpp $Graphics/OpenGL/OpenShader.cpp $Graphics/OpenGL/OpenTexture.cpp"
-
-VulkanCpp=""
-
-DirectXCpp=""
-
-MetalCpp=""
-
 ToolsCpp="$Tools/FileLoader.cpp $Tools/StringSearcher.cpp $Tools/Memory/MemoryPool.cpp"
 
-GameObjectsCpp="$Game/Game.cpp $Game/GameObjects/Mesh/Mesh.cpp $Game/GameObjects/Physics/Collision/Collision.cpp"
+GameObjectsCpp="$Game/Game.cpp $Game/GameObjects/Physics/Collision/Collision.cpp"
 
 EcsCpps="$Bed/ECS/ECS.cpp $Bed/ECS/ComponentManager.cpp $Bed/ECS/EntityManager.cpp $Bed/ECS/World.cpp"
 
-MathCpp="$Math/Matrix/Matrix3x3.cpp"
-
 PlatformSpecficCpps=""
 
-EngineCpp="$App/Application.cpp $Dependencies/stb_image/stb_image.cpp
+EngineCpp="$App/Application.cpp
             $App/Time.cpp
-            $GraphicsCpp
             $ToolsCpp 
             $GameObjectsCpp
-            $EcsCpps
-            $MathCpp
-            $OpenGLCpp
-            $VulkanCpp
-            $DirectXCpp
-            $MetalCpp"
+            $EcsCpps"
 
 GameCpp="Playground/Source/App.cpp"
 

@@ -4,7 +4,7 @@ namespace Bed
 {
     void StressTestSystem(Bed::World& world)
     {
-        for(int i = 0; i < world.GetAllEntities().size() > i; i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             Bed::Transform* transform = world.GetComponent<Bed::Transform>(i);
 

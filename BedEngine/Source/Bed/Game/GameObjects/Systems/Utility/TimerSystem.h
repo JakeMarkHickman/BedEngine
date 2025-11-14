@@ -8,7 +8,7 @@ namespace Bed
     void TimerSystem(Bed::World& world)
     {
         //TODO: Get all Entities will break if entites are removed
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::TimerCompleted>(i))
             {

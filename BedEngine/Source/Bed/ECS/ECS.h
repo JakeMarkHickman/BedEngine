@@ -4,6 +4,7 @@
 #include "unordered_map"
 
 #include <Tools/Memory/MemoryPool.h>
+#include <functional>
 
 namespace Bed
 {
@@ -48,6 +49,24 @@ namespace Bed
 
         std::unordered_map<uint64_t, Bed::World*>& GetActiveWorlds() { return m_WorldRegistry; };
 
+        template<typename... Comps>
+        void RegisterOnComponentAttachedGlobal(std::function<void(Bed::World&, uint64_t)> listener)
+        {
+            ([&]{
+                uint64_t hashCode = typeid(Comps).hash_code();
+                m_GlobalComponentAttachedlisteners[hashCode].emplace_back(listener);
+            }(), ...);
+        }
+
+        template<typename... Comps>
+        void RegisterOnComponentRemovedGlobal(std::function<void(Bed::World&, uint64_t)> listener)
+        {
+            ([&]{
+                uint64_t hashCode = typeid(Comps).hash_code();
+                m_GlobalComponentRemovedlisteners[hashCode].emplace_back(listener);
+            }(), ...);
+        }
+        
         uint64_t CreateWorld();
         void RemoveWorld(uint64_t worldID);
 
@@ -70,5 +89,8 @@ namespace Bed
         std::unordered_map<uint64_t, Bed::World*> m_WorldRegistry;
         Bed::MemoryPool* m_WorldPool;
         int64_t m_NextId = 0;
+
+        std::unordered_map<uint64_t, std::vector<std::function<void(Bed::World&, uint64_t)>>> m_GlobalComponentAttachedlisteners;
+        std::unordered_map<uint64_t, std::vector<std::function<void(Bed::World&, uint64_t)>>> m_GlobalComponentRemovedlisteners;
     };
 }

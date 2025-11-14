@@ -11,7 +11,7 @@ namespace Bed
 {
     void TextureSystem(Bed::World& world)
     {
-        for(int i = 0; world.GetAllEntities().size() > i; i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             if(world.HasComponents<Bed::Texture>(i))
             {

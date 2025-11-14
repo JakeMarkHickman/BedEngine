@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <unordered_map>
 
 
 namespace Bed
@@ -16,7 +17,8 @@ namespace Bed
     void AABBCollisionSystem(Bed::World& world)
     {
         std::vector<uint64_t>& allEntities = world.GetAllEntities();
-        std::vector<std::vector<uint64_t>> curCollisions(allEntities.size());
+        std::unordered_map<uint64_t, std::vector<uint64_t>> curCollisions; // stops crash after deleting an entity
+        //std::vector<std::vector<uint64_t>> curCollisions(allEntities.size());
 
         //TODO: This can be way more efficient
         for(uint64_t i : allEntities)
@@ -35,6 +37,7 @@ namespace Bed
 
             for(uint64_t j : allEntities)
             {
+
                 if(i >= j) // Only Check Every entity once against counter entity
                 {
                     continue;
@@ -60,12 +63,16 @@ namespace Bed
             }
         }
 
-        for (uint64_t i : allEntities)
+        /*for (uint64_t i : allEntities)
         {
             if (!world.HasComponents<Bed::AABBCollision, Bed::Transform>(i))
                 continue;
 
-            std::vector<uint64_t> newCollisions = curCollisions[i];
+            std::cout << "Collision start: " << i << "\n";
+
+            std::vector<uint64_t> newCollisions = curCollisions[i]; 
+
+            std::cout << "pre Collision: " << i << "\n";
 
             std::vector<uint64_t> prevCollisions;
             if(world.HasComponents<Bed::CollisionEnter>(i))
@@ -128,6 +135,8 @@ namespace Bed
                 world.RemoveComponents<Bed::CollisionEnter, Bed::CollisionStay>(i);
                 world.AttachComponents(i, Bed::CollisionExit(exitCollisions));
             }
-        }
+
+            std::cout << "Collision end: " << i << "\n";
+        }*/
     }
 }

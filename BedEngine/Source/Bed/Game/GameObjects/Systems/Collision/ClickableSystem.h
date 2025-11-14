@@ -14,7 +14,7 @@ namespace Bed
         float aspect = Bed::Window::GetAspectRatio();
         WindowSize winsize = Bed::Window::GetWindowSize();
 
-        for(int i = 0; i < world.GetAllEntities().size(); i++)
+        for(uint64_t i : world.GetAllEntities())
         {
             //TODO: Make Work with 3D objects
             //TODO: Using Input Component feels weird

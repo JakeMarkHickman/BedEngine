@@ -8,6 +8,7 @@ uint64_t Bed::World::CreateEntity()
 void Bed::World::DestroyEntity(uint64_t entity)
 {
     m_EntityManager.DestroyEntity(entity);
+    m_ComponentManager.RemoveAllComponents(entity);
 }
 
 

@@ -13,7 +13,7 @@ namespace Bed
     class PlatformFactory
     {
     public:
-        static Bed::Platform* CreatePlatform(GraphicsAPI::EGraphicsAPIFlags pipeline)
+        static Bed::Platform* CreatePlatform(Bed::EGraphicsAPIFlags pipeline)
         {
             #ifdef BED_LINUX_PLATFORM
 

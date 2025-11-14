@@ -1,13 +1,10 @@
 #pragma once
 
 #include <Platforms/Window.h>
-#include <Graphics/GraphicVariables.h>
 
-//TODO: Remove this
-#include <Graphics/OpenGL/OpenRenderer.h>
-#include <Graphics/OpenGL/OpenTexture.h>
-#include <Graphics/OpenGL/OpenShader.h>
-#include <Graphics/TextureManager.h>
+//TODO: This needs to change
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 namespace Bed
 {

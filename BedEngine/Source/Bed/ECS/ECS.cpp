@@ -15,6 +15,23 @@ uint64_t Bed::ECS::CreateWorld()
 
     m_WorldRegistry.emplace(worldID, allocatedWorld);
 
+
+    for(auto& listeners : m_GlobalComponentAttachedlisteners)
+    {
+        for(auto& listener : listeners.second)
+        {
+            m_WorldRegistry[worldID]->RegisterOnComponentAttached(listeners.first, listener);
+        }
+    }
+
+    for(auto& listeners : m_GlobalComponentRemovedlisteners)
+    {
+        for(auto& listener : listeners.second)
+        {
+            m_WorldRegistry[worldID]->RegisterOnComponentRemoved(listeners.first, listener);
+        }
+    }
+
     return worldID;
 }
 
