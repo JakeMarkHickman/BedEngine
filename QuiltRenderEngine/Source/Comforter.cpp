@@ -1,7 +1,7 @@
 #include "Comforter.h"
 
 #include "Vertex.h"
-#include "OpenGL/OpenDebugger.h"
+#include "OpenGl/OpenDebugger.h"
 
 //TODO: clean this function up
 Quilt::Batch& Quilt::Comforter::GetOrCreateBatch(BatchData& batchData)

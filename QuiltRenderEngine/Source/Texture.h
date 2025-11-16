@@ -1,6 +1,6 @@
 #pragma once
 
-#include "OpenGL/OpenDebugger.h"
+#include "OpenGl/OpenDebugger.h"
 
 namespace Quilt
 {

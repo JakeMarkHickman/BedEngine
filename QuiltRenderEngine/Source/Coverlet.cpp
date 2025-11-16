@@ -1,7 +1,7 @@
 #include "Coverlet.h"
 
 //TODO: this needs to go
-#include "OpenGL/OpenDebugger.h"
+#include "OpenGl/OpenDebugger.h"
 
 unsigned int Quilt::Coverlet::AddShader(const std::string& VertexShader, const std::string& FragmentShader)
 {

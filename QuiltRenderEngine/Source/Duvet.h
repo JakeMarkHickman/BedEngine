@@ -4,7 +4,7 @@
 
 #include <SleepTrace.h>
 
-#include "OpenGL/OpenDebugger.h"
+#include "OpenGl/OpenDebugger.h"
 #include "Mesh.h"
 #include "Coverlet.h"
 #include "Comforter.h"
