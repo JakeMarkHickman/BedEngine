@@ -72,3 +72,268 @@ Quilt::Batch Quilt::Comforter::CreateBatch(unsigned int vertexCount, unsigned in
 
     return newBatch;
 }
+
+unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData, const Pillow::Transform* transform)
+{
+    uint32_t batch = m_BatchCount;
+    m_BatchCount++;
+
+    m_BatchStorage.Types.resize(m_BatchCount);
+    m_BatchStorage.ShaderHandles.resize(m_BatchCount);
+    m_BatchStorage.VertexLayoutHandles.resize(m_BatchCount);
+
+    m_BatchStorage.VertexBufferHandles.resize(m_BatchCount);
+    m_BatchStorage.IndexBufferHandles.resize(m_BatchCount);
+
+    m_BatchStorage.VertexCounts.resize(m_BatchCount);
+    m_BatchStorage.IndexCounts.resize(m_BatchCount);
+
+    m_BatchStorage.Transforms.resize(m_BatchCount);
+
+    CreateHandle(batch); //Allocates a sparse set for the batch
+
+    m_BatchStorage.Types[batch] = batchData.Type;
+    m_BatchStorage.ShaderHandles[batch] = batchData.ShaderID;
+
+    //Set Up vertex Layout
+    GLCall(glGenVertexArrays(1, &m_BatchStorage.VertexLayoutHandles[batch]));
+    GLCall(glBindVertexArray(m_BatchStorage.VertexLayoutHandles[batch]));
+
+    //Set up vertex buffer
+    m_BatchStorage.VertexBufferHandles[batch] = CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
+
+    //Set up index buffer
+    m_BatchStorage.IndexBufferHandles[batch] = CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
+
+    size_t stride = 13 * sizeof(float);
+
+    GLCall(glEnableVertexAttribArray(0)); // Position
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
+
+    GLCall(glEnableVertexAttribArray(1)); // Normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
+
+    GLCall(glEnableVertexAttribArray(2)); // Colour
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
+
+    GLCall(glEnableVertexAttribArray(3)); // Texture Coordinates
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, (void*)(10 * sizeof(float)));
+
+    GLCall(glEnableVertexAttribArray(4)); // Texture ID
+    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void*)(12 * sizeof(float)));
+
+    m_BatchStorage.VertexCounts[batch] = 0;
+    m_BatchStorage.IndexCounts[batch] = 0;
+
+    m_BatchStorage.Transforms[batch] = transform;
+
+    return batch;
+}
+
+void Quilt::Comforter::PopulateBatchBuffer(unsigned int batchHandle, Quilt::BufferType bufferType, const void* data, unsigned int size, unsigned int offset)
+{
+    unsigned int bufferHandle;
+
+    switch(bufferType)
+    {
+        case Quilt::BufferType::Vertex:
+            bufferHandle = m_BatchStorage.VertexBufferHandles[batchHandle];
+            GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_GPUBufferStroage.Handles[bufferHandle]));
+            GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset * m_GPUBufferStroage.DataSizes[bufferHandle], size * m_GPUBufferStroage.DataSizes[bufferHandle], data));
+            break;
+
+        case Quilt::BufferType::Index:
+            bufferHandle = m_BatchStorage.IndexBufferHandles[batchHandle];
+            GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GPUBufferStroage.Handles[bufferHandle]));
+            GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset * m_GPUBufferStroage.DataSizes[bufferHandle], size * m_GPUBufferStroage.DataSizes[bufferHandle], data));
+            break;
+        
+        case Quilt::BufferType::Instance:
+            LOG_WARN("Instance Buffer not yet implemented");
+            break;
+
+        case Quilt::BufferType::Storage:
+            LOG_WARN("Storage Buffer not yet implemented");
+            break;
+    }
+}
+
+/*void PopulateBatch(unsigned int batchHandle, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices)
+{
+    //TODO: get Vertex Offset. It is needed!
+
+    //Upload vertex Buffer data
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_BatchStorage.VertexBufferHandles[batchHandle]));
+    GLCall(glBufferSubData(GL_ARRAY_BUFFER, vertexOffset * batch.VertexBuffer.DataSize, vertices.size() * batch.VertexBuffer.DataSize, vertices.data()));
+
+    //Upload index Buffer data
+    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.IndexBuffer.Handle));
+    GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, indexOffset * batch.IndexBuffer.DataSize, indices.size() * batch.IndexBuffer.DataSize, indices.data()));
+}*/
+
+void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
+{
+    uint32_t last = m_BatchCount - 1;
+
+    //Swap the index with the last in array
+    std::swap(m_BatchStorage.Types[batchHandle], m_BatchStorage.Types[last]);
+    std::swap(m_BatchStorage.ShaderHandles[batchHandle], m_BatchStorage.ShaderHandles[last]);
+    std::swap(m_BatchStorage.VertexLayoutHandles[batchHandle], m_BatchStorage.VertexLayoutHandles[last]);
+
+    std::swap(m_BatchStorage.VertexBufferHandles[batchHandle], m_BatchStorage.VertexBufferHandles[last]);
+    std::swap(m_BatchStorage.IndexBufferHandles[batchHandle], m_BatchStorage.IndexBufferHandles[last]);
+
+    std::swap(m_BatchStorage.VertexCounts[batchHandle], m_BatchStorage.VertexCounts[last]);
+    std::swap(m_BatchStorage.IndexCounts[batchHandle], m_BatchStorage.IndexCounts[last]);
+
+    std::swap(m_BatchStorage.Transforms[batchHandle], m_BatchStorage.Transforms[last]);
+
+    //RelocateIndex(m_IndexToHandle[], index);
+
+    //Remove the last index
+    m_BatchStorage.Types.pop_back();
+    m_BatchStorage.ShaderHandles.pop_back();
+    m_BatchStorage.VertexLayoutHandles.pop_back();
+
+    m_BatchStorage.VertexBufferHandles.pop_back();
+    m_BatchStorage.IndexBufferHandles.pop_back();
+
+    m_BatchStorage.VertexCounts.pop_back();
+    m_BatchStorage.IndexCounts.pop_back();
+
+    m_BatchStorage.Transforms.pop_back();
+
+    m_BatchCount--;
+}
+
+void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform)
+{
+    for(unsigned int handle : m_HandleSet.GetAllData())
+    {
+        //bind shader from batch
+        if(!glIsProgram(m_BatchStorage.ShaderHandles[handle]))
+        {
+            LOG_WARN("Batch does not have a shader Bound");
+            continue;
+        }
+
+        GLCall(glUseProgram(m_BatchStorage.ShaderHandles[handle]));
+
+        glm::mat4 proj = glm::orthoLH(1.7777f * -5.0f, -1.7777f * -5.0f, -5.0f, 5.0f, -1.0f, 500.0f); // camera
+
+        glm::vec3 camPos = glm::vec3(cameraTransform->Position.x, cameraTransform->Position.y, cameraTransform->Position.z);
+        glm::vec3 targetPos = camPos + glm::vec3(0.0f, 0.0f, 1.0f);
+        glm::vec3 upVec = glm::vec3(0.0f, 1.0f, 0.0f);
+
+        glm::mat4 view = glm::lookAtLH(camPos, targetPos, upVec);
+
+        switch(m_BatchStorage.Types[handle])
+        {
+            case Quilt::BatchType::None:
+                break;
+            
+            case Quilt::BatchType::Static:
+                break;
+            
+            case Quilt::BatchType::Dynamic:
+                glm::mat4 model;
+                for (const Pillow::Transform* transform : m_BatchStorage.Transforms)
+                {
+                    model = glm::translate(glm::mat4(1.0f), glm::vec3(transform->Position.x, transform->Position.y, transform->Position.z)) *
+                            glm::yawPitchRoll(
+                                glm::radians(transform->Rotation.y),
+                                glm::radians(transform->Rotation.x),
+                                glm::radians(transform->Rotation.z)
+                            ) *
+                            glm::scale(glm::mat4(1.0f), glm::vec3(transform->Scale.x, transform->Scale.y, transform->Scale.z));
+
+                    shaderManager.SetUniformMat4f(m_BatchStorage.ShaderHandles[handle], "u_Model", model);
+                    shaderManager.SetUniformMat4f(m_BatchStorage.ShaderHandles[handle], "u_View", view);
+                    shaderManager.SetUniformMat4f(m_BatchStorage.ShaderHandles[handle], "u_Projection", proj);
+
+                    int samplers[32];
+                    for(int i = 0; i < 32; ++i)
+                    {
+                        samplers[i] = i;
+                    } 
+
+                    shaderManager.SetUniform1iv(m_BatchStorage.ShaderHandles[handle], "u_Textures", 32, samplers);
+
+                    //for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
+                    //{
+                    //    GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
+                    //    GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
+                    //}
+
+                    GLCall(glBindVertexArray(m_BatchStorage.VertexLayoutHandles[handle]));
+                    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_GPUBufferStroage.Handles[m_BatchStorage.VertexBufferHandles[handle]]));
+                    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GPUBufferStroage.Handles[m_BatchStorage.IndexBufferHandles[handle]]));
+
+                    GLCall(glDrawElements(GL_TRIANGLES, m_GPUBufferStroage.DataCounts[m_BatchStorage.IndexBufferHandles[handle]], GL_UNSIGNED_INT, nullptr));
+                }
+                break;
+
+            case Quilt::BatchType::Instanced:
+                break;
+        }
+    }
+}
+
+unsigned int Quilt::Comforter::CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
+{
+    uint32_t buffer = m_GPUBufferCount;
+    m_GPUBufferCount++;
+
+    m_GPUBufferStroage.Types.resize(m_GPUBufferCount);
+    m_GPUBufferStroage.DataSizes.resize(m_GPUBufferCount);
+    m_GPUBufferStroage.DataCounts.resize(m_GPUBufferCount);
+    m_GPUBufferStroage.Handles.resize(m_GPUBufferCount);
+
+    m_GPUBufferStroage.Types[buffer] = type;
+    m_GPUBufferStroage.DataSizes[buffer] = dataSize;
+    m_GPUBufferStroage.DataCounts[buffer] = dataCount;
+
+    unsigned int bufferType;
+
+    switch (type)
+    {
+    case Quilt::BufferType::Vertex:
+        bufferType = GL_ARRAY_BUFFER;
+        break;
+
+    case Quilt::BufferType::Index:
+        bufferType = GL_ELEMENT_ARRAY_BUFFER;
+        break;
+
+    case Quilt::BufferType::Instance:
+        bufferType = GL_ARRAY_BUFFER;
+        break;
+
+    case Quilt::BufferType::Storage:
+        bufferType = GL_SHADER_STORAGE_BUFFER;
+        break;
+    
+    default:
+        LOG_FATAL("Undefined buffer type");
+        abort();
+        break;
+    }
+
+    GLCall(glGenBuffers(1, &m_GPUBufferStroage.Handles[buffer]));
+    GLCall(glBindBuffer(bufferType, m_GPUBufferStroage.Handles[buffer]));
+    
+    GLCall(glBufferData(bufferType, m_GPUBufferStroage.DataSizes[buffer] * m_GPUBufferStroage.DataCounts[buffer], nullptr, GL_DYNAMIC_DRAW)); //TODO: This needs to change later to support shader storage and instances
+
+    return buffer;
+}
+
+void Quilt::Comforter::CreateHandle(unsigned int BatchHandle)
+{
+    m_HandleSet.Insert(m_CurrentHandle, BatchHandle);
+    m_CurrentHandle++;
+}
+
+void Quilt::Comforter::RelocateIndex(unsigned int handle, unsigned int index)
+{
+    
+}

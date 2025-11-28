@@ -7,7 +7,7 @@ buildPath="build"                           # The path to build to
 StaticBuild=true
 Debug=true
 
-SharedDependencies="-IPillowMath/include -ISleepTraceDebugger/Source"
+SharedDependencies="-IPillowMath/include -ISleepTraceDebugger/Source -IFrameUtility/Source"
 
 #TODO: THIS IS THE RENDER ENGINE LIB BUILD
 Dependencies="QuiltRenderEngine/Dependencies"

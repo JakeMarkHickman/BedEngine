@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Tools/Memory/SparseSet.h>
+#include <SparseSet.h>
 #include <Tools/Memory/MemoryPool.h>
 #include <vector>
 #include <typeindex>
@@ -32,7 +32,7 @@ namespace Bed
                 // MemoryPool needs to be constructed inside the vector as moving data causes a crash
                 m_ComponentPool.emplace_back(sizeof(Component), 10001); //TODO: Scale this with the amount of entities available
 
-                Bed::SparseSet<void*> newCompSet;
+                Frame::SparseSet<void*> newCompSet;
                 m_EntityComponents.emplace_back(newCompSet); 
             }
             else
@@ -54,7 +54,7 @@ namespace Bed
 
         void RemoveAllComponents(uint64_t entity)
         {
-            for(SparseSet<void*>& component : m_EntityComponents)
+            for(Frame::SparseSet<void*>& component : m_EntityComponents)
             {
                 component.Remove(entity);
                 //TODO Need to deconstruct the component using its destructor
@@ -134,7 +134,7 @@ namespace Bed
 
         std::unordered_map<uint64_t, uint64_t> m_ComponentRegisty;
         std::vector<Bed::MemoryPool> m_ComponentPool;
-        std::vector<Bed::SparseSet<void*>> m_EntityComponents;
+        std::vector<Frame::SparseSet<void*>> m_EntityComponents;
         uint64_t m_RegisteredComponents = 0;
 
     };

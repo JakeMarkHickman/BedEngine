@@ -56,7 +56,7 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
 
     void main()
     {
-        o_FragColour = texture(u_Textures[int(v_TexID)], v_TexCoord) * v_Colour;
+        o_FragColour = v_Colour; //texture(u_Textures[int(v_TexID)], v_TexCoord) * v_Colour;
     }
     )";
 
@@ -69,9 +69,20 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
 
     Quilt::Batch& batch = m_BatchManager.GetOrCreateBatch(data);
 
+    unsigned int newBatch = m_BatchManager.NewCreateBatch(16000, 24000, data, transform);
+
+    unsigned int vertOffset = m_BatchManager.GetBatchStorage().VertexCounts[newBatch];
+    unsigned int indOffset = m_BatchManager.GetBatchStorage().IndexCounts[newBatch];
+
+    m_BatchManager.PopulateBatchBuffer(newBatch, Quilt::BufferType::Vertex, vertices.data(), vertices.size(), vertOffset);
+    m_BatchManager.PopulateBatchBuffer(newBatch, Quilt::BufferType::Index, indices.data(), indices.size(), indOffset);
+
+    m_BatchManager.GetBatchStorage().VertexCounts[newBatch] = vertices.size();
+    m_BatchManager.GetBatchStorage().IndexCounts[newBatch] = indices.size();
+
     uint64_t vertexOffset = batch.VertexCount;
     uint64_t indexOffset = batch.IndexCount;
-
+ 
     //TODO: dont need to do this here.
     //Upload vertex Buffer data
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, batch.VertexBuffer.Handle));
@@ -162,7 +173,9 @@ void Quilt::Duvet::Draw()
             continue;
         }
 
-        for (const Quilt::Batch& batch : m_BatchManager.GetBatches())
+        m_BatchManager.DrawBatches(m_ShaderManager, camera.Transform);
+
+        /*for (const Quilt::Batch& batch : m_BatchManager.GetBatches())
         {
             //bind shader from batch
             if(!glIsProgram(batch.Data.ShaderID))
@@ -235,6 +248,6 @@ void Quilt::Duvet::Draw()
                 
                 break;
             }
-        }
+        }*/
     }
 }

@@ -2,9 +2,8 @@
 
 #include <vector>
 
-namespace Bed
+namespace Frame
 {
-    // TODO: include core.h as to be able to use sparce arrays within games/editor
     template<typename T>
     class SparseSet
     {
@@ -54,11 +53,6 @@ namespace Bed
 
         T GetData(uint64_t id)
         {
-            //if(!id < m_Sparse.size() && !m_Sparse[id] != -1)
-            //{
-            //    throw std::runtime_error("No Data in ID");
-            //}
-
             return m_Data[m_Sparse[id]];
         }
 
@@ -67,9 +61,28 @@ namespace Bed
             m_Data[m_Sparse[id]] = data;
         }*/
 
+        void Swap(uint64_t id, uint64_t idToSwap)
+        {
+            //swap dense index but using the sparse IDs
+
+            uint64_t sparseA = m_Sparse[id];
+            uint64_t sparseB = m_Sparse[idToSwap];
+
+            uint64_t denseA = m_Dense[sparseA];
+            uint64_t denseB = m_Dense[sparseB];
+
+            m_Dense[sparseA] = denseB;
+            m_Dense[sparseB] = denseA;
+        }
+
         const std::vector<uint64_t>& GetIDs() const
         {
             return m_Dense;
+        }
+
+        const std::vector<T>& GetAllData() const
+        {
+            return m_Data;
         }
 
         void Clear()

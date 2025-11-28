@@ -3,6 +3,8 @@
 #include <string>
 #include <Transform.h>
 
+#include <vector>
+
 namespace Quilt
 {
     //TODO: Remove this
@@ -11,6 +13,13 @@ namespace Quilt
         unsigned int Handle;
         unsigned int VertexShader;
         unsigned int FragmentShader;
+    };
+
+    struct Shaders
+    {
+        std::vector<unsigned int> Programs;
+        std::vector<unsigned int> VertexShaders;
+        std::vector<unsigned int> FragmentShaders;
     };
 
     class Coverlet
