@@ -111,7 +111,7 @@ namespace Quilt
         GPUBuffers m_GPUBufferStroage;
         uint32_t m_GPUBufferCount = 0;
 
-        
+        std::vector<unsigned int> m_batchHandlesToRemove;
     };
 
     using Batcher = Comforter;

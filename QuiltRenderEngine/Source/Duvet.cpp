@@ -74,13 +74,13 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
 
 void Quilt::Duvet::RemoveMesh(const unsigned int& meshHandle)
 {
-    m_BatchManager.RemoveMesh(meshHandle);w
+    m_BatchManager.RemoveMesh(meshHandle);
 
-    Quilt::Mesh& meshToRemove = m_MeshHandles[meshHandle];
+    //Quilt::Mesh& meshToRemove = m_MeshHandles[meshHandle];
     //Quilt::Batch& batch = m_BatchManager.GetBatches()[meshToRemove.BatchIndex];
 
-    LOG_DEBUG("Removing batch: ", meshToRemove.BatchIndex);
-    m_BatchManager.RemoveBatch(meshToRemove.BatchIndex);
+    //LOG_DEBUG("Removing batch: ", meshToRemove.BatchIndex);
+    //m_BatchManager.RemoveBatch(meshToRemove.BatchIndex);
 
     //if(meshToRemove.LocalIndex < batch.Transforms.size())
     //{
@@ -88,7 +88,7 @@ void Quilt::Duvet::RemoveMesh(const unsigned int& meshHandle)
     //    batch.Transforms.erase(batch.Transforms.begin() + meshToRemove.LocalIndex);
     //}
 
-    meshToRemove = {};
+    //meshToRemove = {};
 }
 
 unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform)

@@ -17,9 +17,11 @@ unsigned int Quilt::Comforter::CreateMesh(BatchData& batchData, const std::vecto
     m_Meshes.IndexCounts.resize(m_MeshCount);
 
     unsigned int batchId = GetOrCreateBatch(16000, 24000, batchData);
-    unsigned int vertexOffset = m_BatchStorage.VertexCounts[m_Meshes.BatchIDs[newMesh]];
-    unsigned int indexOffset = m_BatchStorage.IndexCounts[m_Meshes.BatchIDs[newMesh]];
+    unsigned int vertexOffset = m_BatchStorage.VertexCounts[m_HandleSet.GetData(batchId)];
+    unsigned int indexOffset = m_BatchStorage.IndexCounts[m_HandleSet.GetData(batchId)];
     m_BatchStorage.Transforms[batchId] = transform;
+
+    LOG_DEBUG("batch ID: ", batchId);
 
     PopulateBatchBuffer(batchId, Quilt::BufferType::Vertex, vertices.data(), vertices.size(), vertexOffset);
     PopulateBatchBuffer(batchId, Quilt::BufferType::Index, indices.data(), indices.size(), indexOffset);
@@ -40,8 +42,6 @@ unsigned int Quilt::Comforter::RemoveMesh(unsigned int meshID)
 
     return 0;
 }
-
-//TODO: clean this function up
 
 unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
 {
@@ -77,7 +77,13 @@ unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned
 
     m_BatchStorage.Transforms.resize(m_BatchCount);
 
+    LOG_DEBUG("m_BatchCount: ", m_BatchCount);
+    LOG_DEBUG("batch id ", batch);
+    LOG_DEBUG("batch storage size ", m_BatchStorage.Types.size());
+
     unsigned int handle = CreateHandle(batch); //Allocates a sparse set for the batch
+
+    LOG_DEBUG("HANDLE after creation ", handle);
 
     m_BatchStorage.Types[batch] = batchData.Type;
     m_BatchStorage.ShaderHandles[batch] = batchData.ShaderID;
@@ -118,19 +124,19 @@ unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned
 void Quilt::Comforter::PopulateBatchBuffer(unsigned int batchHandle, Quilt::BufferType bufferType, const void* data, unsigned int size, unsigned int offset)
 {
     unsigned int bufferHandle;
+    unsigned int type;
 
     switch(bufferType)
     {
         case Quilt::BufferType::Vertex:
             bufferHandle = m_BatchStorage.VertexBufferHandles[batchHandle];
-            GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_GPUBufferStroage.Handles[bufferHandle]));
-            GLCall(glBufferSubData(GL_ARRAY_BUFFER, offset * m_GPUBufferStroage.DataSizes[bufferHandle], size * m_GPUBufferStroage.DataSizes[bufferHandle], data));
+            LOG_DEBUG("Buffer Handle: ", bufferHandle);
+            type = GL_ARRAY_BUFFER;
             break;
 
         case Quilt::BufferType::Index:
             bufferHandle = m_BatchStorage.IndexBufferHandles[batchHandle];
-            GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GPUBufferStroage.Handles[bufferHandle]));
-            GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset * m_GPUBufferStroage.DataSizes[bufferHandle], size * m_GPUBufferStroage.DataSizes[bufferHandle], data));
+            type = GL_ELEMENT_ARRAY_BUFFER;
             break;
         
         case Quilt::BufferType::Instance:
@@ -141,6 +147,15 @@ void Quilt::Comforter::PopulateBatchBuffer(unsigned int batchHandle, Quilt::Buff
             LOG_WARN("Storage Buffer not yet implemented");
             break;
     }
+
+    LOG_DEBUG("Buffer Handle to populate: ", bufferHandle);
+    LOG_DEBUG("Offset to populate with: ", offset);
+    LOG_DEBUG("Data size to populate with: ", size);
+
+    GLCall(glBindBuffer(type, m_GPUBufferStroage.Handles[bufferHandle]));
+    GLCall(glBufferSubData(type, offset * m_GPUBufferStroage.DataSizes[bufferHandle], size * m_GPUBufferStroage.DataSizes[bufferHandle], data));
+
+    LOG_DEBUG("FINISHED POPULATING BUFFER: ", bufferHandle);
 }
 
 void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
@@ -168,6 +183,8 @@ void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
 
     //RelocateIndex(m_IndexToHandle[], index);
     m_HandleSet.Swap(handle, last);
+    m_batchHandlesToRemove.push_back(batchHandle);
+
     //TODO: Swap to deffered updates
 
     //Remove the last index
@@ -259,12 +276,19 @@ void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow:
                 break;
         }
     }
+
+    for(unsigned int batchHandle : m_batchHandlesToRemove)
+    {
+       m_HandleSet.Remove(batchHandle);
+    }
 }
 
 unsigned int Quilt::Comforter::CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
 {
     uint32_t buffer = m_GPUBufferCount;
     m_GPUBufferCount++;
+
+    LOG_DEBUG("GPU BUFFER CREATE HERE", buffer);
 
     m_GPUBufferStroage.Types.resize(m_GPUBufferCount);
     m_GPUBufferStroage.DataSizes.resize(m_GPUBufferCount);
@@ -311,6 +335,9 @@ unsigned int Quilt::Comforter::CreateBuffer(BufferType type, unsigned int dataSi
 unsigned int Quilt::Comforter::CreateHandle(unsigned int BatchHandle)
 {
     unsigned int createdHandle = m_CurrentHandle;
+
+    LOG_DEBUG("Creating handle: ", createdHandle, " with batch handle ", BatchHandle);
+
     m_HandleSet.Insert(m_CurrentHandle, BatchHandle);
     m_CurrentHandle++;
 
