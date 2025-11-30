@@ -28,7 +28,5 @@ namespace Quilt
         std::vector<uint64_t> IndexOffsets;
         std::vector<uint64_t> VertexCounts;
         std::vector<uint64_t> IndexCounts;
-
-        std::unordered_map<unsigned int, unsigned int> BatchToMesh;
     };
 }

@@ -67,56 +67,15 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
     data.Type = BatchType::Dynamic;
     //TODO: use vertex layout too!
 
-    //Quilt::Batch& batch = m_BatchManager.GetOrCreateBatch(data);
+    unsigned int newMesh = m_BatchManager.CreateMesh(data, vertices, indices, transform);
 
-    unsigned int newBatch = m_BatchManager.NewCreateBatch(16000, 24000, data, transform);
-
-    unsigned int vertexOffset = m_BatchManager.GetBatchStorage().VertexCounts[m_BatchManager.GetHandle(newBatch)];
-    unsigned int indexOffset = m_BatchManager.GetBatchStorage().IndexCounts[m_BatchManager.GetHandle(newBatch)];
-
-    m_BatchManager.PopulateBatchBuffer(m_BatchManager.GetHandle(newBatch), Quilt::BufferType::Vertex, vertices.data(), vertices.size(), vertexOffset);
-    m_BatchManager.PopulateBatchBuffer(m_BatchManager.GetHandle(newBatch), Quilt::BufferType::Index, indices.data(), indices.size(), indexOffset);
-
-    m_BatchManager.GetBatchStorage().VertexCounts[m_BatchManager.GetHandle(newBatch)] = vertices.size();
-    m_BatchManager.GetBatchStorage().IndexCounts[m_BatchManager.GetHandle(newBatch)] = indices.size();
-
-    //uint64_t vertexOffset = batch.VertexCount;
-    //uint64_t indexOffset = batch.IndexCount;
- 
-    //TODO: dont need to do this here.
-    //Upload vertex Buffer data
-    //GLCall(glBindBuffer(GL_ARRAY_BUFFER, batch.VertexBuffer.Handle));
-    //GLCall(glBufferSubData(GL_ARRAY_BUFFER, vertexOffset * batch.VertexBuffer.DataSize, vertices.size() * batch.VertexBuffer.DataSize, vertices.data()));
-    //Upload index Buffer data
-    //GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.IndexBuffer.Handle));
-    //GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, indexOffset * batch.IndexBuffer.DataSize, indices.size() * batch.IndexBuffer.DataSize, indices.data()));
-
-    //batch.VertexCount += vertices.size();
-    //batch.IndexCount += indices.size();
-    //batch.Transforms.push_back(transform);
-
-    Mesh meshHandle;
-    
-
-    meshHandle.BatchIndex = newBatch; //m_BatchManager.GetBatches().size() - 1;
-    //meshHandle.LocalIndex = batch.Transforms.size() - 1; //THIS IS WRONG for now
-    meshHandle.VertexOffset = vertexOffset;
-    meshHandle.IndexOffset = indexOffset;
-    meshHandle.VertexCount = vertices.size();
-    meshHandle.IndexCount = indices.size();
-    meshHandle.Vertices = vertices;
-    meshHandle.Indices = indices;
-
-    //LOG_DEBUG("Batch ID: ", meshHandle.BatchIndex);
-
-    m_MeshHandles.push_back(meshHandle);
-    unsigned int value = m_MeshHandles.size() - 1;
-
-    return value;
+    return newMesh;
 }
 
 void Quilt::Duvet::RemoveMesh(const unsigned int& meshHandle)
 {
+    m_BatchManager.RemoveMesh(meshHandle);w
+
     Quilt::Mesh& meshToRemove = m_MeshHandles[meshHandle];
     //Quilt::Batch& batch = m_BatchManager.GetBatches()[meshToRemove.BatchIndex];
 

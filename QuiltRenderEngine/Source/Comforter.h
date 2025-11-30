@@ -4,6 +4,7 @@
 
 #include <Transform.h>
 #include "GPUBuffer.h"
+#include "Mesh.h"
 #include "Coverlet.h"
 
 namespace Quilt
@@ -75,16 +76,14 @@ namespace Quilt
     class Comforter
     {
     public:
-        std::vector<Quilt::Batch>& GetBatches() { return m_Batches; };
+        //Create a mesh Handle
+        unsigned int CreateMesh(BatchData& batchData, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform);
+        unsigned int RemoveMesh(unsigned int meshID);
 
         Quilt::Batches& GetBatchStorage() { return m_BatchStorage; }; //TODO: make const later
         unsigned int GetHandle(unsigned int id) { return m_HandleSet.GetData(id); };
 
-        Quilt::Batch& GetOrCreateBatch(BatchData& batchData);
-        [[deprecated("Replaced by NewCreateBatch, which will become the standard with SoA.")]]
-        Quilt::Batch CreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
-
-        unsigned int NewCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData, const Pillow::Transform* transform);
+        unsigned int NewCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
         void PopulateBatchBuffer(unsigned int batchHandle, Quilt::BufferType bufferType, const void* data, unsigned int size, unsigned int offset);
         void RemoveTransform(unsigned int batchHandle);
         void RemoveBatch(unsigned int batchHandle);
@@ -92,6 +91,8 @@ namespace Quilt
         void DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform);
 
     private:
+        unsigned int GetOrCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
+
         unsigned int CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount);
 
         unsigned int CreateHandle(unsigned int BatchHandle);
@@ -101,11 +102,16 @@ namespace Quilt
         Batches m_BatchStorage;
         uint32_t m_BatchCount = 0;
 
+        Quilt::MeshStorage m_Meshes;
+        uint32_t m_MeshCount = 0;
+
         Frame::SparseSet<unsigned int> m_HandleSet;
         unsigned int m_CurrentHandle = 0;
 
         GPUBuffers m_GPUBufferStroage;
         uint32_t m_GPUBufferCount = 0;
+
+        
     };
 
     using Batcher = Comforter;
