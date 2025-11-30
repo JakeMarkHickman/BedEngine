@@ -18,4 +18,17 @@ namespace Quilt
         std::vector<Quilt::Vertex> Vertices;
         std::vector<unsigned int> Indices;
     };
+
+    struct MeshStorage
+    {
+        std::vector<unsigned int> BatchIDs;
+        std::vector<uint64_t> LocalIndices;
+
+        std::vector<uint64_t> VertexOffsets;
+        std::vector<uint64_t> IndexOffsets;
+        std::vector<uint64_t> VertexCounts;
+        std::vector<uint64_t> IndexCounts;
+
+        std::unordered_map<unsigned int, unsigned int> BatchToMesh;
+    };
 }

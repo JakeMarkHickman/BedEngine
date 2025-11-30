@@ -53,6 +53,11 @@ namespace Debug
 
         //TODO: Add a time to see when something happened
         std::cout << type << "[" << file << " " << line << "]: " << message << "\n";
+
+        if(logType == SleepTrace::LogType::Fatal)
+        {
+            abort();
+        }
     }
 }
 #endif
@@ -64,8 +69,6 @@ namespace Bed
     {
         if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
         {
-            LOG_INFO("Registering Sprite");
-
             Quilt::Vertex v0;
             v0.Position = { -0.5f, -0.5f, 0.0f };
             v0.Normal = { 0.0f, 0.0f, 0.0f };
@@ -104,8 +107,6 @@ namespace Bed
 
     void OnTextureComponentAttached(Bed::World& world, uint64_t entity)
     {
-        LOG_INFO("Registering Texture");
-
         if(world.HasComponents<Bed::Texture, Bed::Sprite, Pillow::Transform>(entity))
         {
             Bed::Texture* texture = world.GetComponent<Bed::Texture>(entity);
@@ -119,8 +120,6 @@ namespace Bed
     {
         if(world.HasComponents<Pillow::Transform, Bed::Camera>(entity))
         {
-            LOG_INFO("Registering Camera");
-
             Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
             Quilt::Duvet::CreateCamera(transform);
         }
@@ -131,8 +130,6 @@ namespace Bed
     {
         if(world.HasComponents<Pillow::Transform, Mattress::PhysicsObject>(entity))
         {
-            LOG_INFO("Registering Physics Object");
-
             Mattress::PhysicsObject* physicsObject = world.GetComponent<Mattress::PhysicsObject>(entity);
             Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
 
@@ -146,7 +143,6 @@ namespace Bed
     {
         if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
         {
-            LOG_DEBUG("Removing sprite");
             Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
             Quilt::Duvet::RemoveMesh(sprite->Handle);
         }

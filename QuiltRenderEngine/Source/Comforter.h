@@ -78,6 +78,7 @@ namespace Quilt
         std::vector<Quilt::Batch>& GetBatches() { return m_Batches; };
 
         Quilt::Batches& GetBatchStorage() { return m_BatchStorage; }; //TODO: make const later
+        unsigned int GetHandle(unsigned int id) { return m_HandleSet.GetData(id); };
 
         Quilt::Batch& GetOrCreateBatch(BatchData& batchData);
         [[deprecated("Replaced by NewCreateBatch, which will become the standard with SoA.")]]
@@ -85,6 +86,7 @@ namespace Quilt
 
         unsigned int NewCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData, const Pillow::Transform* transform);
         void PopulateBatchBuffer(unsigned int batchHandle, Quilt::BufferType bufferType, const void* data, unsigned int size, unsigned int offset);
+        void RemoveTransform(unsigned int batchHandle);
         void RemoveBatch(unsigned int batchHandle);
 
         void DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform);
@@ -92,7 +94,7 @@ namespace Quilt
     private:
         unsigned int CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount);
 
-        void CreateHandle(unsigned int BatchHandle);
+        unsigned int CreateHandle(unsigned int BatchHandle);
         void RelocateIndex(unsigned int handle, unsigned int index);
 
         std::vector<Quilt::Batch> m_Batches;

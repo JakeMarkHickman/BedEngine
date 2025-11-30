@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 namespace Frame
 {
@@ -30,7 +31,7 @@ namespace Frame
 
         void Remove(uint64_t id)
         {
-            if(id < m_Sparse.size() && m_Sparse[id] != -1) // checks if id is smaller than sparce vector and if the index is not equal to -1
+            if(HasIndex(id)) // checks if id is smaller than sparce vector and if the index is not equal to -1
             {
                 uint64_t index = m_Sparse[id];
                 uint64_t lastId = m_Dense.back();
@@ -65,14 +66,15 @@ namespace Frame
         {
             //swap dense index but using the sparse IDs
 
-            uint64_t sparseA = m_Sparse[id];
-            uint64_t sparseB = m_Sparse[idToSwap];
+            int64_t sparseA = m_Sparse[id];
+            int64_t sparseB = m_Sparse[idToSwap];
 
-            uint64_t denseA = m_Dense[sparseA];
-            uint64_t denseB = m_Dense[sparseB];
+            uint64_t temp = m_Dense[sparseA];
+            m_Dense[sparseA] = m_Dense[sparseB];
+            m_Dense[sparseB] = temp;
 
-            m_Dense[sparseA] = denseB;
-            m_Dense[sparseB] = denseA;
+            m_Sparse[id] = sparseB;
+            m_Sparse[idToSwap] = sparseA;
         }
 
         const std::vector<uint64_t>& GetIDs() const

@@ -78,6 +78,8 @@ unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned
     uint32_t batch = m_BatchCount;
     m_BatchCount++;
 
+    LOG_DEBUG("Creating batch: ", batch);
+
     m_BatchStorage.Types.resize(m_BatchCount);
     m_BatchStorage.ShaderHandles.resize(m_BatchCount);
     m_BatchStorage.VertexLayoutHandles.resize(m_BatchCount);
@@ -90,7 +92,7 @@ unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned
 
     m_BatchStorage.Transforms.resize(m_BatchCount);
 
-    CreateHandle(batch); //Allocates a sparse set for the batch
+    unsigned int handle = CreateHandle(batch); //Allocates a sparse set for the batch
 
     m_BatchStorage.Types[batch] = batchData.Type;
     m_BatchStorage.ShaderHandles[batch] = batchData.ShaderID;
@@ -127,7 +129,7 @@ unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned
 
     m_BatchStorage.Transforms[batch] = transform;
 
-    return batch;
+    return handle;
 }
 
 void Quilt::Comforter::PopulateBatchBuffer(unsigned int batchHandle, Quilt::BufferType bufferType, const void* data, unsigned int size, unsigned int offset)
@@ -158,37 +160,32 @@ void Quilt::Comforter::PopulateBatchBuffer(unsigned int batchHandle, Quilt::Buff
     }
 }
 
-/*void PopulateBatch(unsigned int batchHandle, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices)
-{
-    //TODO: get Vertex Offset. It is needed!
-
-    //Upload vertex Buffer data
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_BatchStorage.VertexBufferHandles[batchHandle]));
-    GLCall(glBufferSubData(GL_ARRAY_BUFFER, vertexOffset * batch.VertexBuffer.DataSize, vertices.size() * batch.VertexBuffer.DataSize, vertices.data()));
-
-    //Upload index Buffer data
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.IndexBuffer.Handle));
-    GLCall(glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, indexOffset * batch.IndexBuffer.DataSize, indices.size() * batch.IndexBuffer.DataSize, indices.data()));
-}*/
-
 void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
 {
+    unsigned int handle = GetHandle(batchHandle);
+
     uint32_t last = m_BatchCount - 1;
 
+    LOG_DEBUG("Last handle: ", last);
+
     //Swap the index with the last in array
-    std::swap(m_BatchStorage.Types[batchHandle], m_BatchStorage.Types[last]);
-    std::swap(m_BatchStorage.ShaderHandles[batchHandle], m_BatchStorage.ShaderHandles[last]);
-    std::swap(m_BatchStorage.VertexLayoutHandles[batchHandle], m_BatchStorage.VertexLayoutHandles[last]);
+    std::swap(m_BatchStorage.Types[handle], m_BatchStorage.Types[last]);
+    std::swap(m_BatchStorage.ShaderHandles[handle], m_BatchStorage.ShaderHandles[last]);
+    std::swap(m_BatchStorage.VertexLayoutHandles[handle], m_BatchStorage.VertexLayoutHandles[last]);
 
-    std::swap(m_BatchStorage.VertexBufferHandles[batchHandle], m_BatchStorage.VertexBufferHandles[last]);
-    std::swap(m_BatchStorage.IndexBufferHandles[batchHandle], m_BatchStorage.IndexBufferHandles[last]);
+    std::swap(m_BatchStorage.VertexBufferHandles[handle], m_BatchStorage.VertexBufferHandles[last]);
+    std::swap(m_BatchStorage.IndexBufferHandles[handle], m_BatchStorage.IndexBufferHandles[last]);
 
-    std::swap(m_BatchStorage.VertexCounts[batchHandle], m_BatchStorage.VertexCounts[last]);
-    std::swap(m_BatchStorage.IndexCounts[batchHandle], m_BatchStorage.IndexCounts[last]);
+    std::swap(m_BatchStorage.VertexCounts[handle], m_BatchStorage.VertexCounts[last]);
+    std::swap(m_BatchStorage.IndexCounts[handle], m_BatchStorage.IndexCounts[last]);
 
-    std::swap(m_BatchStorage.Transforms[batchHandle], m_BatchStorage.Transforms[last]);
+    std::swap(m_BatchStorage.Transforms[handle], m_BatchStorage.Transforms[last]);
+
+    LOG_DEBUG("Swaping: ", handle, " and ", last);
 
     //RelocateIndex(m_IndexToHandle[], index);
+    m_HandleSet.Swap(handle, last);
+    m_HandleSet.Remove(handle);
 
     //Remove the last index
     m_BatchStorage.Types.pop_back();
@@ -204,6 +201,8 @@ void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
     m_BatchStorage.Transforms.pop_back();
 
     m_BatchCount--;
+
+    //return last;
 }
 
 void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform)
@@ -315,7 +314,6 @@ unsigned int Quilt::Comforter::CreateBuffer(BufferType type, unsigned int dataSi
     
     default:
         LOG_FATAL("Undefined buffer type");
-        abort();
         break;
     }
 
@@ -327,10 +325,13 @@ unsigned int Quilt::Comforter::CreateBuffer(BufferType type, unsigned int dataSi
     return buffer;
 }
 
-void Quilt::Comforter::CreateHandle(unsigned int BatchHandle)
+unsigned int Quilt::Comforter::CreateHandle(unsigned int BatchHandle)
 {
+    unsigned int createdHandle = m_CurrentHandle;
     m_HandleSet.Insert(m_CurrentHandle, BatchHandle);
     m_CurrentHandle++;
+
+    return createdHandle;
 }
 
 void Quilt::Comforter::RelocateIndex(unsigned int handle, unsigned int index)
