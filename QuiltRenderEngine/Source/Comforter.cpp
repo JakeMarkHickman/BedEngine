@@ -38,7 +38,7 @@ unsigned int Quilt::Comforter::CreateMesh(BatchData& batchData, const std::vecto
 
 unsigned int Quilt::Comforter::RemoveMesh(unsigned int meshID)
 {
-    RemoveBatch(m_Meshes.BatchIDs[meshID]);
+    RemoveBatch(meshID);
 
     return 0;
 }
@@ -158,9 +158,9 @@ void Quilt::Comforter::PopulateBatchBuffer(unsigned int batchHandle, Quilt::Buff
     LOG_DEBUG("FINISHED POPULATING BUFFER: ", bufferHandle);
 }
 
-void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
+void Quilt::Comforter::RemoveBatch(unsigned int meshHandle)
 {
-    unsigned int handle = GetHandle(batchHandle);
+    unsigned int handle = m_Meshes.BatchIDs[meshHandle];
 
     uint32_t last = m_BatchCount - 1;
 
@@ -183,7 +183,7 @@ void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
 
     //RelocateIndex(m_IndexToHandle[], index);
     m_HandleSet.Swap(handle, last);
-    m_batchHandlesToRemove.push_back(batchHandle);
+    m_batchHandlesToRemove.push_back(handle);
 
     //TODO: Swap to deffered updates
 
@@ -338,7 +338,7 @@ unsigned int Quilt::Comforter::CreateHandle(unsigned int BatchHandle)
 
     LOG_DEBUG("Creating handle: ", createdHandle, " with batch handle ", BatchHandle);
 
-    m_HandleSet.Insert(m_CurrentHandle, BatchHandle);
+    m_HandleSet.Insert(m_CurrentHandle, BatchHandle);j
     m_CurrentHandle++;
 
     return createdHandle;

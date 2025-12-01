@@ -86,7 +86,7 @@ namespace Quilt
         unsigned int NewCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
         void PopulateBatchBuffer(unsigned int batchHandle, Quilt::BufferType bufferType, const void* data, unsigned int size, unsigned int offset);
         void RemoveTransform(unsigned int batchHandle);
-        void RemoveBatch(unsigned int batchHandle);
+        void RemoveBatch(unsigned int meshHandle);
 
         void DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform);
 
@@ -104,6 +104,9 @@ namespace Quilt
 
         Quilt::MeshStorage m_Meshes;
         uint32_t m_MeshCount = 0;
+
+        std::vector<unsigned int> m_MeshToHandle;
+        std::vector<unsigned int> m_HandleToMesh;
 
         Frame::SparseSet<unsigned int> m_HandleSet;
         unsigned int m_CurrentHandle = 0;
