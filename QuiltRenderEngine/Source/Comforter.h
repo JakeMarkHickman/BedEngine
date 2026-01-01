@@ -88,15 +88,15 @@ namespace Quilt
         void RemoveTransform(unsigned int batchHandle);
         void RemoveBatch(unsigned int meshHandle);
 
-        void DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform);
+        void DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform, float xSizePercent, float ySizePercent);
 
     private:
         unsigned int GetOrCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
 
-        unsigned int CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount);
-
         unsigned int CreateHandle(unsigned int BatchHandle);
         void RelocateIndex(unsigned int handle, unsigned int index);
+
+        BufferManager m_BufferManager;
 
         std::vector<Quilt::Batch> m_Batches;
         Batches m_BatchStorage;

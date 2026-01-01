@@ -5,15 +5,54 @@
 
 namespace Quilt
 {
-    struct Camera
+    enum class ProjectionType
     {
-        bool IsActive = true;
+        Orthographic,
+        Perspective
+    };
 
-        const Pillow::Transform* Transform;
+    struct Cameras
+    {
+        std::vector<bool> Active;
+        std::vector<ProjectionType> ProjectionTypes;
 
-        float XScreenOffset = 0.0f;
-        float YScreenOffset = 0.0f;
-        float ScreenWidth = 1.0f;
-        float ScreenHeight = 1.0f;
+        std::vector<const Pillow::Transform*> Transforms;
+
+        std::vector<float> XSizes;
+        std::vector<float> YSizes;
+        std::vector<float> XPositions;
+        std::vector<float> YPositions;
+    };
+
+    struct CameraScreenSizeBounds
+    {
+        float XSize;
+        float YSize;
+        float XPosition;
+        float YPosition;
+    };
+
+    class CameraManager
+    {
+    public:
+        unsigned int CreateCamera(const Pillow::Transform* cameraTransform);
+        void RemoveCamera(unsigned int cameraID);
+
+        void ToggleCamera(unsigned int cameraID, bool isActive);
+        void SetCameraProjection(unsigned int cameraID, ProjectionType projectionType);
+        void SetCameraScreenPosition(unsigned int cameraID, float xPosition, float yPosition);
+        void SetCameraScreenSize(unsigned int cameraID, float xSize, float ySize);
+
+        bool IsCameraActive(unsigned int cameraID) { return m_CameraStorage.Active[cameraID]; };
+        ProjectionType GetCameraProjectionType(unsigned int cameraID) { return m_CameraStorage.ProjectionTypes[cameraID]; };
+        const Pillow::Transform* GetCameraTransform(unsigned int cameraID) { return m_CameraStorage.Transforms[cameraID]; };
+        CameraScreenSizeBounds GetCameraScreen(unsigned int cameraID);
+        
+
+        unsigned int GetCameraCount() { return m_CameraCount; };
+
+    private:
+        Quilt::Cameras m_CameraStorage;
+        unsigned int m_CameraCount = 0;
     };
 }

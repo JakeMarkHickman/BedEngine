@@ -18,7 +18,7 @@ Source="QuiltRenderEngine/Source"
 Includes="$SharedDependencies -I$Source $GLFW -I$Dependencies/stb_image"
 
 OpenGL="$Source/OpenGl"
-Cpps="$Source/Duvet.cpp $Source/Coverlet.cpp $Source/Comforter.cpp $Source/Texture.cpp $Dependencies/stb_image/stb_image.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
+Cpps="$Source/Duvet.cpp $Source/Coverlet.cpp $Source/Comforter.cpp $Source/GPUBuffer.cpp $Source/Texture.cpp $Source/Camera.cpp $Dependencies/stb_image/stb_image.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
 Flags="-std=c++20 -Wno-c++20-extensions"
 Predef=""
 OutputFile=""

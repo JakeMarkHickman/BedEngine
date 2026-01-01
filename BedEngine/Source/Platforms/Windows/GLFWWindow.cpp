@@ -261,55 +261,6 @@ bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
 
 void Bed::GLFWWindow::UpdateWindow()
 {
-    int width;
-    int height;
-    glfwGetWindowSize(window, &width, &height);
-    ResizeWindow(width, height);
-
-    /*
-    // Render here 
-    renderer->Clear();
-
-    //Render Everything
-    glEnable(GL_DEPTH_TEST);
-    renderer->Draw(va3D, ib3D, shader3D);
-
-    glEnable(GL_DEPTH_TEST);
-    renderer->Draw(va2D, ib2D, shader2D);
-    renderer->DrawInstanced(va2D, ib2D, ivb2D, shader2D);
-
-    glDisable(GL_DEPTH_TEST);
-    renderer->Draw(vaUI, ibUI, shaderUI);
-    renderer->DrawInstanced(vaUI, ibUI, ivbUI, shaderUI);
-
-    //Unbind Everything
-    Bed::TextureManager::UnbindTextures();
-
-    shader3D->Unbind();
-    vb3D->Unbind();
-    ib3D->Unbind();
-    va3D->Unbind();
-    ivb3D->Unbind();
-    iva3D->Unbind();
-    pointLightBuffer->Unbind();
-    directionalLightBuffer->Unbind();
-    spotLightBuffer->Unbind();
-
-    shader2D->Unbind();
-    vb2D->Unbind();
-    ib2D->Unbind();
-    va2D->Unbind();
-    ivb2D->Unbind();
-    iva2D->Unbind();
-
-    shaderUI->Unbind();
-    vbUI->Unbind();
-    ibUI->Unbind();
-    vaUI->Unbind();
-    ivbUI->Unbind();
-    ivaUI->Unbind();
-    */
-
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
 
@@ -319,14 +270,15 @@ void Bed::GLFWWindow::UpdateWindow()
 
 bool Bed::GLFWWindow::IsWindowOpen()
 {
+    int width;
+    int height;
+    glfwGetWindowSize(window, &width, &height);
+    ResizeWindow(width, height);
     return !glfwWindowShouldClose(window);
 }
 
 void Bed::GLFWWindow::CloseWindow()
 {
-    /*delete shader3D;
-    delete shader2D;
-    delete shaderUI;*/
     glfwTerminate();
 }
 
@@ -334,8 +286,6 @@ void Bed::GLFWWindow::ResizeWindow(int width, int height)
 {
     if(m_WindowSize.Width != width || m_WindowSize.Height != height)
     {
-        //TODO: make this use Quilt
-        glViewport(0, 0, width, height);
         Bed::Window::ResizeWindow(width, height);
     }
 }

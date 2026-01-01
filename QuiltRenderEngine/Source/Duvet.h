@@ -22,11 +22,11 @@ namespace Quilt
         static unsigned int CreateMesh(const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform);
         static void RemoveMesh(const unsigned int& meshHandle);
 
-        static unsigned int CreateCamera(const Pillow::Transform* transform);
+        static unsigned int CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize);
 
         static void CreateTexture(const std::string texturePath, const TextureFiltering filter, const unsigned int& meshHandle);
 
-        static void SetViewPort(int width, int hight) { GLCall(glViewport(0, 0, width, hight)); };
+        static void SetViewPort(int width, int height) { WindowWidth = width; WindowHeight = height; };
 
         static void Draw();
 
@@ -37,7 +37,10 @@ namespace Quilt
 
         inline static std::vector<Quilt::Mesh> m_MeshHandles;
 
-        inline static std::vector<Quilt::Camera> m_Cameras;
+        inline static Quilt::CameraManager m_CameraManager;
+
+        inline static int WindowWidth = 0;
+        inline static int WindowHeight = 0;
     };
 
     using Renderer = Duvet;

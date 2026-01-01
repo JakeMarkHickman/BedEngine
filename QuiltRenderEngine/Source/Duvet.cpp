@@ -91,16 +91,16 @@ void Quilt::Duvet::RemoveMesh(const unsigned int& meshHandle)
     //meshToRemove = {};
 }
 
-unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform)
+unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize)
 {
-    Quilt::Camera newCamera;
+    unsigned int cameraID = m_CameraManager.CreateCamera(transform);
 
-    newCamera.Transform = transform;
+    m_CameraManager.ToggleCamera(cameraID, isActive);
+    m_CameraManager.SetCameraProjection(cameraID, Quilt::ProjectionType::Orthographic);
+    m_CameraManager.SetCameraScreenPosition(cameraID, xScreenPos, yScreenPos);
+    m_CameraManager.SetCameraScreenSize(cameraID, xScreenSize, yScreenSize);
 
-    m_Cameras.emplace_back(newCamera);
-
-    unsigned int value = m_Cameras.size() - 1;
-    return value;
+    return cameraID;
 }
 
 void Quilt::Duvet::CreateTexture(const std::string texturePath, const TextureFiltering filter, const unsigned int& meshHandle)
@@ -128,89 +128,24 @@ void Quilt::Duvet::Draw()
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-    for (const Quilt::Camera& camera : m_Cameras)
+    for (int camera = 0; camera < m_CameraManager.GetCameraCount(); camera++)
     {
-        if(!camera.IsActive)
+        if(!m_CameraManager.IsCameraActive(camera))
         {
             LOG_INFO("Camera is not active");
             continue;
         }
 
-        m_BatchManager.DrawBatches(m_ShaderManager, camera.Transform);
+        CameraScreenSizeBounds bounds = m_CameraManager.GetCameraScreen(camera);
 
-        /*for (const Quilt::Batch& batch : m_BatchManager.GetBatches())
-        {
-            //bind shader from batch
-            if(!glIsProgram(batch.Data.ShaderID))
-            {
-                LOG_WARN("Batch does not have a shader Bound");
-                continue;
-            }
+        float xSizePercent = bounds.XSize * WindowWidth;
+        float ySizePercent = bounds.YSize * WindowHeight;
 
-            GLCall(glUseProgram(batch.Data.ShaderID));
-            glm::mat4 proj = glm::orthoLH(1.7777f * -5.0f, -1.7777f * -5.0f, -5.0f, 5.0f, -1.0f, 500.0f); // camera
+        float xPosPercent = bounds.XPosition * WindowWidth;
+        float yPosPercent = bounds.YPosition * WindowHeight;
 
-            glm::vec3 camPos = glm::vec3(camera.Transform->Position.x, camera.Transform->Position.y, camera.Transform->Position.z);
-            glm::vec3 targetPos = camPos + glm::vec3(0.0f, 0.0f, 1.0f);
-            glm::vec3 upVec = glm::vec3(0.0f, 1.0f, 0.0f);
+        GLCall(glViewport(xPosPercent, yPosPercent, xSizePercent, ySizePercent));
 
-            glm::mat4 view = glm::lookAtLH(camPos, targetPos, upVec);
-
-            switch (batch.Data.Type)
-            {
-            case BatchType::None:
-                GLCall(glBindVertexArray(batch.Data.VertexLayoutID));
-                GLCall(glBindBuffer(GL_ARRAY_BUFFER, batch.VertexBuffer.Handle));
-                GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.IndexBuffer.Handle));
-
-                GLCall(glDrawElements(GL_TRIANGLES, batch.IndexCount, GL_UNSIGNED_INT, nullptr));
-                break;
-            case BatchType::Static:
-                
-                break;
-            case BatchType::Dynamic:
-                glm::mat4 model;
-                
-                for (const Pillow::Transform* transform : batch.Transforms)
-                {
-                    model = glm::translate(glm::mat4(1.0f), glm::vec3(transform->Position.x, transform->Position.y, transform->Position.z)) *
-                            glm::yawPitchRoll(
-                                glm::radians(transform->Rotation.y),
-                                glm::radians(transform->Rotation.x),
-                                glm::radians(transform->Rotation.z)
-                            ) *
-                            glm::scale(glm::mat4(1.0f), glm::vec3(transform->Scale.x, transform->Scale.y, transform->Scale.z));
-
-                    m_ShaderManager.SetUniformMat4f(batch.Data.ShaderID, "u_Model", model);
-                    m_ShaderManager.SetUniformMat4f(batch.Data.ShaderID, "u_View", view);
-                    m_ShaderManager.SetUniformMat4f(batch.Data.ShaderID, "u_Projection", proj);
-
-                    int samplers[32];
-                    for(int i = 0; i < 32; ++i)
-                    {
-                        samplers[i] = i;
-                    } 
-
-                    m_ShaderManager.SetUniform1iv(batch.Data.ShaderID, "u_Textures", 32, samplers);
-
-                    for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
-                    {
-                        GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
-                        GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
-                    }
-
-                    GLCall(glBindVertexArray(batch.Data.VertexLayoutID));
-                    GLCall(glBindBuffer(GL_ARRAY_BUFFER, batch.VertexBuffer.Handle));
-                    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, batch.IndexBuffer.Handle));
-
-                    GLCall(glDrawElements(GL_TRIANGLES, batch.IndexCount, GL_UNSIGNED_INT, nullptr));
-                }
-                
-                break;
-            case BatchType::Instanced:
-                
-                break;
-            }
-        }*/
+        m_BatchManager.DrawBatches(m_ShaderManager, m_CameraManager.GetCameraTransform(camera), xSizePercent, ySizePercent);
     }
 }

@@ -120,8 +120,9 @@ namespace Bed
     {
         if(world.HasComponents<Pillow::Transform, Bed::Camera>(entity))
         {
+            Bed::Camera* cam = world.GetComponent<Bed::Camera>(entity);        
             Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
-            Quilt::Duvet::CreateCamera(transform);
+            cam->Handle = Quilt::Duvet::CreateCamera(transform, cam->Active, cam->XScreenPosition, cam->YScreenPosition, cam->XScreenSize, cam->YScreenSize);
         }
     }
 
@@ -166,12 +167,13 @@ namespace Bed
         {
             return; // Return if the Window wasnt created
         }
-
         Update();
     }
 
     void Application::Update()
     {
+        LOG_DEBUG(Bed::Window::GetWindowSize().Width);
+
         //TODO: This needs to be better
         //Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
 
@@ -193,6 +195,8 @@ namespace Bed
         //Game Loop
         while (m_Window->IsWindowOpen())
         {
+            Quilt::Duvet::SetViewPort(Bed::Window::GetWindowSize().Width, Bed::Window::GetWindowSize().Height);
+
             m_Time.CalculateDeltaTime();
 
             m_Game->Update(); //Game update
@@ -232,8 +236,8 @@ namespace Bed
             }
 
             Quilt::Duvet::Draw();
-            
-            m_Window->UpdateWindow(); // Update the platform App
+
+            m_Window->UpdateWindow(); // Update the window buffers
         }
         
         m_Window->CloseWindow(); // Close the window

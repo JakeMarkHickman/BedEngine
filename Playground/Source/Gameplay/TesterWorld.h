@@ -89,12 +89,16 @@ namespace Test
                                                         Mattress::PhysicsObject(),
                                                         Bed::Texture("Assets/Resources/Textures/LittleGuy.png"));
 
-            uint64_t TestCam = GetECS().CreateEntity(world1);
-            GetECS().AttachComponents(world1, TestCam, Pillow::Transform(Pillow::Vector3f(0.0f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
+            uint64_t PlayerCam = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, PlayerCam, Pillow::Transform(Pillow::Vector3f(0.0f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
                                                         Bed::PlayerTag(),
                                                         Mattress::PhysicsObject(),
-                                                        Bed::Camera());
+                                                        Bed::Camera(0.0f, 0.0f, 1.0f, 1.0f)); 
+
+            uint64_t testCam = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, testCam, Pillow::Transform(Pillow::Vector3f(0.0f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
+                                                        Bed::Camera(0.375f, 0.75f, 0.25f, 0.25f));
 
             uint64_t TestEnt2 = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, TestEnt2, Bed::Sprite(), 

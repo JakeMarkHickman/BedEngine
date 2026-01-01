@@ -20,6 +20,8 @@ namespace Bed
         virtual void ResizeWindow(int width, int height);
         virtual void RenameWindow(const char* title);
 
+        
+
         //TODO: This is for testing only
         static GLFWwindow* GetWindow() { return window; };
 

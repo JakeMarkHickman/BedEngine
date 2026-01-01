@@ -23,8 +23,9 @@ unsigned int Quilt::Comforter::CreateMesh(BatchData& batchData, const std::vecto
 
     LOG_DEBUG("batch ID: ", batchId);
 
-    PopulateBatchBuffer(batchId, Quilt::BufferType::Vertex, vertices.data(), vertices.size(), vertexOffset);
-    PopulateBatchBuffer(batchId, Quilt::BufferType::Index, indices.data(), indices.size(), indexOffset);
+    //Populate Buffers
+    m_BufferManager.PopulateBuffer(m_BatchStorage.VertexBufferHandles[batchId], vertices.data(), vertices.size(), vertexOffset);
+    m_BufferManager.PopulateBuffer(m_BatchStorage.IndexBufferHandles[batchId], indices.data(), indices.size(), indexOffset);
 
     m_Meshes.BatchIDs[newMesh] = batchId;
     m_Meshes.LocalIndices[newMesh] = m_BatchStorage.Transforms.size() - 1; //TODO: Set the transform location
@@ -93,10 +94,10 @@ unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned
     GLCall(glBindVertexArray(m_BatchStorage.VertexLayoutHandles[batch]));
 
     //Set up vertex buffer
-    m_BatchStorage.VertexBufferHandles[batch] = CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
+    m_BatchStorage.VertexBufferHandles[batch] = m_BufferManager.CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
 
     //Set up index buffer
-    m_BatchStorage.IndexBufferHandles[batch] = CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
+    m_BatchStorage.IndexBufferHandles[batch] = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
 
     size_t stride = 13 * sizeof(float);
 
@@ -205,7 +206,7 @@ void Quilt::Comforter::RemoveBatch(unsigned int meshHandle)
     //return last;
 }
 
-void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform)
+void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform, float xSizePercent, float ySizePercent)
 {
     for(unsigned int handle : m_HandleSet.GetAllData())
     {
@@ -218,7 +219,15 @@ void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow:
 
         GLCall(glUseProgram(m_BatchStorage.ShaderHandles[handle]));
 
-        glm::mat4 proj = glm::orthoLH(1.7777f * -5.0f, -1.7777f * -5.0f, -5.0f, 5.0f, -1.0f, 500.0f); // camera
+        float aspect = xSizePercent / ySizePercent;
+        float zoom = 5.0f;
+
+        float left = -zoom * aspect;
+        float right = zoom * aspect;
+        float bottom = -zoom;
+        float top = zoom;
+
+        glm::mat4 proj = glm::orthoLH(left, right, bottom, top, -1.0f, 500.0f); // camera
 
         glm::vec3 camPos = glm::vec3(cameraTransform->Position.x, cameraTransform->Position.y, cameraTransform->Position.z);
         glm::vec3 targetPos = camPos + glm::vec3(0.0f, 0.0f, 1.0f);
@@ -265,10 +274,11 @@ void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow:
                     //}
 
                     GLCall(glBindVertexArray(m_BatchStorage.VertexLayoutHandles[handle]));
-                    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_GPUBufferStroage.Handles[m_BatchStorage.VertexBufferHandles[handle]]));
-                    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_GPUBufferStroage.Handles[m_BatchStorage.IndexBufferHandles[handle]]));
+                    m_BufferManager.BindBuffer(m_BatchStorage.VertexBufferHandles[handle]);
+                    m_BufferManager.BindBuffer(m_BatchStorage.IndexBufferHandles[handle]);
 
-                    GLCall(glDrawElements(GL_TRIANGLES, m_GPUBufferStroage.DataCounts[m_BatchStorage.IndexBufferHandles[handle]], GL_UNSIGNED_INT, nullptr));
+                    //TODO: This draw seems tedious ideally this would be non-trivial -> m_BufferManager.GetBufferStorage().DataCounts[m_BatchStorage.IndexBufferHandles[handle]]
+                    GLCall(glDrawElements(GL_TRIANGLES, m_BufferManager.GetBufferStorage().DataCounts[m_BatchStorage.IndexBufferHandles[handle]], GL_UNSIGNED_INT, nullptr));
                 }
                 break;
 
@@ -283,62 +293,13 @@ void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow:
     }
 }
 
-unsigned int Quilt::Comforter::CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
-{
-    uint32_t buffer = m_GPUBufferCount;
-    m_GPUBufferCount++;
-
-    LOG_DEBUG("GPU BUFFER CREATE HERE", buffer);
-
-    m_GPUBufferStroage.Types.resize(m_GPUBufferCount);
-    m_GPUBufferStroage.DataSizes.resize(m_GPUBufferCount);
-    m_GPUBufferStroage.DataCounts.resize(m_GPUBufferCount);
-    m_GPUBufferStroage.Handles.resize(m_GPUBufferCount);
-
-    m_GPUBufferStroage.Types[buffer] = type;
-    m_GPUBufferStroage.DataSizes[buffer] = dataSize;
-    m_GPUBufferStroage.DataCounts[buffer] = dataCount;
-
-    unsigned int bufferType;
-
-    switch (type)
-    {
-    case Quilt::BufferType::Vertex:
-        bufferType = GL_ARRAY_BUFFER;
-        break;
-
-    case Quilt::BufferType::Index:
-        bufferType = GL_ELEMENT_ARRAY_BUFFER;
-        break;
-
-    case Quilt::BufferType::Instance:
-        bufferType = GL_ARRAY_BUFFER;
-        break;
-
-    case Quilt::BufferType::Storage:
-        bufferType = GL_SHADER_STORAGE_BUFFER;
-        break;
-    
-    default:
-        LOG_FATAL("Undefined buffer type");
-        break;
-    }
-
-    GLCall(glGenBuffers(1, &m_GPUBufferStroage.Handles[buffer]));
-    GLCall(glBindBuffer(bufferType, m_GPUBufferStroage.Handles[buffer]));
-    
-    GLCall(glBufferData(bufferType, m_GPUBufferStroage.DataSizes[buffer] * m_GPUBufferStroage.DataCounts[buffer], nullptr, GL_DYNAMIC_DRAW)); //TODO: This needs to change later to support shader storage and instances
-
-    return buffer;
-}
-
 unsigned int Quilt::Comforter::CreateHandle(unsigned int BatchHandle)
 {
     unsigned int createdHandle = m_CurrentHandle;
 
     LOG_DEBUG("Creating handle: ", createdHandle, " with batch handle ", BatchHandle);
 
-    m_HandleSet.Insert(m_CurrentHandle, BatchHandle);j
+    m_HandleSet.Insert(m_CurrentHandle, BatchHandle);
     m_CurrentHandle++;
 
     return createdHandle;
