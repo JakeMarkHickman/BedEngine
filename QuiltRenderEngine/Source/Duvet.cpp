@@ -128,7 +128,7 @@ void Quilt::Duvet::Draw()
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 
-    for (int camera = 0; camera < m_CameraManager.GetCameraCount(); camera++)
+    for (unsigned int camera : m_CameraManager.GetAllCameras())
     {
         if(!m_CameraManager.IsCameraActive(camera))
         {

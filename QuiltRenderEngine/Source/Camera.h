@@ -48,11 +48,15 @@ namespace Quilt
         const Pillow::Transform* GetCameraTransform(unsigned int cameraID) { return m_CameraStorage.Transforms[cameraID]; };
         CameraScreenSizeBounds GetCameraScreen(unsigned int cameraID);
         
-
+        std::vector<unsigned int> GetAllCameras() { return m_Cameras; };
         unsigned int GetCameraCount() { return m_CameraCount; };
 
     private:
         Quilt::Cameras m_CameraStorage;
         unsigned int m_CameraCount = 0;
+        std::vector<unsigned int> m_Cameras;
+        std::vector<unsigned int> m_RemovedCameras;
+
+        //TODO: Track the ammount of cameras currenctly active prefrably having a max of 10 cameras but having it toggleable would be nice
     };
 }

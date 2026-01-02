@@ -84,7 +84,6 @@ namespace Quilt
         unsigned int GetHandle(unsigned int id) { return m_HandleSet.GetData(id); };
 
         unsigned int NewCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
-        void PopulateBatchBuffer(unsigned int batchHandle, Quilt::BufferType bufferType, const void* data, unsigned int size, unsigned int offset);
         void RemoveTransform(unsigned int batchHandle);
         void RemoveBatch(unsigned int meshHandle);
 
@@ -98,7 +97,6 @@ namespace Quilt
 
         BufferManager m_BufferManager;
 
-        std::vector<Quilt::Batch> m_Batches;
         Batches m_BatchStorage;
         uint32_t m_BatchCount = 0;
 
@@ -111,11 +109,8 @@ namespace Quilt
         Frame::SparseSet<unsigned int> m_HandleSet;
         unsigned int m_CurrentHandle = 0;
 
-        GPUBuffers m_GPUBufferStroage;
-        uint32_t m_GPUBufferCount = 0;
-
         std::vector<unsigned int> m_batchHandlesToRemove;
     };
 
-    using Batcher = Comforter;
+    using BatchManager = Comforter;
 }

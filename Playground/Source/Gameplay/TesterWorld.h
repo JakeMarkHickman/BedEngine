@@ -15,7 +15,7 @@
 #include <Systems/Renderer/SpriteSystem.h>
 #include "Systems/SpawnerSystem.h"
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
-#include <Bed/Game/GameObjects/Systems/Physics/PhysicsRegisterSystem.h>
+#include <Bed/Game/GameObjects/Systems/TwoPlayerControllerSystem.h>
 
 
 /*
@@ -81,23 +81,38 @@ namespace Test
             //World 1
             uint64_t world1 = GetECS().CreateWorld();
 
-            uint64_t TestEnt = GetECS().CreateEntity(world1);
-            GetECS().AttachComponents(world1, TestEnt, Bed::Sprite(), 
-                                                        Pillow::Transform(0.0f, 0.0f, 1.0f),
+            uint64_t PlayerOne = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, PlayerOne, Bed::Sprite(), 
+                                                        Pillow::Transform(Pillow::Vector3f(-1.5f, 0.0f, 0.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
-                                                        Bed::PlayerTag(),
+                                                        Bed::PlayerOneTag(),
                                                         Mattress::PhysicsObject(),
                                                         Bed::Texture("Assets/Resources/Textures/LittleGuy.png"));
 
-            uint64_t PlayerCam = GetECS().CreateEntity(world1);
-            GetECS().AttachComponents(world1, PlayerCam, Pillow::Transform(Pillow::Vector3f(0.0f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
+            uint64_t PlayerOneCam = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, PlayerOneCam, Pillow::Transform(Pillow::Vector3f(-1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
-                                                        Bed::PlayerTag(),
+                                                        Bed::PlayerOneTag(),
                                                         Mattress::PhysicsObject(),
-                                                        Bed::Camera(0.0f, 0.0f, 1.0f, 1.0f)); 
+                                                        Bed::Camera(0.0f, 0.0f, 0.5f, 1.0f));
 
-            uint64_t testCam = GetECS().CreateEntity(world1);
-            GetECS().AttachComponents(world1, testCam, Pillow::Transform(Pillow::Vector3f(0.0f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
+            uint64_t PlayerTwo = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, PlayerTwo, Bed::Sprite(), 
+                                                        Pillow::Transform(Pillow::Vector3f(1.5f, 0.0f, 0.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
+                                                        Bed::Input(),
+                                                        Bed::PlayerTwoTag(),
+                                                        Mattress::PhysicsObject(),
+                                                        Bed::Texture("Assets/Resources/Textures/LittleGuy.png"));
+
+            uint64_t PlayerTwoCam = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, PlayerTwoCam, Pillow::Transform(Pillow::Vector3f(1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
+                                                        Bed::Input(),
+                                                        Bed::PlayerTwoTag(),
+                                                        Mattress::PhysicsObject(),
+                                                        Bed::Camera(0.5f, 0.0f, 0.5f, 1.0f)); 
+
+            uint64_t MiniMapCam = GetECS().CreateEntity(world1);
+            GetECS().AttachComponents(world1, MiniMapCam, Pillow::Transform(Pillow::Vector3f(0.0f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Camera(0.375f, 0.75f, 0.25f, 0.25f));
 
             uint64_t TestEnt2 = GetECS().CreateEntity(world1);
@@ -112,7 +127,7 @@ namespace Test
 
             m_ecs.AddSystem(world1, Bed::InputSystem);
             m_ecs.AddSystem(world1, Bed::SpriteSystem);
-            m_ecs.AddSystem(world1, Bed::PlayerControllerSystem);
+            m_ecs.AddSystem(world1, Bed::TwoPlayerControllerSystem);
             m_ecs.AddSystem(world1, SpawnerSystem);
 
             /*

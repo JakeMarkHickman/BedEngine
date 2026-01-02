@@ -122,43 +122,6 @@ unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned
     return handle;
 }
 
-void Quilt::Comforter::PopulateBatchBuffer(unsigned int batchHandle, Quilt::BufferType bufferType, const void* data, unsigned int size, unsigned int offset)
-{
-    unsigned int bufferHandle;
-    unsigned int type;
-
-    switch(bufferType)
-    {
-        case Quilt::BufferType::Vertex:
-            bufferHandle = m_BatchStorage.VertexBufferHandles[batchHandle];
-            LOG_DEBUG("Buffer Handle: ", bufferHandle);
-            type = GL_ARRAY_BUFFER;
-            break;
-
-        case Quilt::BufferType::Index:
-            bufferHandle = m_BatchStorage.IndexBufferHandles[batchHandle];
-            type = GL_ELEMENT_ARRAY_BUFFER;
-            break;
-        
-        case Quilt::BufferType::Instance:
-            LOG_WARN("Instance Buffer not yet implemented");
-            break;
-
-        case Quilt::BufferType::Storage:
-            LOG_WARN("Storage Buffer not yet implemented");
-            break;
-    }
-
-    LOG_DEBUG("Buffer Handle to populate: ", bufferHandle);
-    LOG_DEBUG("Offset to populate with: ", offset);
-    LOG_DEBUG("Data size to populate with: ", size);
-
-    GLCall(glBindBuffer(type, m_GPUBufferStroage.Handles[bufferHandle]));
-    GLCall(glBufferSubData(type, offset * m_GPUBufferStroage.DataSizes[bufferHandle], size * m_GPUBufferStroage.DataSizes[bufferHandle], data));
-
-    LOG_DEBUG("FINISHED POPULATING BUFFER: ", bufferHandle);
-}
-
 void Quilt::Comforter::RemoveBatch(unsigned int meshHandle)
 {
     unsigned int handle = m_Meshes.BatchIDs[meshHandle];
@@ -168,6 +131,7 @@ void Quilt::Comforter::RemoveBatch(unsigned int meshHandle)
     LOG_DEBUG("Last handle: ", last);
 
     //Swap the index with the last in array
+    /*
     std::swap(m_BatchStorage.Types[handle], m_BatchStorage.Types[last]);
     std::swap(m_BatchStorage.ShaderHandles[handle], m_BatchStorage.ShaderHandles[last]);
     std::swap(m_BatchStorage.VertexLayoutHandles[handle], m_BatchStorage.VertexLayoutHandles[last]);
@@ -203,7 +167,7 @@ void Quilt::Comforter::RemoveBatch(unsigned int meshHandle)
 
     m_BatchCount--;
 
-    //return last;
+    //return last;*/
 }
 
 void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform, float xSizePercent, float ySizePercent)

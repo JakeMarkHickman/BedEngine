@@ -35,8 +35,6 @@ namespace Quilt
         inline static Quilt::Comforter m_BatchManager;
         inline static Quilt::TextureManager m_TextureManager;
 
-        inline static std::vector<Quilt::Mesh> m_MeshHandles;
-
         inline static Quilt::CameraManager m_CameraManager;
 
         inline static int WindowWidth = 0;

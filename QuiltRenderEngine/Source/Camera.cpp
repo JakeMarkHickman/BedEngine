@@ -2,8 +2,21 @@
 
 unsigned int Quilt::CameraManager::CreateCamera(const Pillow::Transform* cameraTransform)
 {
-    unsigned int cameraID = m_CameraCount;
+    unsigned int cameraID;
+
+    if(!m_RemovedCameras.empty())
+    {
+        cameraID = m_RemovedCameras.back();
+        m_Cameras.push_back(cameraID);
+        m_RemovedCameras.pop_back();
+
+        return cameraID;
+    }
+
+    cameraID = m_CameraCount;
     m_CameraCount++;
+
+    m_Cameras.push_back(cameraID);
 
     m_CameraStorage.Active.resize(m_CameraCount);
     m_CameraStorage.ProjectionTypes.resize(m_CameraCount);
