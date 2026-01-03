@@ -134,6 +134,7 @@ namespace Bed
 
         std::unordered_map<uint64_t, uint64_t> m_ComponentRegisty;
         std::vector<Bed::MemoryPool> m_ComponentPool;
+
         std::vector<Frame::SparseSet<void*>> m_EntityComponents;
         uint64_t m_RegisteredComponents = 0;
 

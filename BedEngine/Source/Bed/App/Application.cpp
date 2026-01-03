@@ -192,6 +192,13 @@ namespace Bed
 
         m_Game->BeginPlay();
 
+        float fixedFramerate = 60.0f;
+        float UpdateDelay = 1.0f / fixedFramerate;
+        int MaxSteps = 4;
+
+        float currentTimer = 0.0f;
+
+
         //Game Loop
         while (m_Window->IsWindowOpen())
         {
@@ -213,25 +220,34 @@ namespace Bed
                     Have the loop below inside of the physics system and worlds are added into the manager
                     from the ECS that way its a one function call
             */
-            for(auto& world : m_Game->GetActiveWorlds())
+            currentTimer += Time::GetDeltaTime();
+            currentTimer = std::min(currentTimer, UpdateDelay * MaxSteps);
+
+            while(currentTimer >= UpdateDelay)
             {
-                world.second->GetWorldPhysics().Step(Time::GetDeltaTime()); //Physics update
                 
-                //Update Entity Positions from physics step
-                //TODO: Use quieries to test for physics data not a physics object to update
-                //TODO: This could be a call back so that all data/worlds gets registered then
-                for(uint64_t i : world.second->GetAllEntities())
+                for(auto& world : m_Game->GetActiveWorlds())
                 {
-                    if(!world.second->HasComponents<Pillow::Transform, Mattress::PhysicsObject>(i))
+                    world.second->GetWorldPhysics().Step(UpdateDelay); //Physics update
+                    
+                    //Update Entity Positions from physics step
+                    //TODO: Use quieries to test for physics data not a physics object to update
+                    //TODO: This could be a call back so that all data/worlds gets registered then
+                    for(uint64_t i : world.second->GetAllEntities())
                     {
-                        continue;
+                        if(!world.second->HasComponents<Pillow::Transform, Mattress::PhysicsObject>(i))
+                        {
+                            continue;
+                        }
+
+                        Pillow::Transform* transform = world.second->GetComponent<Pillow::Transform>(i);
+                        Mattress::PhysicsObject* phyObj = world.second->GetComponent<Mattress::PhysicsObject>(i);
+
+                        //Update the Position of the Object
+                        transform->Position = phyObj->Position;
                     }
 
-                    Pillow::Transform* transform = world.second->GetComponent<Pillow::Transform>(i);
-                    Mattress::PhysicsObject* phyObj = world.second->GetComponent<Mattress::PhysicsObject>(i);
-
-                    //Update the Position of the Object
-                    transform->Position = phyObj->Position;
+                    currentTimer -= UpdateDelay;
                 }
             }
 

@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <SleepTrace.h>
 
 unsigned int Quilt::CameraManager::CreateCamera(const Pillow::Transform* cameraTransform)
 {
@@ -29,6 +30,17 @@ unsigned int Quilt::CameraManager::CreateCamera(const Pillow::Transform* cameraT
     m_CameraStorage.Transforms[cameraID] = cameraTransform;
     
     return cameraID;
+}
+
+void Quilt::CameraManager::RemoveCamera(unsigned int cameraID)
+{
+    for(unsigned int cam : m_Cameras)
+    {
+        if(cam == cameraID)
+        {
+            LOG_DEBUG("Remove cam");
+        }
+    }
 }
 
 void Quilt::CameraManager::ToggleCamera(unsigned int cameraID, bool isActive)
