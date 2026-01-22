@@ -249,7 +249,7 @@ namespace Bed
 
                     currentTimer -= UpdateDelay;
                 }
-            }
+            } 
 
             Quilt::Duvet::Draw();
 

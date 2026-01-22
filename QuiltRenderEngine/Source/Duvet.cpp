@@ -67,6 +67,15 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
     data.Type = BatchType::Dynamic;
     //TODO: use vertex layout too!
 
+    //Create the batch and assign data
+    unsigned int batchHandle = m_BatchManager.GetOrCreateBatch(16000, 24000, data);
+
+    //Create the Mesh Handle allowing for a 
+    unsigned int newMesh = m_MeshManager.CreateMeshHandle();
+    m_MeshManager.SetMeshBatchID(newMesh, batchHandle);
+    //m_MeshManager.SetMeshTransformOffset(newMesh, );
+
+
     unsigned int newMesh = m_BatchManager.CreateMesh(data, vertices, indices, transform);
 
     return newMesh;

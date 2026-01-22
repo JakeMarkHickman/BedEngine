@@ -9,6 +9,7 @@ namespace Bed
     public:
         static float GetDeltaTime() { return m_DeltaTime; };
         void CalculateDeltaTime();
+        
     private:
         inline static float m_DeltaTime = 0.0f;
     

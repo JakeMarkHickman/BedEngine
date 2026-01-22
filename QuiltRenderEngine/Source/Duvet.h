@@ -33,6 +33,7 @@ namespace Quilt
     private:
         inline static Quilt::Coverlet m_ShaderManager;
         inline static Quilt::Comforter m_BatchManager;
+        inline static Quilt::MeshManager m_MeshManager;
         inline static Quilt::TextureManager m_TextureManager;
 
         inline static Quilt::CameraManager m_CameraManager;

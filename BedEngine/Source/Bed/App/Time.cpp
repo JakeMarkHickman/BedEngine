@@ -1,4 +1,5 @@
 #include "Time.h"
+#include <SleepTrace.h>
 
 void Bed::Time::CalculateDeltaTime()
 {

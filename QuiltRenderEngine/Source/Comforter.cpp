@@ -3,14 +3,42 @@
 #include "Vertex.h"
 #include "OpenGl/OpenDebugger.h"
 
-unsigned int Quilt::Comforter::CreateMesh(BatchData& batchData, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform)
+
+unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
+{
+    if (m_BatchStorage.empty())
+    {
+        return CreateBatchHandle(vertexCount, indexCount, batchData);
+    }
+
+    //TODO: Decide when to get/create a new batch
+    CreateBatchHandle(vertexCount, indexCount, batchData);
+}
+
+unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
+{
+    unsigned int newBatchHandle = m_BatchHandleCount;
+    m_BatchHandleCount++;
+
+    Quilt::Batch newBatch;
+    m_BatchStorage.Insert(newBatchHandle, newBatch);
+
+    return newBatchHandle;
+}
+
+unsigned int Quilt::Comforter::GetBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
+{
+    
+}
+
+/*unsigned int Quilt::Comforter::CreateMesh(BatchData& batchData, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform)
 {
     uint32_t newMesh = m_MeshCount;
     m_MeshCount++;
 
     //Allocate Space for the new meshes
     m_Meshes.BatchIDs.resize(m_MeshCount);
-    m_Meshes.LocalIndices.resize(m_MeshCount);
+    m_Meshes.TransformOffset.resize(m_MeshCount);
     m_Meshes.VertexOffsets.resize(m_MeshCount);
     m_Meshes.IndexOffsets.resize(m_MeshCount);
     m_Meshes.VertexCounts.resize(m_MeshCount);
@@ -28,7 +56,8 @@ unsigned int Quilt::Comforter::CreateMesh(BatchData& batchData, const std::vecto
     m_BufferManager.PopulateBuffer(m_BatchStorage.IndexBufferHandles[batchId], indices.data(), indices.size(), indexOffset);
 
     m_Meshes.BatchIDs[newMesh] = batchId;
-    m_Meshes.LocalIndices[newMesh] = m_BatchStorage.Transforms.size() - 1; //TODO: Set the transform location
+    //TODO: why is the transform not linked to the batch
+    m_Meshes.TransformOffset[newMesh] = m_BatchStorage.Transforms.size() - 1; //TODO: Set the transform location
     m_Meshes.VertexOffsets[newMesh] = vertexOffset;
     m_Meshes.IndexOffsets[newMesh] = indexOffset;
     m_Meshes.VertexCounts[newMesh] = vertices.size();
@@ -130,44 +159,6 @@ void Quilt::Comforter::RemoveBatch(unsigned int meshHandle)
 
     LOG_DEBUG("Last handle: ", last);
 
-    //Swap the index with the last in array
-    /*
-    std::swap(m_BatchStorage.Types[handle], m_BatchStorage.Types[last]);
-    std::swap(m_BatchStorage.ShaderHandles[handle], m_BatchStorage.ShaderHandles[last]);
-    std::swap(m_BatchStorage.VertexLayoutHandles[handle], m_BatchStorage.VertexLayoutHandles[last]);
-
-    std::swap(m_BatchStorage.VertexBufferHandles[handle], m_BatchStorage.VertexBufferHandles[last]);
-    std::swap(m_BatchStorage.IndexBufferHandles[handle], m_BatchStorage.IndexBufferHandles[last]);
-
-    std::swap(m_BatchStorage.VertexCounts[handle], m_BatchStorage.VertexCounts[last]);
-    std::swap(m_BatchStorage.IndexCounts[handle], m_BatchStorage.IndexCounts[last]);
-
-    std::swap(m_BatchStorage.Transforms[handle], m_BatchStorage.Transforms[last]);
-
-    LOG_DEBUG("Swaping: ", handle, " and ", last);
-
-    //RelocateIndex(m_IndexToHandle[], index);
-    m_HandleSet.Swap(handle, last);
-    m_batchHandlesToRemove.push_back(handle);
-
-    //TODO: Swap to deffered updates
-
-    //Remove the last index
-    m_BatchStorage.Types.pop_back();
-    m_BatchStorage.ShaderHandles.pop_back();
-    m_BatchStorage.VertexLayoutHandles.pop_back();
-
-    m_BatchStorage.VertexBufferHandles.pop_back();
-    m_BatchStorage.IndexBufferHandles.pop_back();
-
-    m_BatchStorage.VertexCounts.pop_back();
-    m_BatchStorage.IndexCounts.pop_back();
-
-    m_BatchStorage.Transforms.pop_back();
-
-    m_BatchCount--;
-
-    //return last;*/
 }
 
 void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform, float xSizePercent, float ySizePercent)
@@ -272,4 +263,4 @@ unsigned int Quilt::Comforter::CreateHandle(unsigned int BatchHandle)
 void Quilt::Comforter::RelocateIndex(unsigned int handle, unsigned int index)
 {
     
-}
+}*/
