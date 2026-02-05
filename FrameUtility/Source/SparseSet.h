@@ -52,7 +52,7 @@ namespace Frame
             return id < m_Sparse.size() && m_Sparse[id] != -1;
         }
 
-        T GetData(uint64_t id)
+        T& GetData(uint64_t id)
         {
             return m_Data[m_Sparse[id]];
         }

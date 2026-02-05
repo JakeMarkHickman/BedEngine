@@ -5,22 +5,22 @@
 #Build Path
 buildPath="build"                           # The path to build to
 StaticBuild=true
-Debug=true
+Debug=false
 
 SharedDependencies="-IPillowMath/include -ISleepTraceDebugger/Source -IFrameUtility/Source"
 
 #TODO: THIS IS THE RENDER ENGINE LIB BUILD
 Dependencies="QuiltRenderEngine/Dependencies"
-GLFW="-IBedEngine/Dependencies/GLEW/include -IBedEngine/Dependencies/GLFW/include"
+GLFW="-IBedEngine/Dependencies/GLFW/include"
 
 Source="QuiltRenderEngine/Source"
 
-Includes="$SharedDependencies -I$Source $GLFW -I$Dependencies/stb_image"
+Includes="$SharedDependencies -I$Source $GLFW -I$Dependencies/stb_image -I$Dependencies/GLEW/include"
 
 OpenGL="$Source/OpenGl"
-Cpps="$Source/Duvet.cpp $Source/Coverlet.cpp $Source/Comforter.cpp $Source/GPUBuffer.cpp $Source/Texture.cpp $Source/Camera.cpp $Dependencies/stb_image/stb_image.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
+Cpps="$Source/Duvet.cpp $Source/Coverlet.cpp $Source/Comforter.cpp $Source/GPUBuffer.cpp $Source/Mesh.cpp $Source/Texture.cpp $Source/Camera.cpp $Dependencies/stb_image/stb_image.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
 Flags="-std=c++20 -Wno-c++20-extensions"
-Predef=""
+Predef="-DGLEW_STATIC"
 OutputFile=""
 
 if $StaticBuild; then
@@ -88,10 +88,10 @@ GameOutputFile="Playground"                     # No extention as we will set it
 EngineOutputFile=""                # The engine will always be a dynamic lib
 
 #Includes
-GameIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/GLEW/include -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source " #-I$Dependencies/glm
+GameIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source -IQuiltRenderEngine/Dependencies/GLEW/include" #-I$Dependencies/glm
 EngineIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/GLFW/include
-                -I$Dependencies/GLEW/include -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include
-                -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source" #-I$Dependencies/glm
+                -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include
+                -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source -IQuiltRenderEngine/Dependencies/GLEW/include"
 
 #Libarys
 GameLibs=""             # Libs for the game
@@ -156,7 +156,7 @@ else
     PlatformSpecficCpps=$Platforms/Windows/GLFWWindow.cpp
 
     # Set Variables
-    EngineLibs="$EngineLibs BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -luser32 -lkernel32 -lgdi32 -lwinmm -lshell32 -lBedEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
+    EngineLibs="$EngineLibs BedEngine/Dependencies/GLFW/glfw3_mt.lib -lopengl32 -luser32 -lkernel32 -lgdi32 -lwinmm -lshell32 -lQuiltRenderEngine/Dependencies/GLEW/lib/Release/x64/glew32s.lib"
     GamePredef="$GamePredef -DBED_WINDOWS_PLATFORM"
 
     GameFlags="$GameFlags -Wl,/subsystem:console"

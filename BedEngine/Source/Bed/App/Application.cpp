@@ -165,15 +165,21 @@ namespace Bed
         //TODO: make a system to automatically recognise monitor size and scale correctly
         if(!m_Window->CreateWindow(800, 450, m_ApplicationName)) // Check to make sure the Window is created
         {
-            return; // Return if the Window wasnt created
+            LOG_FATAL("Window not Created!");
+            return;
         }
+
+        if(!Quilt::Duvet::IsContextValid()) // Check to make sure the context is created
+        {
+            LOG_FATAL("Context not Created!");
+            return;
+        }
+
         Update();
     }
 
     void Application::Update()
     {
-        LOG_DEBUG(Bed::Window::GetWindowSize().Width);
-
         //TODO: This needs to be better
         //Bed::ContextRegistry& instance = Bed::ContextRegistry::GetInstance();
 
@@ -251,6 +257,9 @@ namespace Bed
                 }
             } 
 
+            //Clear the screen
+            Quilt::Duvet::Clear();
+            //Draw
             Quilt::Duvet::Draw();
 
             m_Window->UpdateWindow(); // Update the window buffers

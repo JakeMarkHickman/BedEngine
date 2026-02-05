@@ -3,7 +3,6 @@
 #include <Platforms/Window.h>
 
 //TODO: This needs to change
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 namespace Bed
@@ -19,8 +18,6 @@ namespace Bed
         virtual void CloseWindow();
         virtual void ResizeWindow(int width, int height);
         virtual void RenameWindow(const char* title);
-
-        
 
         //TODO: This is for testing only
         static GLFWwindow* GetWindow() { return window; };

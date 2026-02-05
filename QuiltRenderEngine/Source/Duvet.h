@@ -28,11 +28,16 @@ namespace Quilt
 
         static void SetViewPort(int width, int height) { WindowWidth = width; WindowHeight = height; };
 
+        static bool IsContextValid();
+        //Draw all registered meshes to the screen
         static void Draw();
+        //Clears the screen from previous draw call
+        static void Clear();
 
     private:
         inline static Quilt::Coverlet m_ShaderManager;
         inline static Quilt::Comforter m_BatchManager;
+        inline static Quilt::BufferManager m_BufferManager;
         inline static Quilt::MeshManager m_MeshManager;
         inline static Quilt::TextureManager m_TextureManager;
 

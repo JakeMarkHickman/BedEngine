@@ -4,129 +4,34 @@
 #include "OpenGl/OpenDebugger.h"
 
 
-unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
+unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData)
 {
-    if (m_BatchStorage.empty())
+    /*if (m_BatchStorage.empty())
     {
-        return CreateBatchHandle(vertexCount, indexCount, batchData);
-    }
+        return CreateBatchHandle(batchData);
+    }*/
 
     //TODO: Decide when to get/create a new batch
-    CreateBatchHandle(vertexCount, indexCount, batchData);
+    return CreateBatchHandle(vertexBufferHandle, indexBufferHandle, batchData);
 }
 
-unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
+unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData)
 {
     unsigned int newBatchHandle = m_BatchHandleCount;
     m_BatchHandleCount++;
 
     Quilt::Batch newBatch;
-    m_BatchStorage.Insert(newBatchHandle, newBatch);
+    newBatch.Data = batchData;
+    newBatch.VertexBufferHandle = vertexBufferHandle;
+    newBatch.IndexBufferHandle = indexBufferHandle;
 
-    return newBatchHandle;
-}
+    newBatch.VertexCount = 0;
+    newBatch.IndexCount = 0;
 
-unsigned int Quilt::Comforter::GetBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
-{
-    
-}
-
-/*unsigned int Quilt::Comforter::CreateMesh(BatchData& batchData, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform)
-{
-    uint32_t newMesh = m_MeshCount;
-    m_MeshCount++;
-
-    //Allocate Space for the new meshes
-    m_Meshes.BatchIDs.resize(m_MeshCount);
-    m_Meshes.TransformOffset.resize(m_MeshCount);
-    m_Meshes.VertexOffsets.resize(m_MeshCount);
-    m_Meshes.IndexOffsets.resize(m_MeshCount);
-    m_Meshes.VertexCounts.resize(m_MeshCount);
-    m_Meshes.IndexCounts.resize(m_MeshCount);
-
-    unsigned int batchId = GetOrCreateBatch(16000, 24000, batchData);
-    unsigned int vertexOffset = m_BatchStorage.VertexCounts[m_HandleSet.GetData(batchId)];
-    unsigned int indexOffset = m_BatchStorage.IndexCounts[m_HandleSet.GetData(batchId)];
-    m_BatchStorage.Transforms[batchId] = transform;
-
-    LOG_DEBUG("batch ID: ", batchId);
-
-    //Populate Buffers
-    m_BufferManager.PopulateBuffer(m_BatchStorage.VertexBufferHandles[batchId], vertices.data(), vertices.size(), vertexOffset);
-    m_BufferManager.PopulateBuffer(m_BatchStorage.IndexBufferHandles[batchId], indices.data(), indices.size(), indexOffset);
-
-    m_Meshes.BatchIDs[newMesh] = batchId;
-    //TODO: why is the transform not linked to the batch
-    m_Meshes.TransformOffset[newMesh] = m_BatchStorage.Transforms.size() - 1; //TODO: Set the transform location
-    m_Meshes.VertexOffsets[newMesh] = vertexOffset;
-    m_Meshes.IndexOffsets[newMesh] = indexOffset;
-    m_Meshes.VertexCounts[newMesh] = vertices.size();
-    m_Meshes.IndexCounts[newMesh] = indices.size();
-
-    return newMesh;
-}
-
-unsigned int Quilt::Comforter::RemoveMesh(unsigned int meshID)
-{
-    RemoveBatch(meshID);
-
-    return 0;
-}
-
-unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
-{
-    if(m_BatchCount <= 0)
-    {
-        return NewCreateBatch(vertexCount, indexCount, batchData);
-    }
-
-    for(int i = 0; i < m_BatchCount; i++)
-    {
-        //TODO: loop through batches and find if a batch has matching batch data
-    }
-
-    return NewCreateBatch(vertexCount, indexCount, batchData);
-}
-
-unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
-{
-    uint32_t batch = m_BatchCount;
-    m_BatchCount++;
-
-    LOG_DEBUG("Creating batch: ", batch);
-
-    m_BatchStorage.Types.resize(m_BatchCount);
-    m_BatchStorage.ShaderHandles.resize(m_BatchCount);
-    m_BatchStorage.VertexLayoutHandles.resize(m_BatchCount);
-
-    m_BatchStorage.VertexBufferHandles.resize(m_BatchCount);
-    m_BatchStorage.IndexBufferHandles.resize(m_BatchCount);
-
-    m_BatchStorage.VertexCounts.resize(m_BatchCount);
-    m_BatchStorage.IndexCounts.resize(m_BatchCount);
-
-    m_BatchStorage.Transforms.resize(m_BatchCount);
-
-    LOG_DEBUG("m_BatchCount: ", m_BatchCount);
-    LOG_DEBUG("batch id ", batch);
-    LOG_DEBUG("batch storage size ", m_BatchStorage.Types.size());
-
-    unsigned int handle = CreateHandle(batch); //Allocates a sparse set for the batch
-
-    LOG_DEBUG("HANDLE after creation ", handle);
-
-    m_BatchStorage.Types[batch] = batchData.Type;
-    m_BatchStorage.ShaderHandles[batch] = batchData.ShaderID;
-
-    //Set Up vertex Layout
-    GLCall(glGenVertexArrays(1, &m_BatchStorage.VertexLayoutHandles[batch]));
-    GLCall(glBindVertexArray(m_BatchStorage.VertexLayoutHandles[batch]));
-
-    //Set up vertex buffer
-    m_BatchStorage.VertexBufferHandles[batch] = m_BufferManager.CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
-
-    //Set up index buffer
-    m_BatchStorage.IndexBufferHandles[batch] = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
+    //TODO: remove this out of here
+    //Generate vertex array
+    GLCall(glGenVertexArrays(1, &newBatch.Data.VertexLayoutID));
+    GLCall(glBindVertexArray(newBatch.Data.VertexLayoutID));
 
     size_t stride = 13 * sizeof(float);
 
@@ -145,122 +50,22 @@ unsigned int Quilt::Comforter::NewCreateBatch(unsigned int vertexCount, unsigned
     GLCall(glEnableVertexAttribArray(4)); // Texture ID
     glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void*)(12 * sizeof(float)));
 
-    m_BatchStorage.VertexCounts[batch] = 0;
-    m_BatchStorage.IndexCounts[batch] = 0;
+    m_BatchStorage.Insert(newBatchHandle, newBatch);
 
-    return handle;
+    return newBatchHandle;
 }
 
-void Quilt::Comforter::RemoveBatch(unsigned int meshHandle)
+unsigned int Quilt::Comforter::GetBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
 {
-    unsigned int handle = m_Meshes.BatchIDs[meshHandle];
-
-    uint32_t last = m_BatchCount - 1;
-
-    LOG_DEBUG("Last handle: ", last);
-
+    return 0;
 }
 
-void Quilt::Comforter::DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform, float xSizePercent, float ySizePercent)
+unsigned int Quilt::Comforter::AddTransform(unsigned int batchHandle, const Pillow::Transform* transform)
 {
-    for(unsigned int handle : m_HandleSet.GetAllData())
-    {
-        //bind shader from batch
-        if(!glIsProgram(m_BatchStorage.ShaderHandles[handle]))
-        {
-            LOG_WARN("Batch does not have a shader Bound");
-            continue;
-        }
+    //TODO: this needs to be more advanced as users may need to add and remove transforms
+    m_BatchStorage.GetData(batchHandle).Transforms.push_back(transform);
 
-        GLCall(glUseProgram(m_BatchStorage.ShaderHandles[handle]));
+    LOG_INFO("Transforms size ", m_BatchStorage.GetData(batchHandle).Transforms.size());
 
-        float aspect = xSizePercent / ySizePercent;
-        float zoom = 5.0f;
-
-        float left = -zoom * aspect;
-        float right = zoom * aspect;
-        float bottom = -zoom;
-        float top = zoom;
-
-        glm::mat4 proj = glm::orthoLH(left, right, bottom, top, -1.0f, 500.0f); // camera
-
-        glm::vec3 camPos = glm::vec3(cameraTransform->Position.x, cameraTransform->Position.y, cameraTransform->Position.z);
-        glm::vec3 targetPos = camPos + glm::vec3(0.0f, 0.0f, 1.0f);
-        glm::vec3 upVec = glm::vec3(0.0f, 1.0f, 0.0f);
-
-        glm::mat4 view = glm::lookAtLH(camPos, targetPos, upVec);
-
-        switch(m_BatchStorage.Types[handle])
-        {
-            case Quilt::BatchType::None:
-                break;
-            
-            case Quilt::BatchType::Static:
-                break;
-            
-            case Quilt::BatchType::Dynamic:
-                glm::mat4 model;
-                for (const Pillow::Transform* transform : m_BatchStorage.Transforms)
-                {
-                    model = glm::translate(glm::mat4(1.0f), glm::vec3(transform->Position.x, transform->Position.y, transform->Position.z)) *
-                            glm::yawPitchRoll(
-                                glm::radians(transform->Rotation.y),
-                                glm::radians(transform->Rotation.x),
-                                glm::radians(transform->Rotation.z)
-                            ) *
-                            glm::scale(glm::mat4(1.0f), glm::vec3(transform->Scale.x, transform->Scale.y, transform->Scale.z));
-
-                    shaderManager.SetUniformMat4f(m_BatchStorage.ShaderHandles[handle], "u_Model", model);
-                    shaderManager.SetUniformMat4f(m_BatchStorage.ShaderHandles[handle], "u_View", view);
-                    shaderManager.SetUniformMat4f(m_BatchStorage.ShaderHandles[handle], "u_Projection", proj);
-
-                    int samplers[32];
-                    for(int i = 0; i < 32; ++i)
-                    {
-                        samplers[i] = i;
-                    } 
-
-                    shaderManager.SetUniform1iv(m_BatchStorage.ShaderHandles[handle], "u_Textures", 32, samplers);
-
-                    //for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
-                    //{
-                    //    GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
-                    //    GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
-                    //}
-
-                    GLCall(glBindVertexArray(m_BatchStorage.VertexLayoutHandles[handle]));
-                    m_BufferManager.BindBuffer(m_BatchStorage.VertexBufferHandles[handle]);
-                    m_BufferManager.BindBuffer(m_BatchStorage.IndexBufferHandles[handle]);
-
-                    //TODO: This draw seems tedious ideally this would be non-trivial -> m_BufferManager.GetBufferStorage().DataCounts[m_BatchStorage.IndexBufferHandles[handle]]
-                    GLCall(glDrawElements(GL_TRIANGLES, m_BufferManager.GetBufferStorage().DataCounts[m_BatchStorage.IndexBufferHandles[handle]], GL_UNSIGNED_INT, nullptr));
-                }
-                break;
-
-            case Quilt::BatchType::Instanced:
-                break;
-        }
-    }
-
-    for(unsigned int batchHandle : m_batchHandlesToRemove)
-    {
-       m_HandleSet.Remove(batchHandle);
-    }
+    return m_BatchStorage.GetData(batchHandle).Transforms.size() - 1;
 }
-
-unsigned int Quilt::Comforter::CreateHandle(unsigned int BatchHandle)
-{
-    unsigned int createdHandle = m_CurrentHandle;
-
-    LOG_DEBUG("Creating handle: ", createdHandle, " with batch handle ", BatchHandle);
-
-    m_HandleSet.Insert(m_CurrentHandle, BatchHandle);
-    m_CurrentHandle++;
-
-    return createdHandle;
-}
-
-void Quilt::Comforter::RelocateIndex(unsigned int handle, unsigned int index)
-{
-    
-}*/

@@ -49,8 +49,8 @@ namespace Quilt
     struct Batch
     {
         BatchData Data;
-        GPUBuffer VertexBuffer;
-        GPUBuffer IndexBuffer;
+        uint64_t VertexBufferHandle;
+        uint64_t IndexBufferHandle;
 
         uint64_t VertexCount;
         uint64_t IndexCount;
@@ -72,62 +72,28 @@ namespace Quilt
         /*
             Creates a batch handle to return back to the Mesh SoA. 
         */
-        unsigned int GetOrCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
+        unsigned int GetOrCreateBatch(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
 
+        const std::vector<Quilt::Batch>& GetAllBatches() { return m_BatchStorage.GetAllData(); };
 
-        const BatchData& GetBatchData(unsigned int batchHandle);
-        const GPUBuffer& GetVertexBuffer(unsigned int batchHandle);
-        const GPUBuffer& GetIndexBuffer(unsigned int batchHandle);
-        const uint64_t& GetVertexCount(unsigned int batchHandle);
-        const uint64_t& GetIndexCount(unsigned int batchHandle);
-
+        const Quilt::Batch GetBatch(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle); };
+        const BatchData GetBatchData(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).Data; };
+        const uint64_t GetVertexBuffer(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).VertexBufferHandle; };
+        const uint64_t GetIndexBuffer(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).IndexBufferHandle; };
+        const uint64_t GetVertexCount(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).VertexCount; };
+        const uint64_t GetIndexCount(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).IndexCount; };
 
         const Pillow::Transform* GetTransform(unsigned int batchHandle, uint64_t indexOffset);
 
+        unsigned int AddTransform(unsigned int batchHandle, const Pillow::Transform* transform);
+
     private:
-        unsigned int CreateBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
-        unsigned int GetBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
+        unsigned int CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
+        unsigned int GetBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
 
         unsigned int m_BatchHandleCount = 0;
         Frame::SparseSet<Quilt::Batch> m_BatchStorage;
-    }
-
-    /*class Comforter
-    {
-    public:
-        //Create a mesh Handle
-        unsigned int CreateMesh(BatchData& batchData, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform);
-        unsigned int RemoveMesh(unsigned int meshID);
-
-        unsigned int GetOrCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
-
-        Quilt::Batches& GetBatchStorage() { return m_BatchStorage; }; //TODO: make const later
-        unsigned int GetHandle(unsigned int id) { return m_HandleSet.GetData(id); };
-
-        unsigned int NewCreateBatch(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData);
-        void RemoveTransform(unsigned int batchHandle);
-        void RemoveBatch(unsigned int meshHandle);
-
-        void DrawBatches(Quilt::Coverlet& shaderManager, const Pillow::Transform* cameraTransform, float xSizePercent, float ySizePercent);
-
-    private:
-
-        unsigned int CreateHandle(unsigned int BatchHandle);
-        void RelocateIndex(unsigned int handle, unsigned int index);
-
-        BufferManager m_BufferManager;
-
-        Batches m_BatchStorage;
-        uint32_t m_BatchCount = 0;
-
-        std::vector<unsigned int> m_MeshToHandle;
-        std::vector<unsigned int> m_HandleToMesh;
-
-        Frame::SparseSet<unsigned int> m_HandleSet;
-        unsigned int m_CurrentHandle = 0;
-
-        std::vector<unsigned int> m_batchHandlesToRemove;
-    };*/
+    };
 
     using BatchManager = Comforter;
 }
