@@ -3,6 +3,17 @@
 unsigned int Quilt::MeshManager::CreateMeshHandle()
 {
     uint32_t newMeshHandle = m_MeshCount;
+
+    if(!m_RemovedMeshIDs.empty())
+    {
+        newMeshHandle = m_RemovedMeshIDs.back();
+        m_RemovedMeshIDs.pop_back();
+
+        LOG_INFO("Reusing Mesh ID: ", newMeshHandle);
+
+        return newMeshHandle;
+    }
+
     m_MeshCount++;
 
     m_Meshes.BatchIDs.resize(m_MeshCount);
@@ -17,9 +28,11 @@ unsigned int Quilt::MeshManager::CreateMeshHandle()
     return newMeshHandle;
 }
 
-void Quilt::MeshManager::RemoveMeshData(unsigned int& meshID)
+void Quilt::MeshManager::RemoveMesh(unsigned int& meshID)
 {
-    
+    LOG_INFO("Removing Mesh ID: ", meshID);
+
+    m_RemovedMeshIDs.push_back(meshID);
 }
 
 void Quilt::MeshManager::SetMeshBatchID(unsigned int& meshID, unsigned int batchID)

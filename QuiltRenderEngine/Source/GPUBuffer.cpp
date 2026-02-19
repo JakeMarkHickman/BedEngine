@@ -27,7 +27,7 @@ unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int da
 
 void Quilt::BufferManager::RemoveBuffer(unsigned int bufferID)
 {
-    
+    LOG_INFO("Removing Buffer at ID: ", bufferID);
 }
 
 void Quilt::BufferManager::PopulateBuffer(unsigned int bufferID, const void* data, unsigned int size, unsigned int offset)

@@ -73,13 +73,15 @@ namespace Quilt
             Creates a batch handle to return back to the Mesh SoA. 
         */
         unsigned int GetOrCreateBatch(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
+        void RemoveBatch(unsigned int batchHandle) { m_RemovedBatchIDs.push_back(batchHandle); return m_BatchStorage.Remove(batchHandle); };
+        bool IsBatchEmpty(unsigned int batchHandle) { return true; };
 
         const std::vector<Quilt::Batch>& GetAllBatches() { return m_BatchStorage.GetAllData(); };
 
         const Quilt::Batch GetBatch(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle); };
         const BatchData GetBatchData(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).Data; };
-        const uint64_t GetVertexBuffer(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).VertexBufferHandle; };
-        const uint64_t GetIndexBuffer(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).IndexBufferHandle; };
+        const uint64_t GetVertexBufferHandle(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).VertexBufferHandle; };
+        const uint64_t GetIndexBufferHandle(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).IndexBufferHandle; };
         const uint64_t GetVertexCount(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).VertexCount; };
         const uint64_t GetIndexCount(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).IndexCount; };
 
@@ -92,6 +94,7 @@ namespace Quilt
         unsigned int GetBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
 
         unsigned int m_BatchHandleCount = 0;
+        std::vector<unsigned int> m_RemovedBatchIDs;
         Frame::SparseSet<Quilt::Batch> m_BatchStorage;
     };
 

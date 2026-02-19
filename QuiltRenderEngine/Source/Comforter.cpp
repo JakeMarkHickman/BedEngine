@@ -17,8 +17,18 @@ unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexBufferHandle,
 
 unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData)
 {
-    unsigned int newBatchHandle = m_BatchHandleCount;
-    m_BatchHandleCount++;
+    unsigned int newBatchHandle;
+
+    if(m_RemovedBatchIDs.empty())
+    {
+        newBatchHandle = m_BatchHandleCount;
+        m_BatchHandleCount++;
+    }
+    else
+    {
+        newBatchHandle = m_RemovedBatchIDs.back();
+        m_RemovedBatchIDs.pop_back();
+    }
 
     Quilt::Batch newBatch;
     newBatch.Data = batchData;

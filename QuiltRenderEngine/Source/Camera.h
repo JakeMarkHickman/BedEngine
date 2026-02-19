@@ -1,11 +1,12 @@
 #pragma once
 
+#include <SparseSet.h>
 #include <Transform.h>
 #include <vector>
 
 namespace Quilt
 {
-    enum class ProjectionType
+    enum class Projection
     {
         Orthographic,
         Perspective
@@ -14,7 +15,7 @@ namespace Quilt
     struct Cameras
     {
         std::vector<bool> Active;
-        std::vector<ProjectionType> ProjectionTypes;
+        std::vector<Projection> ProjectionTypes;
 
         std::vector<const Pillow::Transform*> Transforms;
 
@@ -32,6 +33,20 @@ namespace Quilt
         float YPosition;
     };
 
+    struct Camera
+    {
+        bool IsActive;
+        Projection ProjectionType;
+
+        const Pillow::Transform* Transform;
+
+        CameraScreenSizeBounds ScreenBounds;
+
+        float FOV;
+        float Zoom;
+    };
+
+
     class CameraManager
     {
     public:
@@ -39,22 +54,24 @@ namespace Quilt
         void RemoveCamera(unsigned int cameraID);
 
         void ToggleCamera(unsigned int cameraID, bool isActive);
-        void SetCameraProjection(unsigned int cameraID, ProjectionType projectionType);
+        void SetCameraProjection(unsigned int cameraID, Projection projectionType);
         void SetCameraScreenPosition(unsigned int cameraID, float xPosition, float yPosition);
         void SetCameraScreenSize(unsigned int cameraID, float xSize, float ySize);
+        void SetCameraFOV(unsigned int cameraID, float fov);
+        void SetCameraZoom(unsigned int cameraID, float zoom);
 
-        bool IsCameraActive(unsigned int cameraID) { return m_CameraStorage.Active[cameraID]; };
-        ProjectionType GetCameraProjectionType(unsigned int cameraID) { return m_CameraStorage.ProjectionTypes[cameraID]; };
-        const Pillow::Transform* GetCameraTransform(unsigned int cameraID) { return m_CameraStorage.Transforms[cameraID]; };
-        CameraScreenSizeBounds GetCameraScreen(unsigned int cameraID);
+        bool IsCameraActive(unsigned int cameraID) { return m_CameraStorage.GetData(cameraID).IsActive; };
+        Projection GetCameraProjectionType(unsigned int cameraID) { return m_CameraStorage.GetData(cameraID).ProjectionType; };
+        const Pillow::Transform* GetCameraTransform(unsigned int cameraID) { return m_CameraStorage.GetData(cameraID).Transform; };
+        CameraScreenSizeBounds GetCameraScreen(unsigned int cameraID) { return m_CameraStorage.GetData(cameraID).ScreenBounds; };
         
-        std::vector<unsigned int> GetAllCameras() { return m_Cameras; };
+        const std::vector<Quilt::Camera>& GetAllCameras() { return m_CameraStorage.GetAllData(); };
         unsigned int GetCameraCount() { return m_CameraCount; };
 
     private:
-        Quilt::Cameras m_CameraStorage;
+        Frame::SparseSet<Quilt::Camera> m_CameraStorage;
+
         unsigned int m_CameraCount = 0;
-        std::vector<unsigned int> m_Cameras;
         std::vector<unsigned int> m_RemovedCameras;
 
         //TODO: Track the ammount of cameras currenctly active prefrably having a max of 10 cameras but having it toggleable would be nice

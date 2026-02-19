@@ -4,7 +4,7 @@
 
 unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform)
 {
-    LOG_DEBUG("Texture Slots ", m_TextureManager.GetTextureSlots());
+    LOG_INFO("Device Texture Slots ", m_TextureManager.GetTextureSlots());
 
     //TODO: Make this shader be parsed in with materials rather than hardcoded here
     std::string vertexShader = R"(
@@ -78,8 +78,8 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
     unsigned int transformOffset = m_BatchManager.AddTransform(batchHandle, transform);
 
     //Populate buffers
-    m_BufferManager.PopulateBuffer(m_BatchManager.GetVertexBuffer(batchHandle), vertices.data(), vertices.size(), m_BatchManager.GetVertexCount(batchHandle));
-    m_BufferManager.PopulateBuffer(m_BatchManager.GetIndexBuffer(batchHandle), indices.data(), indices.size(), m_BatchManager.GetIndexCount(batchHandle));
+    m_BufferManager.PopulateBuffer(m_BatchManager.GetVertexBufferHandle(batchHandle), vertices.data(), vertices.size(), m_BatchManager.GetVertexCount(batchHandle));
+    m_BufferManager.PopulateBuffer(m_BatchManager.GetIndexBufferHandle(batchHandle), indices.data(), indices.size(), m_BatchManager.GetIndexCount(batchHandle));
 
     //Create the Mesh Handle
     unsigned int newMesh = m_MeshManager.CreateMeshHandle();
@@ -95,23 +95,22 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
     return newMesh;
 }
 
-void Quilt::Duvet::RemoveMesh(const unsigned int& meshHandle)
+void Quilt::Duvet::RemoveMesh(unsigned int& meshHandle)
 {
-    //m_BatchManager.RemoveMesh(meshHandle);
+    unsigned int batchID = m_MeshManager.GetMeshBatchID(meshHandle);
+    unsigned int vertBufferID = m_BatchManager.GetIndexBufferHandle(batchID);
+    unsigned int indexBufferID = m_BatchManager.GetVertexBufferHandle(batchID);
 
-    //Quilt::Mesh& meshToRemove = m_MeshHandles[meshHandle];
-    //Quilt::Batch& batch = m_BatchManager.GetBatches()[meshToRemove.BatchIndex];
+    m_BufferManager.RemoveBuffer(vertBufferID);
+    m_BufferManager.RemoveBuffer(indexBufferID);
 
-    //LOG_DEBUG("Removing batch: ", meshToRemove.BatchIndex);
-    //m_BatchManager.RemoveBatch(meshToRemove.BatchIndex);
+    //check if batch is empty
+    if (m_BatchManager.IsBatchEmpty(batchID))
+    {
+        m_BatchManager.RemoveBatch(batchID); //Remove the batch if Empty
+    }
 
-    //if(meshToRemove.LocalIndex < batch.Transforms.size())
-    //{
-    //    LOG_DEBUG("Removing Transform pointer in Quilt");
-    //    batch.Transforms.erase(batch.Transforms.begin() + meshToRemove.LocalIndex);
-    //}
-
-    //meshToRemove = {};
+    m_MeshManager.RemoveMesh(meshHandle);
 }
 
 unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize)
@@ -119,9 +118,11 @@ unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool
     unsigned int cameraID = m_CameraManager.CreateCamera(transform);
 
     m_CameraManager.ToggleCamera(cameraID, isActive);
-    m_CameraManager.SetCameraProjection(cameraID, Quilt::ProjectionType::Orthographic);
+    m_CameraManager.SetCameraProjection(cameraID, Quilt::Projection::Orthographic);
     m_CameraManager.SetCameraScreenPosition(cameraID, xScreenPos, yScreenPos);
     m_CameraManager.SetCameraScreenSize(cameraID, xScreenSize, yScreenSize);
+    m_CameraManager.SetCameraFOV(cameraID, 90.0f);
+    m_CameraManager.SetCameraZoom(cameraID, 5.0f);
 
     return cameraID;
 }
@@ -147,44 +148,33 @@ void Quilt::Duvet::CreateTexture(const std::string texturePath, const TextureFil
 
 bool Quilt::Duvet::IsContextValid()
 {
-    if(glewInit() != GLEW_OK)
-    {
-        return false;
-    }
-
-    return true;
+    return glewInit() == GLEW_OK;
 }
 
 void Quilt::Duvet::Draw()
 {
-    for (unsigned int camera : m_CameraManager.GetAllCameras())
+    for (const Quilt::Camera& camera : m_CameraManager.GetAllCameras())
     {
-        if(!m_CameraManager.IsCameraActive(camera))
+        if (!camera.IsActive)
         {
-            LOG_INFO("Camera is not active");
             continue;
         }
 
-        CameraScreenSizeBounds bounds = m_CameraManager.GetCameraScreen(camera);
+        float xSizePercent = camera.ScreenBounds.XSize * WindowWidth;
+        float ySizePercent = camera.ScreenBounds.YSize * WindowHeight;
 
-        float xSizePercent = bounds.XSize * WindowWidth;
-        float ySizePercent = bounds.YSize * WindowHeight;
-
-        float xPosPercent = bounds.XPosition * WindowWidth;
-        float yPosPercent = bounds.YPosition * WindowHeight;
+        float xPosPercent = camera.ScreenBounds.XPosition * WindowWidth;
+        float yPosPercent = camera.ScreenBounds.YPosition * WindowHeight;
 
         float aspect = xSizePercent / ySizePercent;
-        float zoom = 5.0f;
 
-        float left = -zoom * aspect;
-        float right = zoom * aspect;
-        float bottom = -zoom;
-        float top = zoom;
-
-        const Pillow::Transform* cameraTransform = m_CameraManager.GetCameraTransform(camera);
+        float left = -camera.Zoom * aspect;
+        float right = camera.Zoom * aspect;
+        float bottom = -camera.Zoom;
+        float top = camera.Zoom;
 
         glm::mat4 proj = glm::orthoLH(left, right, bottom, top, -1.0f, 500.0f); // camera
-        glm::vec3 camPos = glm::vec3(cameraTransform->Position.x, cameraTransform->Position.y, cameraTransform->Position.z);
+        glm::vec3 camPos = glm::vec3(camera.Transform->Position.x, camera.Transform->Position.y, camera.Transform->Position.z);
         glm::vec3 targetPos = camPos + glm::vec3(0.0f, 0.0f, 1.0f);
         glm::vec3 upVec = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -192,12 +182,9 @@ void Quilt::Duvet::Draw()
 
         GLCall(glViewport(xPosPercent, yPosPercent, xSizePercent, ySizePercent));
 
-        //TODO: make the draw function for the game (again)
-
-        for(Quilt::Batch currentBatch : m_BatchManager.GetAllBatches())
+        for (Quilt::Batch currentBatch : m_BatchManager.GetAllBatches())
         {
-            //LOG_DEBUG("Current batch transform at 0: ", currentBatch.Transforms[0]->Position.x);
-            if(!glIsProgram(currentBatch.Data.ShaderID))
+            if (!glIsProgram(currentBatch.Data.ShaderID))
             {
                 LOG_WARN("Batch does not have a valid shader bound moving to next batch");
                 continue;
@@ -205,7 +192,7 @@ void Quilt::Duvet::Draw()
 
             GLCall(glUseProgram(currentBatch.Data.ShaderID));
 
-            switch(currentBatch.Data.Type)
+            switch (currentBatch.Data.Type)
             {
                 case Quilt::BatchType::None:
                 break;

@@ -38,6 +38,6 @@ namespace Quilt
 
         GPUBuffers m_BufferStorage;
         unsigned int m_GPUBufferCount = 0;
-        std::vector<unsigned int> m_UnusedBuffers;
+        std::vector<unsigned int> m_RemovedBuffers;
     };
 }

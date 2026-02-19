@@ -187,6 +187,7 @@ namespace Bed
             TODO: Some of these may not be global
             TODO: Make it so reloading a world correctly adds the global events
             TODO: call plugins that register global components here, maybe have a way to force reload plugins so that it can happen at any time (stops closing the editor).
+            TODO: make this a seperate function as this will be able to be modified by users or plugins
         */
         m_Game->GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Sprite>(Bed::OnSpriteComponentAttached);
         m_Game->GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Sprite>(Bed::OnSpriteComponentRemoved);

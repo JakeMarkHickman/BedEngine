@@ -5,7 +5,7 @@
 #Build Path
 buildPath="build"                           # The path to build to
 StaticBuild=true
-Debug=false
+Debug=true
 
 SharedDependencies="-IPillowMath/include -ISleepTraceDebugger/Source -IFrameUtility/Source"
 
@@ -42,7 +42,6 @@ fi
 
 
 #TODO: THIS IS THE PHYSICS ENGINE LIB BUILD
-
 Dependencies="MattressPhysicsEngine/Dependencies"
 Source="MattressPhysicsEngine/Source"
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SleepTrace.h>
 #include <vector>
 
 #include "Vertex.h"
@@ -35,7 +36,7 @@ namespace Quilt
                 - A copy of the Indices uploaded
         */
         unsigned int CreateMeshHandle();
-        void RemoveMeshData(unsigned int& meshID);
+        void RemoveMesh(unsigned int& meshID);
 
         void SetMeshBatchID(unsigned int& meshID, unsigned int batchID);
         void SetMeshTransformOffset(unsigned int& meshID, uint64_t transformOffset);
@@ -57,9 +58,12 @@ namespace Quilt
         std::vector<unsigned int>& GetMeshIndices(unsigned int& meshID) { return m_Meshes.Indices[meshID]; };
 
     private:
+        //TODO: Reuse 
+
         //As meshes are just a handle to other data they will never be deleted
         Quilt::MeshStorage m_Meshes;
         uint32_t m_MeshCount = 0;
+        std::vector<uint32_t> m_RemovedMeshIDs;
         
     };
 }

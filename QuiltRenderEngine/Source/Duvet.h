@@ -20,7 +20,7 @@ namespace Quilt
     {
     public:
         static unsigned int CreateMesh(const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform);
-        static void RemoveMesh(const unsigned int& meshHandle);
+        static void RemoveMesh(unsigned int& meshHandle);
 
         static unsigned int CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize);
 
