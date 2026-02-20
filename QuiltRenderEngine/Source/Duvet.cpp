@@ -56,7 +56,7 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
 
     void main()
     {
-        o_FragColour = v_Colour; //texture(u_Textures[int(v_TexID)], v_TexCoord) * v_Colour;
+        o_FragColour = texture(u_Textures[int(v_TexID)], v_TexCoord) * v_Colour;
     }
     )";
 
@@ -129,23 +129,22 @@ unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool
     return cameraID;
 }
 
-void Quilt::Duvet::CreateTexture(const std::string texturePath, const TextureFiltering filter, const unsigned int& meshHandle)
+void Quilt::Duvet::CreateTexture(const std::string texturePath, const TextureFiltering filter, unsigned int& meshHandle)
 {
-    /*//Load Texture from file
+    //Load Texture from file
     int slot = m_TextureManager.AddTexture(texturePath, filter);
 
-    Quilt::Mesh& mesh = m_MeshHandles[meshHandle];
+    unsigned int batchHandle = m_MeshManager.GetMeshBatchID(meshHandle);
+    unsigned int vertexOffset = m_MeshManager.GetMeshVertexOffset(meshHandle);
+    unsigned int vertexCount = m_MeshManager.GetMeshVertexCount(meshHandle);
+    unsigned int vertexBufferHandle = m_BatchManager.GetBatch(batchHandle).VertexBufferHandle;
 
-    const Quilt::Batch& batch = m_BatchManager.GetBatches()[mesh.BatchIndex];
-
-    for(Quilt::Vertex& vert : mesh.Vertices)
+    for(Quilt::Vertex& vert : m_MeshManager.GetMeshVertices(meshHandle))
     {
         vert.TextureID = slot;
     }
 
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, batch.VertexBuffer.Handle));
-    GLCall(glBufferSubData(GL_ARRAY_BUFFER, mesh.VertexOffset * batch.VertexBuffer.DataSize, mesh.Vertices.size() * batch.VertexBuffer.DataSize, mesh.Vertices.data()));
-    */
+    m_BufferManager.PopulateBuffer(vertexBufferHandle, m_MeshManager.GetMeshVertices(meshHandle).data(), vertexCount, vertexOffset);
 };
 
 bool Quilt::Duvet::IsContextValid()
@@ -226,11 +225,11 @@ void Quilt::Duvet::Draw()
 
                         m_ShaderManager.SetUniform1iv(currentBatch.Data.ShaderID, "u_Textures", 32, samplers);
 
-                        //for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
-                        //{
-                        //    GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
-                        //    GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
-                        //}
+                        for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
+                        {
+                            GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
+                            GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
+                        }
 
                         GLCall(glBindVertexArray(currentBatch.Data.VertexLayoutID));
                         m_BufferManager.BindBuffer(currentBatch.VertexBufferHandle);

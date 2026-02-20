@@ -24,7 +24,7 @@ namespace Quilt
 
         static unsigned int CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize);
 
-        static void CreateTexture(const std::string texturePath, const TextureFiltering filter, const unsigned int& meshHandle);
+        static void CreateTexture(const std::string texturePath, const TextureFiltering filter, unsigned int& meshHandle);
 
         static void SetViewPort(int width, int height) { WindowWidth = width; WindowHeight = height; };
 
