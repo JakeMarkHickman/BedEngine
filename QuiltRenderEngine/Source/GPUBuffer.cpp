@@ -3,13 +3,23 @@
 
 unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
 {
-    uint32_t buffer = m_GPUBufferCount;
-    m_GPUBufferCount++;
+    uint32_t buffer;
 
-    m_BufferStorage.Types.resize(m_GPUBufferCount);
-    m_BufferStorage.DataSizes.resize(m_GPUBufferCount);
-    m_BufferStorage.DataCounts.resize(m_GPUBufferCount);
-    m_BufferStorage.Handles.resize(m_GPUBufferCount);
+    if(!m_RemovedBuffers.empty())
+    {
+        buffer = m_RemovedBuffers.back();
+        m_RemovedBuffers.pop_back();
+    }
+    else
+    {
+        buffer = m_GPUBufferCount;
+        m_GPUBufferCount++;
+
+        m_BufferStorage.Types.resize(m_GPUBufferCount);
+        m_BufferStorage.DataSizes.resize(m_GPUBufferCount);
+        m_BufferStorage.DataCounts.resize(m_GPUBufferCount);
+        m_BufferStorage.Handles.resize(m_GPUBufferCount);
+    }
 
     m_BufferStorage.Types[buffer] = type;
     m_BufferStorage.DataSizes[buffer] = dataSize;
@@ -28,6 +38,9 @@ unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int da
 void Quilt::BufferManager::RemoveBuffer(unsigned int bufferID)
 {
     LOG_INFO("Removing Buffer at ID: ", bufferID);
+
+    GLCall(glDeleteBuffers(1, &m_BufferStorage.Handles[bufferID]));
+    m_RemovedBuffers.push_back(bufferID);
 }
 
 void Quilt::BufferManager::PopulateBuffer(unsigned int bufferID, const void* data, unsigned int size, unsigned int offset)

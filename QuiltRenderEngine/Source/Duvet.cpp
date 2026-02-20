@@ -104,6 +104,8 @@ void Quilt::Duvet::RemoveMesh(unsigned int& meshHandle)
     m_BufferManager.RemoveBuffer(vertBufferID);
     m_BufferManager.RemoveBuffer(indexBufferID);
 
+    //TODO: when there is storage buffers loop through all the buffers to remove
+
     //check if batch is empty
     if (m_BatchManager.IsBatchEmpty(batchID))
     {
