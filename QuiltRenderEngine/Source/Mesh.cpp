@@ -2,19 +2,22 @@
 
 unsigned int Quilt::MeshManager::CreateMeshHandle()
 {
-    uint32_t newMeshHandle = m_MeshCount;
+    uint32_t meshID;
 
     if(!m_RemovedMeshIDs.empty())
     {
-        newMeshHandle = m_RemovedMeshIDs.back();
+        meshID = m_RemovedMeshIDs.back();
         m_RemovedMeshIDs.pop_back();
 
-        LOG_INFO("Reusing Mesh ID: ", newMeshHandle);
+        LOG_INFO("Recycled Mesh: ", meshID);
 
-        return newMeshHandle;
+        return meshID;
     }
 
+    meshID = m_MeshCount;
     m_MeshCount++;
+
+    LOG_INFO("Created Mesh: ", meshID);
 
     m_Meshes.BatchIDs.resize(m_MeshCount);
     m_Meshes.TransformOffset.resize(m_MeshCount);
@@ -25,14 +28,16 @@ unsigned int Quilt::MeshManager::CreateMeshHandle()
     m_Meshes.Vertices.resize(m_MeshCount);
     m_Meshes.Indices.resize(m_MeshCount);
 
-    return newMeshHandle;
+    return meshID;
 }
 
 void Quilt::MeshManager::RemoveMesh(unsigned int& meshID)
 {
-    LOG_INFO("Removing Mesh ID: ", meshID);
+    LOG_INFO("Removed Mesh: ", meshID);
 
     m_RemovedMeshIDs.push_back(meshID);
+
+    //TODO: clear data??
 }
 
 void Quilt::MeshManager::SetMeshBatchID(unsigned int& meshID, unsigned int batchID)

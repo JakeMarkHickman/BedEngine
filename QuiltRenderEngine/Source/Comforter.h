@@ -73,7 +73,7 @@ namespace Quilt
             Creates a batch handle to return back to the Mesh SoA. 
         */
         unsigned int GetOrCreateBatch(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
-        void RemoveBatch(unsigned int batchHandle) { m_RemovedBatchIDs.push_back(batchHandle); return m_BatchStorage.Remove(batchHandle); };
+        void RemoveBatch(unsigned int batchHandle);
         bool IsBatchEmpty(unsigned int batchHandle) { return true; };
 
         const std::vector<Quilt::Batch>& GetAllBatches() { return m_BatchStorage.GetAllData(); };

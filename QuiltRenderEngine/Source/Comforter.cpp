@@ -15,19 +15,31 @@ unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexBufferHandle,
     return CreateBatchHandle(vertexBufferHandle, indexBufferHandle, batchData);
 }
 
+void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
+{
+    LOG_INFO("Removed Batch: ", batchHandle);
+
+    m_RemovedBatchIDs.push_back(batchHandle);
+    return m_BatchStorage.Remove(batchHandle);
+}
+
 unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData)
 {
-    unsigned int newBatchHandle;
+    unsigned int batchHandle;
 
     if(m_RemovedBatchIDs.empty())
     {
-        newBatchHandle = m_BatchHandleCount;
+        batchHandle = m_BatchHandleCount;
         m_BatchHandleCount++;
+
+        LOG_INFO("Created Batch: ", batchHandle);
     }
     else
     {
-        newBatchHandle = m_RemovedBatchIDs.back();
+        batchHandle = m_RemovedBatchIDs.back();
         m_RemovedBatchIDs.pop_back();
+
+        LOG_INFO("Recycled Batch: ", batchHandle);
     }
 
     Quilt::Batch newBatch;
@@ -60,9 +72,9 @@ unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle
     GLCall(glEnableVertexAttribArray(4)); // Texture ID
     glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void*)(12 * sizeof(float)));
 
-    m_BatchStorage.Insert(newBatchHandle, newBatch);
+    m_BatchStorage.Insert(batchHandle, newBatch);
 
-    return newBatchHandle;
+    return batchHandle;
 }
 
 unsigned int Quilt::Comforter::GetBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
@@ -74,8 +86,6 @@ unsigned int Quilt::Comforter::AddTransform(unsigned int batchHandle, const Pill
 {
     //TODO: this needs to be more advanced as users may need to add and remove transforms
     m_BatchStorage.GetData(batchHandle).Transforms.push_back(transform);
-
-    LOG_INFO("Transforms size ", m_BatchStorage.GetData(batchHandle).Transforms.size());
 
     return m_BatchStorage.GetData(batchHandle).Transforms.size() - 1;
 }

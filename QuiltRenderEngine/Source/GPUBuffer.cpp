@@ -3,41 +3,45 @@
 
 unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
 {
-    uint32_t buffer;
+    uint32_t bufferID;
 
     if(!m_RemovedBuffers.empty())
     {
-        buffer = m_RemovedBuffers.back();
+        bufferID = m_RemovedBuffers.back();
         m_RemovedBuffers.pop_back();
+
+        LOG_INFO("Recycled Buffer: ", bufferID);
     }
     else
     {
-        buffer = m_GPUBufferCount;
+        bufferID = m_GPUBufferCount;
         m_GPUBufferCount++;
 
         m_BufferStorage.Types.resize(m_GPUBufferCount);
         m_BufferStorage.DataSizes.resize(m_GPUBufferCount);
         m_BufferStorage.DataCounts.resize(m_GPUBufferCount);
         m_BufferStorage.Handles.resize(m_GPUBufferCount);
+
+        LOG_INFO("Created Buffer: ", bufferID);
     }
 
-    m_BufferStorage.Types[buffer] = type;
-    m_BufferStorage.DataSizes[buffer] = dataSize;
-    m_BufferStorage.DataCounts[buffer] = dataCount;
+    m_BufferStorage.Types[bufferID] = type;
+    m_BufferStorage.DataSizes[bufferID] = dataSize;
+    m_BufferStorage.DataCounts[bufferID] = dataCount;
 
     unsigned int bufferType = GetBufferType(type);
 
-    GLCall(glGenBuffers(1, &m_BufferStorage.Handles[buffer]));
-    GLCall(glBindBuffer(bufferType, m_BufferStorage.Handles[buffer]));
+    GLCall(glGenBuffers(1, &m_BufferStorage.Handles[bufferID]));
+    GLCall(glBindBuffer(bufferType, m_BufferStorage.Handles[bufferID]));
     
-    GLCall(glBufferData(bufferType, m_BufferStorage.DataSizes[buffer] * m_BufferStorage.DataCounts[buffer], nullptr, GL_DYNAMIC_DRAW)); //TODO: This needs to change later to support shader storage and instances
+    GLCall(glBufferData(bufferType, m_BufferStorage.DataSizes[bufferID] * m_BufferStorage.DataCounts[bufferID], nullptr, GL_DYNAMIC_DRAW)); //TODO: This needs to change later to support shader storage and instances
 
-    return buffer;
+    return bufferID;
 }
 
 void Quilt::BufferManager::RemoveBuffer(unsigned int bufferID)
 {
-    LOG_INFO("Removing Buffer at ID: ", bufferID);
+    LOG_INFO("Removing Buffer: ", bufferID);
 
     GLCall(glDeleteBuffers(1, &m_BufferStorage.Handles[bufferID]));
     m_RemovedBuffers.push_back(bufferID);
