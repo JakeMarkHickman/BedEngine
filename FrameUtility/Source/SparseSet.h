@@ -87,6 +87,12 @@ namespace Frame
             return m_Data;
         }
 
+        //Is the Data of sparse set empty
+        const bool IsEmpty() const
+        {
+            return m_Data.empty();
+        }
+
         void Clear()
         {
             m_Sparse.clear();

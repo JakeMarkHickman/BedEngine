@@ -129,6 +129,11 @@ unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool
     return cameraID;
 }
 
+void Quilt::Duvet::RemoveCamera(unsigned int& cameraHandle)
+{
+    m_CameraManager.RemoveCamera(cameraHandle);
+}
+
 void Quilt::Duvet::CreateTexture(const std::string texturePath, const TextureFiltering filter, unsigned int& meshHandle)
 {
     //Load Texture from file

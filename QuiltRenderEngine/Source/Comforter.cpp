@@ -6,11 +6,26 @@
 
 unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData)
 {
-    /*if (m_BatchStorage.empty())
+    if (m_BatchStorage.IsEmpty())
     {
-        return CreateBatchHandle(batchData);
-    }*/
+        LOG_INFO("No Batches exist creating");
+        return CreateBatchHandle(vertexBufferHandle, indexBufferHandle, batchData);
+    }
 
+    for(Quilt::Batch batch : m_BatchStorage.GetAllData())
+    {
+        LOG_DEBUG("Batch data: ", batchData.ShaderID);
+        LOG_DEBUG("Data Batch: ", batch.Data.ShaderID);
+
+
+        if(batch.Data == batchData)
+        {
+            LOG_INFO("Batch Found");
+            break;
+        }
+    }
+
+    LOG_INFO("No Batch Found");
     //TODO: Decide when to get/create a new batch
     return CreateBatchHandle(vertexBufferHandle, indexBufferHandle, batchData);
 }

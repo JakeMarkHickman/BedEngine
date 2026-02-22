@@ -105,6 +105,15 @@ namespace Bed
         }
     }
 
+    void OnSpriteComponentRemoved(Bed::World& world, uint64_t entity)
+    {
+        if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
+        {
+            Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
+            Quilt::Duvet::RemoveMesh(sprite->Handle);
+        }
+    }
+
     void OnTextureComponentAttached(Bed::World& world, uint64_t entity)
     {
         if(world.HasComponents<Bed::Texture, Bed::Sprite, Pillow::Transform>(entity))
@@ -126,7 +135,16 @@ namespace Bed
         }
     }
 
-    //Physics
+    void OnCameraComponentRemoved(Bed::World& world, uint64_t entity)
+    {
+        if(world.HasComponents<Pillow::Transform, Bed::Camera>(entity))
+        {
+            Bed::Camera* cam = world.GetComponent<Bed::Camera>(entity);
+            Quilt::Duvet::RemoveCamera(cam->Handle);
+        }
+    }
+
+    //PHYSICS
     void OnPhysicsComponentAttached(Bed::World& world, uint64_t entity)
     {
         if(world.HasComponents<Pillow::Transform, Mattress::PhysicsObject>(entity))
@@ -137,15 +155,6 @@ namespace Bed
             physicsObject->Position = transform->Position;
 
             world.GetWorldPhysics().AddPhysicsObject(physicsObject);
-        }
-    }
-
-    void OnSpriteComponentRemoved(Bed::World& world, uint64_t entity)
-    {
-        if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
-        {
-            Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-            Quilt::Duvet::RemoveMesh(sprite->Handle);
         }
     }
 }

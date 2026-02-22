@@ -33,7 +33,7 @@ namespace Quilt
                 vertex layout
             */
             return Type == other.Type &&
-                /*VertexLayoutID == other.VertexLayoutID &&*/
+                //VertexLayoutID == other.VertexLayoutID &&
                 ShaderID == other.ShaderID;
         }
 

@@ -23,6 +23,7 @@ namespace Quilt
         static void RemoveMesh(unsigned int& meshHandle);
 
         static unsigned int CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize);
+        static void RemoveCamera(unsigned int& cameraHandle);
 
         static void CreateTexture(const std::string texturePath, const TextureFiltering filter, unsigned int& meshHandle);
 
