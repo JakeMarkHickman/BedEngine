@@ -49,6 +49,18 @@ namespace Bed
 
         std::unordered_map<uint64_t, Bed::World*>& GetActiveWorlds() { return m_WorldRegistry; };
 
+        /*
+            This adds a Component attched from a class
+            For exmple:
+            Bed::SpriteRenderer::OnSpriteComponentAttached;
+
+            variable 1 - instance: this is the function where you are grabbing the function from I.E SpriteRenderer
+            variable 3 - function: The function refrence I.E &Bed::SpriteRenderer::OnSpriteComponentAttached
+
+            USE CASE:
+            SpriteRenderer spriteRenderer;
+            RegisterOnComponentAttachedGlobal(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentAttached);
+        */
         template<typename... Comps, typename T>
         void RegisterOnComponentAttachedGlobal(T& instance, void(T::*fn)(Bed::World&, uint64_t))
         {
@@ -64,6 +76,18 @@ namespace Bed
             }(), ...);
         }
 
+        /*
+            This adds a Component removed from a class
+            For exmple:
+            Bed::SpriteRenderer::OnSpriteComponentRemoved;
+
+            variable 1 - instance: this is the function where you are grabbing the function from I.E SpriteRenderer
+            variable 3 - function: The function refrence I.E &Bed::SpriteRenderer::OnSpriteComponentRemoved
+
+            USE CASE:
+            SpriteRenderer spriteRenderer;
+            RegisterOnComponentRemovedGlobal(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentRemoved);
+        */
         template<typename... Comps, typename T>
         void RegisterOnComponentRemovedGlobal(T& instance, void(T::*fn)(Bed::World&, uint64_t))
         {
