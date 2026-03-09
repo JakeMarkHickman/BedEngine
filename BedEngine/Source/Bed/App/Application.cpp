@@ -129,7 +129,7 @@ namespace Bed
             return;
         }
 
-        m_Window->SetWindowIcon("Assets/Resources/Textures/BedEngineLogo.png");
+        m_Window->SetWindowIcon(m_WindowIcon);
 
         if(!Quilt::Duvet::IsContextValid()) // Check to make sure the context is created
         {

@@ -21,11 +21,19 @@ namespace Bed
     public:
         void Run();
 
-        void SetApplicationName(const char* Name)
+        void SetApplicationName(const char* name)
         {
-            if(Name != m_ApplicationName)
+            if(name != m_ApplicationName)
             {
-                m_ApplicationName = Name;
+                m_ApplicationName = name;
+            }
+        };
+
+        void SetWindowIcon(const char* path)
+        {
+            if(path != m_WindowIcon)
+            {
+                m_WindowIcon = path;
             }
         };
 
@@ -44,6 +52,7 @@ namespace Bed
     protected:
         // TODO: Add variables that are able to be modified to 
         const char* m_ApplicationName = "Bed Engine";
+        const char* m_WindowIcon = "Assets/Resources/Textures/BedEngineLogo.png";
 
         /*TODO: Game Hierarchy
             App

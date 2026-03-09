@@ -25,7 +25,9 @@ Bed::Application* CreateApplication()
 {
     Bed::Application* App = new TesterGame;
     const char* Name = "Playground";
+    const char* Icon = "Assets/Resources/Textures/LittleGuy.png";
     App->SetApplicationName(Name);
+    App->SetWindowIcon(Icon);
 
     Test::TestWorld* gameWorld = new Test::TestWorld();
 
