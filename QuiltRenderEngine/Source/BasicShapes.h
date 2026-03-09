@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+#include "Vertex.h"
+#include <Vector/Vector4.h>
+
 namespace Quilt
 {
     struct Plane
@@ -7,31 +11,34 @@ namespace Quilt
         Plane();
         Plane(float x, float y);
         Plane(float size);
+
+        std::vector<Quilt::Vertex> Vertices;
+        std::vector<unsigned int> Indices;
     };
 
     struct Circle
     {
-        Circle();
+        Circle() {};
     };
 
     struct Triangle
     {
-        Triangle();
+        Triangle() {};
     };
 
     struct Cube
     {
-        Cube();
+        Cube() {};
     };
 
     struct Sphere
     {
-        Sphere();
+        Sphere() {};
     };
 
     struct Pyramid
     {
-        Pyramid();
+        Pyramid() {};
     };
     
 }

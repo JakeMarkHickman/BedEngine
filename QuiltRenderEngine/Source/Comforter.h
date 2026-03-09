@@ -20,8 +20,8 @@ namespace Quilt
     struct BatchData
     {
         BatchType Type;
-        unsigned int VertexLayoutID;
         unsigned int ShaderID;
+        unsigned int TextureID;
 
         bool operator==(const BatchData& other) const
         {
@@ -33,8 +33,8 @@ namespace Quilt
                 vertex layout
             */
             return Type == other.Type &&
-                //VertexLayoutID == other.VertexLayoutID &&
-                ShaderID == other.ShaderID;
+                ShaderID == other.ShaderID &&
+                TextureID == other.TextureID;
         }
 
         const BatchData& operator=(const BatchData& other)
@@ -55,9 +55,30 @@ namespace Quilt
         uint64_t VertexCount;
         uint64_t IndexCount;
 
+        unsigned int VertexLayoutID;
+
         std::vector<const Pillow::Transform*> Transforms;
     };
+}
 
+namespace std
+{
+    template<>
+    struct hash<Quilt::BatchData>
+    {
+        size_t operator()(const Quilt::BatchData& data) const noexcept
+        {
+            size_t type = std::hash<int>{}(static_cast<int>(data.Type));
+            size_t shaderID = std::hash<unsigned int>{}(data.ShaderID);
+            size_t textureID = std::hash<unsigned int>{}(data.TextureID);
+
+            return type ^ (shaderID << 1) ^ (textureID << 2);
+        }
+    };
+}
+
+namespace Quilt
+{
     /*TODO: SoA better for processing a single field over many objects where AoS is better for objects using many fields!
         - Batches are itterated per batch touching all feilds at a time.
         - Cameras are itterated per camera touching all feilds at a time.
@@ -76,6 +97,9 @@ namespace Quilt
         void RemoveBatch(unsigned int batchHandle);
         bool IsBatchEmpty(unsigned int batchHandle) { return true; };
 
+        bool FindBatchsWithData(BatchData& batchData);
+        std::vector<unsigned int>& GetBatchesWithData(BatchData& batchData);
+
         const std::vector<Quilt::Batch>& GetAllBatches() { return m_BatchStorage.GetAllData(); };
 
         const Quilt::Batch GetBatch(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle); };
@@ -91,11 +115,13 @@ namespace Quilt
 
     private:
         unsigned int CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
-        unsigned int GetBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
+        unsigned int GetBatchHandle(BatchData& batchData);
 
         unsigned int m_BatchHandleCount = 0;
         std::vector<unsigned int> m_RemovedBatchIDs;
         Frame::SparseSet<Quilt::Batch> m_BatchStorage;
+
+        std::unordered_map<BatchData, std::vector<unsigned int>> m_BatchDataLookUp;
     };
 
     using BatchManager = Comforter;

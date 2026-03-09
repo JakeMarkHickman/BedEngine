@@ -16,6 +16,7 @@ namespace Bed
         virtual void UpdateWindow();
         virtual bool IsWindowOpen();
         virtual void CloseWindow();
+        virtual void SetWindowIcon(std::string path);
         virtual void ResizeWindow(int width, int height);
         virtual void RenameWindow(const char* title);
 

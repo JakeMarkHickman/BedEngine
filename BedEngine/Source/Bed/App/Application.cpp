@@ -65,55 +65,6 @@ namespace Debug
 namespace Bed
 {
     //RENDERING
-    void OnSpriteComponentAttached(Bed::World& world, uint64_t entity)
-    {
-        if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
-        {
-            Quilt::Vertex v0;
-            v0.Position = { -0.5f, -0.5f, 0.0f };
-            v0.Normal = { 0.0f, 0.0f, 0.0f };
-            v0.Colour = { Pillow::Vector4f(1.0f, 1.0f, 1.0f, 1.0f) };
-            v0.TextureCoordinates = { 0.0f,  0.0f };
-            v0.TextureID = 0;
-
-            Quilt::Vertex v1;
-            v1.Position = { 0.5f, -0.5f, 0.0f };
-            v1.Normal = { 0.0f, 0.0f, 0.0f };
-            v1.Colour = { Pillow::Vector4f(1.0f, 1.0f, 1.0f, 1.0f) };
-            v1.TextureCoordinates = { 1.0f,  0.0f };
-            v1.TextureID = 0;
-
-            Quilt::Vertex v2;
-            v2.Position = { 0.5f, 0.5f, 0.0f };
-            v2.Normal = { 0.0f, 0.0f, 0.0f };
-            v2.Colour = { Pillow::Vector4f(1.0f, 1.0f, 1.0f, 1.0f) };
-            v2.TextureCoordinates = { 1.0f,  1.0f };
-            v2.TextureID = 0;
-
-            Quilt::Vertex v3;
-            v3.Position = { -0.5f, 0.5f, 0.0f };
-            v3.Normal = { 0.0f, 0.0f, 0.0f };
-            v3.Colour = { Pillow::Vector4f(1.0f, 1.0f, 1.0f, 1.0f) };
-            v3.TextureCoordinates = { 0.0f,  1.0f };
-            v3.TextureID = 0;
-
-            std::vector<Quilt::Vertex> vertices = { v0, v1, v2, v3 };
-            std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
-
-            Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-            sprite->Handle = Quilt::Duvet::CreateMesh(vertices, indices, world.GetComponent<Pillow::Transform>(entity));
-        }
-    }
-
-    void OnSpriteComponentRemoved(Bed::World& world, uint64_t entity)
-    {
-        if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
-        {
-            Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-            Quilt::Duvet::RemoveMesh(sprite->Handle);
-        }
-    }
-
     void OnTextureComponentAttached(Bed::World& world, uint64_t entity)
     {
         if(world.HasComponents<Bed::Texture, Bed::Sprite, Pillow::Transform>(entity))
@@ -178,6 +129,8 @@ namespace Bed
             return;
         }
 
+        m_Window->SetWindowIcon("Assets/Resources/Textures/BedEngineLogo.png");
+
         if(!Quilt::Duvet::IsContextValid()) // Check to make sure the context is created
         {
             LOG_FATAL("Context not Created!");
@@ -198,8 +151,6 @@ namespace Bed
             TODO: call plugins that register global components here, maybe have a way to force reload plugins so that it can happen at any time (stops closing the editor).
             TODO: make this a seperate function as this will be able to be modified by users or plugins
         */
-        m_Game->GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Sprite>(Bed::OnSpriteComponentAttached);
-        m_Game->GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Sprite>(Bed::OnSpriteComponentRemoved);
 
         //TODO: Textures shouldnt rely on needing the sprite or transform
         m_Game->GetECS().RegisterOnComponentAttachedGlobal<Bed::Texture, Bed::Sprite, Pillow::Transform>(Bed::OnTextureComponentAttached);

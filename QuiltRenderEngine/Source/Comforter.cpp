@@ -6,27 +6,18 @@
 
 unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData)
 {
-    if (m_BatchStorage.IsEmpty())
+    if(m_BatchStorage.IsEmpty())
     {
         LOG_INFO("No Batches exist creating");
         return CreateBatchHandle(vertexBufferHandle, indexBufferHandle, batchData);
     }
 
-    for(Quilt::Batch batch : m_BatchStorage.GetAllData())
+    if(FindBatchsWithData(batchData))
     {
-        LOG_DEBUG("Batch data: ", batchData.ShaderID);
-        LOG_DEBUG("Data Batch: ", batch.Data.ShaderID);
-
-
-        if(batch.Data == batchData)
-        {
-            LOG_INFO("Batch Found");
-            break;
-        }
+        return GetBatchHandle(batchData);
     }
 
     LOG_INFO("No Batch Found");
-    //TODO: Decide when to get/create a new batch
     return CreateBatchHandle(vertexBufferHandle, indexBufferHandle, batchData);
 }
 
@@ -67,8 +58,8 @@ unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle
 
     //TODO: remove this out of here
     //Generate vertex array
-    GLCall(glGenVertexArrays(1, &newBatch.Data.VertexLayoutID));
-    GLCall(glBindVertexArray(newBatch.Data.VertexLayoutID));
+    GLCall(glGenVertexArrays(1, &newBatch.VertexLayoutID));
+    GLCall(glBindVertexArray(newBatch.VertexLayoutID));
 
     size_t stride = 13 * sizeof(float);
 
@@ -89,12 +80,42 @@ unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle
 
     m_BatchStorage.Insert(batchHandle, newBatch);
 
+    //check if batch data already exists and add the new batch
+    if(FindBatchsWithData(batchData))
+    {
+        m_BatchDataLookUp.at(batchData).push_back(batchHandle);
+    }
+    else
+    {
+        std::vector<unsigned int> handles;
+        handles.push_back(batchHandle);
+        m_BatchDataLookUp.emplace(batchData, handles);
+    }
+
     return batchHandle;
 }
 
-unsigned int Quilt::Comforter::GetBatchHandle(unsigned int vertexCount, unsigned int indexCount, BatchData& batchData)
+unsigned int Quilt::Comforter::GetBatchHandle(BatchData& batchData)
 {
-    return 0;
+    unsigned int handle;
+
+    for(unsigned int batchHandle : GetBatchesWithData(batchData))
+    {
+        handle = batchHandle;
+        break;
+    }
+
+    return handle;
+}
+
+bool Quilt::Comforter::FindBatchsWithData(BatchData& batchData)
+{
+    return m_BatchDataLookUp.find(batchData) != m_BatchDataLookUp.end();
+}
+
+std::vector<unsigned int>& Quilt::Comforter::GetBatchesWithData(BatchData& batchData)
+{
+    return m_BatchDataLookUp.at(batchData);
 }
 
 unsigned int Quilt::Comforter::AddTransform(unsigned int batchHandle, const Pillow::Transform* transform)

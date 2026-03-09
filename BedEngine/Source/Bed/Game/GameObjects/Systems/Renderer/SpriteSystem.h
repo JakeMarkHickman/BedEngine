@@ -4,24 +4,48 @@
 #include <SleepTrace.h>
 
 #include <Duvet.h>
+#include <BasicShapes.h>
 
 namespace Bed
 {
-    void SpriteSystem(Bed::World& world)
+    struct SpriteRenderer
     {
-        for(uint64_t i : world.GetAllEntities())
+        void OnSpriteComponentAttached(Bed::World& world, uint64_t entity)
         {
-            /*Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
+            if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
+            {
+                Quilt::Plane plane;
 
-            Quilt::Batch& batch = Quilt::Duvet::GetBatch(sprite->Handle);
-            Quilt::Mesh& mesh = Quilt::Duvet::GetMesh(sprite->Handle);
-
-            LOG_DEBUG("Entity: ", i);
-            LOG_DEBUG("Position, X: ", batch.Transforms[mesh.LocalIndex].Position.x, " Y: ", batch.Transforms[mesh.LocalIndex].Position.y, " Z: ", batch.Transforms[mesh.LocalIndex].Position.z);
-            LOG_DEBUG("Rotation, X: ", batch.Transforms[mesh.LocalIndex].Rotation.x, " Y: ", batch.Transforms[mesh.LocalIndex].Rotation.y, " Z: ", batch.Transforms[mesh.LocalIndex].Rotation.z);
-            LOG_DEBUG("Scale, X: ", batch.Transforms[mesh.LocalIndex].Scale.x, " Y: ", batch.Transforms[mesh.LocalIndex].Scale.y, " Z: ", batch.Transforms[mesh.LocalIndex].Scale.z);*/
+                Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
+                sprite->Handle = Quilt::Duvet::CreateMesh(plane.Vertices, plane.Indices, world.GetComponent<Pillow::Transform>(entity));
+            }
         }
-    }
+
+        void OnSpriteComponentRemoved(Bed::World& world, uint64_t entity)
+        {
+            if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
+            {
+                Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
+                Quilt::Duvet::RemoveMesh(sprite->Handle);
+            }
+        }
+
+        void SpriteSystem(Bed::World& world)
+        {
+            for(uint64_t i : world.GetAllEntities())
+            {
+                /*Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
+
+                Quilt::Batch& batch = Quilt::Duvet::GetBatch(sprite->Handle);
+                Quilt::Mesh& mesh = Quilt::Duvet::GetMesh(sprite->Handle);
+
+                LOG_DEBUG("Entity: ", i);
+                LOG_DEBUG("Position, X: ", batch.Transforms[mesh.LocalIndex].Position.x, " Y: ", batch.Transforms[mesh.LocalIndex].Position.y, " Z: ", batch.Transforms[mesh.LocalIndex].Position.z);
+                LOG_DEBUG("Rotation, X: ", batch.Transforms[mesh.LocalIndex].Rotation.x, " Y: ", batch.Transforms[mesh.LocalIndex].Rotation.y, " Z: ", batch.Transforms[mesh.LocalIndex].Rotation.z);
+                LOG_DEBUG("Scale, X: ", batch.Transforms[mesh.LocalIndex].Scale.x, " Y: ", batch.Transforms[mesh.LocalIndex].Scale.y, " Z: ", batch.Transforms[mesh.LocalIndex].Scale.z);*/
+            }
+        }
+    };
 
     /*struct SpriteInstanceData
     {

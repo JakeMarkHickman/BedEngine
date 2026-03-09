@@ -28,6 +28,8 @@ namespace Bed
         virtual bool IsWindowOpen() = 0;
         virtual void CloseWindow() = 0;
 
+        virtual void SetWindowIcon(std::string path) = 0;
+
         virtual void ResizeWindow(int width, int height) 
         {
             m_WindowSize.Width = width;

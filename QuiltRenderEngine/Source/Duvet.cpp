@@ -2,6 +2,16 @@
 
 #include <algorithm>
 
+unsigned int Quilt::Duvet::CreateShader(std::string vertexShader, std::string fragmentShader)
+{
+    if(!m_ShaderManager.IsShaderProgram(vertexShader, fragmentShader))
+    {
+        return m_ShaderManager.AddShader(vertexShader, fragmentShader);
+    }
+    
+    return m_ShaderManager.GetShaderProgram(vertexShader, fragmentShader);
+}
+
 unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform)
 {
     LOG_INFO("Device Texture Slots ", m_TextureManager.GetTextureSlots());
@@ -60,21 +70,37 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
     }
     )";
 
-    unsigned int shaderID = m_ShaderManager.AddShader(vertexShader, fragmentShader);
+
+    
 
     Quilt::BatchData data;
-    data.ShaderID = shaderID;
+    data.ShaderID = CreateShader(vertexShader, fragmentShader);
     data.Type = BatchType::Dynamic;
+    data.TextureID = 0;
     //TODO: use vertex layout too!
 
-    //Create the buffers
-    unsigned int vertexCount = 16000;
-    unsigned int indexCount = 24000;
-    unsigned int vertexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
-    unsigned int indexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
+    unsigned int batchHandle;
+    
+    if(m_BatchManager.FindBatchsWithData(data))
+    {
+        for(unsigned int& handle : m_BatchManager.GetBatchesWithData(data))
+        {
+            batchHandle = handle;
+            break;
+        }
+    }
+    else
+    {
+        //Create the buffers
+        unsigned int vertexCount = 16000;
+        unsigned int indexCount = 24000;
+        unsigned int vertexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
+        unsigned int indexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
+
+        batchHandle = m_BatchManager.GetOrCreateBatch(vertexBufferHandle, indexBufferHandle, data);
+    }
 
     //Create the batch and assign data
-    unsigned int batchHandle = m_BatchManager.GetOrCreateBatch(vertexBufferHandle, indexBufferHandle, data);
     unsigned int transformOffset = m_BatchManager.AddTransform(batchHandle, transform);
 
     //Populate buffers
@@ -236,7 +262,7 @@ void Quilt::Duvet::Draw()
                             GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
                         }
 
-                        GLCall(glBindVertexArray(currentBatch.Data.VertexLayoutID));
+                        GLCall(glBindVertexArray(currentBatch.VertexLayoutID));
                         m_BufferManager.BindBuffer(currentBatch.VertexBufferHandle);
                         m_BufferManager.BindBuffer(currentBatch.IndexBufferHandle);
 

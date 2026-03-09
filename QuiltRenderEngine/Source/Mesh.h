@@ -2,6 +2,7 @@
 
 #include <SleepTrace.h>
 #include <vector>
+#include <unordered_map>
 
 #include "Vertex.h"
 
@@ -20,6 +21,23 @@ namespace Quilt
         std::vector<std::vector<Quilt::Vertex>> Vertices;
         std::vector<std::vector<unsigned int>> Indices;
     };
+
+    struct Mesh
+    {
+        std::vector<Quilt::Vertex> Vertices;
+        std::vector<unsigned int> Indices;
+    };
+
+    /*class MeshStorage
+    {
+    public:
+        
+        
+    private:
+        std::unordered_map<uint64_t, uint64_t> m_MeshRegistry;
+        std::vector<Quilt::Mesh> m_MeshStorage;
+        uint64_t m_MeshCount = 0;
+    }*/
 
     class MeshManager
     {
@@ -58,12 +76,9 @@ namespace Quilt
         std::vector<unsigned int>& GetMeshIndices(unsigned int& meshID) { return m_Meshes.Indices[meshID]; };
 
     private:
-        //TODO: Reuse 
-
         //As meshes are just a handle to other data they will never be deleted
         Quilt::MeshStorage m_Meshes;
-        uint32_t m_MeshCount = 0;
-        std::vector<uint32_t> m_RemovedMeshIDs;
-        
+        std::vector<uint64_t> m_RemovedMeshIDs;
+        uint64_t m_MeshCount = 0;
     };
 }

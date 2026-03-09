@@ -18,7 +18,7 @@ Source="QuiltRenderEngine/Source"
 Includes="$SharedDependencies -I$Source $GLFW -I$Dependencies/stb_image -I$Dependencies/GLEW/include"
 
 OpenGL="$Source/OpenGl"
-Cpps="$Source/Duvet.cpp $Source/Coverlet.cpp $Source/Comforter.cpp $Source/GPUBuffer.cpp $Source/Mesh.cpp $Source/Texture.cpp $Source/Camera.cpp $Dependencies/stb_image/stb_image.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
+Cpps="$Source/Duvet.cpp $Source/Coverlet.cpp $Source/Comforter.cpp $Source/GPUBuffer.cpp $Source/Mesh.cpp $Source/Texture.cpp $Source/Camera.cpp $Dependencies/stb_image/stb_image.cpp $Source/BasicShapes.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
 Flags="-std=c++20 -Wno-c++20-extensions"
 Predef="-DGLEW_STATIC"
 OutputFile=""
@@ -87,10 +87,9 @@ GameOutputFile="Playground"                     # No extention as we will set it
 EngineOutputFile=""                # The engine will always be a dynamic lib
 
 #Includes
-GameIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source -IQuiltRenderEngine/Dependencies/GLEW/include" #-I$Dependencies/glm
-EngineIncludes=" $SharedDependencies -I$Source -I$Inclusions -I$Dependencies/GLFW/include
-                -I$Dependencies/nlohmann -I$Dependencies/MetaStuff/include
-                -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source -IQuiltRenderEngine/Dependencies/GLEW/include"
+sharedIncludes="$SharedDependencies -I$Source -I$Inclusions -I$Dependencies/nlohmann -I$Dependencies/GLFW/include -I$Dependencies/MetaStuff/include -I$Dependencies/stb_image -IMattressPhysicsEngine/Source -IQuiltRenderEngine/Source -IQuiltRenderEngine/Dependencies/GLEW/include"
+GameIncludes="$sharedIncludes"
+EngineIncludes="$sharedIncludes"
 
 #Libarys
 GameLibs=""             # Libs for the game
@@ -110,7 +109,7 @@ if $Debug; then
 fi
 
 #CPPs
-ToolsCpp="$Tools/FileLoader.cpp $Tools/StringSearcher.cpp $Tools/Memory/MemoryPool.cpp"
+ToolsCpp="$Tools/FileLoader.cpp $Tools/StringSearcher.cpp $Tools/Memory/MemoryPool.cpp $Dependencies/stb_image/stb_image.cpp"
 
 GameObjectsCpp="$Game/Game.cpp $Game/GameObjects/Physics/Collision/Collision.cpp"
 

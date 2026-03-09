@@ -19,6 +19,8 @@ namespace Quilt
     class Duvet
     {
     public:
+        static unsigned int CreateShader(std::string vertexShader, std::string fragmentShader);
+
         static unsigned int CreateMesh(const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform);
         static void RemoveMesh(unsigned int& meshHandle);
 

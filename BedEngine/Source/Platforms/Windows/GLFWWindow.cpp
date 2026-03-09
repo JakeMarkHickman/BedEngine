@@ -1,7 +1,7 @@
 #include "GLFWWindow.h"
 
 #include <SleepTrace.h>
-
+#include <stb_image.h>
 
 bool Bed::GLFWWindow::CreateWindow(int width, int height, const char* title)
 {
@@ -135,6 +135,20 @@ bool Bed::GLFWWindow::IsWindowOpen()
 void Bed::GLFWWindow::CloseWindow()
 {
     glfwTerminate();
+}
+
+void Bed::GLFWWindow::SetWindowIcon(std::string path)
+{
+    int width, height, channels;
+    unsigned char* pixels = stbi_load(path.c_str(), &width, &height, &channels, 4);
+
+    GLFWimage image;
+    image.width = width;
+    image.height = height;
+    image.pixels = pixels;
+
+    glfwSetWindowIcon(window, 1, &image);
+    stbi_image_free(pixels);
 }
 
 void Bed::GLFWWindow::ResizeWindow(int width, int height)

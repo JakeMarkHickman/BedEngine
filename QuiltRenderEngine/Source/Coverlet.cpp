@@ -2,6 +2,7 @@
 
 //TODO: this needs to go
 #include "OpenGl/OpenDebugger.h"
+#include <functional>
 
 unsigned int Quilt::Coverlet::AddShader(const std::string& VertexShader, const std::string& FragmentShader)
 {
@@ -65,7 +66,25 @@ unsigned int Quilt::Coverlet::AddShader(const std::string& VertexShader, const s
     GLCall(glDeleteShader(vertexShader));
     GLCall(glDeleteShader(fragmentShader));
 
+    uint64_t shaderHashCode = std::hash<std::string>{}(VertexShader + FragmentShader);
+
+    m_ExistingShaderPrograms.emplace(shaderHashCode, handle);
+
     return handle;
+}
+
+unsigned int Quilt::Coverlet::GetShaderProgram(const std::string& VertexShader, const std::string& FragmentShader)
+{
+    uint64_t shaderHashCode = std::hash<std::string>{}(VertexShader + FragmentShader);
+
+    return m_ExistingShaderPrograms.at(shaderHashCode);
+}
+
+bool Quilt::Coverlet::IsShaderProgram(const std::string& VertexShader, const std::string& FragmentShader)
+{
+    uint64_t shaderHashCode = std::hash<std::string>{}(VertexShader + FragmentShader);
+
+    return m_ExistingShaderPrograms.find(shaderHashCode) != m_ExistingShaderPrograms.end();
 }
 
 void Quilt::Coverlet::SetUniformMat4f(unsigned int handle, const std::string& name, const glm::mat4& Matrix)
