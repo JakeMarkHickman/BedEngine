@@ -10,6 +10,8 @@ namespace Bed
 {
     struct SpriteRenderer
     {
+        Quilt::Duvet renderer;
+
         void OnSpriteComponentAttached(Bed::World& world, uint64_t entity)
         {
             if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
@@ -17,7 +19,7 @@ namespace Bed
                 Quilt::Plane plane;
 
                 Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-                sprite->Handle = Quilt::Duvet::CreateMesh(plane.Vertices, plane.Indices, world.GetComponent<Pillow::Transform>(entity));
+                sprite->Handle = renderer.CreateMesh(plane.Vertices, plane.Indices, world.GetComponent<Pillow::Transform>(entity));
             }
         }
 
@@ -26,8 +28,13 @@ namespace Bed
             if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
             {
                 Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-                Quilt::Duvet::RemoveMesh(sprite->Handle);
+                renderer.RemoveMesh(sprite->Handle);
             }
+        }
+
+        void OnSpriteComponentChanged(Bed::World& world, uint64_t entity)
+        {
+            
         }
 
         void SpriteSystem(Bed::World& world)
