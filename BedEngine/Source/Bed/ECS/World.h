@@ -162,7 +162,7 @@ namespace Bed
         {
             if(m_ComponentAttachedlisteners.find(componentHashCode) != m_ComponentAttachedlisteners.end())
             {
-                for(std::function<void(Bed::World&, uint64_t)> event : m_ComponentAttachedlisteners[componentHashCode])
+                for(std::function<void(Bed::World&, uint64_t&)> event : m_ComponentAttachedlisteners[componentHashCode])
                 {
                     event(*this, entityID);
                 }
@@ -173,7 +173,7 @@ namespace Bed
         {
             if(m_ComponentRemovedlisteners.find(componentHashCode) != m_ComponentRemovedlisteners.end())
             {
-                for(std::function<void(Bed::World&, uint64_t)> event : m_ComponentRemovedlisteners[componentHashCode])
+                for(std::function<void(Bed::World&, uint64_t&)> event : m_ComponentRemovedlisteners[componentHashCode])
                 {
                     event(*this, entityID);
                 }

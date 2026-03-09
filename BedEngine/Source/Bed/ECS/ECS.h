@@ -49,6 +49,12 @@ namespace Bed
 
         std::unordered_map<uint64_t, Bed::World*>& GetActiveWorlds() { return m_WorldRegistry; };
 
+        template<typename... Comps, typename T>
+        void RegisterOnComponentAttachedGlobal(T& instance, void(T::*fn)(Bed::World&, uint64_t))
+        {
+            RegisterOnComponentAttachedGlobal<Comps...>([&instance, fn](Bed::World& world, uint64_t entity){(instance.*fn)(world, entity);});
+        }
+
         template<typename... Comps>
         void RegisterOnComponentAttachedGlobal(std::function<void(Bed::World&, uint64_t)> listener)
         {
@@ -56,6 +62,12 @@ namespace Bed
                 uint64_t hashCode = typeid(Comps).hash_code();
                 m_GlobalComponentAttachedlisteners[hashCode].emplace_back(listener);
             }(), ...);
+        }
+
+        template<typename... Comps, typename T>
+        void RegisterOnComponentRemovedGlobal(T& instance, void(T::*fn)(Bed::World&, uint64_t))
+        {
+            RegisterOnComponentRemovedGlobal<Comps...>([&instance, fn](Bed::World& world, uint64_t entity){(instance.*fn)(world, entity);});
         }
 
         template<typename... Comps>
@@ -79,7 +91,28 @@ namespace Bed
             m_WorldRegistry[worldID]->AttachComponents(entityID, std::forward<Components>(comps)...);
         }
 
+        /*
+            This adds a system from a class
+            For exmple:
+            Bed::SpriteRenderer::SpriteSystem;
+
+            variable 1 - instance: this is the function where you are grabbing the function from I.E SpriteRenderer
+            variable 2 - worldID: The world that this function will be active on
+            variable 3 - function: The function refrence I.E &Bed::SpriteRenderer::SpriteSystem
+
+            USE CASE:
+            SpriteRenderer spriteRenderer;
+            uin64_t world1 = CreateWorld();
+            AddSystem(spriteRenderer, world1, &Bed::SpriteRenderer::SpriteSystem);
+        */
+        template<typename T>
+        void AddSystem(T& instance, uint64_t worldID, void(T::*fn)(Bed::World&))
+        {
+            AddSystem(worldID, [&instance, fn](Bed::World& world){(instance.*fn)(world);});
+        }
         void AddSystem(uint64_t worldID, std::function<void(Bed::World&)> systemToAdd);
+
+
         void RemoveSystem(uint64_t worldID, std::function<void(Bed::World&)> systemToRemove);
         void RemoveAllSystems(uint64_t worldID);
         void UpdateSystems();

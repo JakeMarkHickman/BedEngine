@@ -69,18 +69,8 @@ namespace Test
 
             Bed::SpriteRenderer spriteRenderer;
 
-            GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Sprite>(
-                [&spriteRenderer](Bed::World& world, uint64_t entity) 
-                {
-                    spriteRenderer.OnSpriteComponentAttached(world, entity);
-                }
-            );
-            GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Sprite>(
-                [&spriteRenderer](Bed::World& world, uint64_t entity) 
-                {
-                    spriteRenderer.OnSpriteComponentRemoved(world, entity);
-                }
-            );
+            GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Sprite>(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentAttached);
+            GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Sprite>(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentRemoved);
 
             /*std::vector<int> map = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2,
                              0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 
@@ -141,11 +131,7 @@ namespace Test
                                                         Bed::Texture("Assets/Resources/Textures/SpriteTest.png"));
 
             GetECS().AddSystem(world1, Bed::InputSystem);
-            GetECS().AddSystem(world1, 
-                [&spriteRenderer](Bed::World& world) {
-                    spriteRenderer.SpriteSystem(world);
-                }
-            );
+            GetECS().AddSystem(spriteRenderer, world1, &Bed::SpriteRenderer::SpriteSystem);
             GetECS().AddSystem(world1, Bed::TwoPlayerControllerSystem);
             GetECS().AddSystem(world1, SpawnerSystem);
 
