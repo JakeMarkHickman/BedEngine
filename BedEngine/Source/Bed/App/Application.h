@@ -43,6 +43,16 @@ namespace Bed
             m_Game = game;
         }
 
+        void SetPhysicsFramerate(float framerate)
+        {
+            PhysicsFramerate = framerate;
+        }
+
+        void SetRendererFramerate(float framerate)
+        {
+            RendererFramerate = framerate;
+        }
+
         const char* GetApplicationName()
         {
             return m_ApplicationName;
@@ -53,6 +63,8 @@ namespace Bed
         // TODO: Add variables that are able to be modified to 
         const char* m_ApplicationName = "Bed Engine";
         const char* m_WindowIcon = "Assets/Resources/Textures/BedEngineLogo.png";
+        float PhysicsFramerate = 60.0f;
+        float RendererFramerate = 60.0f;
 
         /*TODO: Game Hierarchy
             App

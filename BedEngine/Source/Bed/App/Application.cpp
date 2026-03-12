@@ -159,8 +159,7 @@ namespace Bed
 
         m_Game->BeginPlay();
 
-        float fixedFramerate = 60.0f;
-        float UpdateDelay = 1.0f / fixedFramerate;
+        float PhysicsUpdateDelay = 1.0f / PhysicsFramerate;
         int MaxSteps = 4;
 
         float currentTimer = 0.0f;
@@ -188,14 +187,14 @@ namespace Bed
                     from the ECS that way its a one function call
             */
             currentTimer += Time::GetDeltaTime();
-            currentTimer = std::min(currentTimer, UpdateDelay * MaxSteps);
+            currentTimer = std::min(currentTimer, PhysicsUpdateDelay * MaxSteps);
 
-            while(currentTimer >= UpdateDelay)
+            while(currentTimer >= PhysicsUpdateDelay)
             {
                 
                 for(auto& world : m_Game->GetActiveWorlds())
                 {
-                    world.second->GetWorldPhysics().Step(UpdateDelay); //Physics update
+                    world.second->GetWorldPhysics().Step(PhysicsUpdateDelay); //Physics update
                     
                     //Update Entity Positions from physics step
                     //TODO: Use quieries to test for physics data not a physics object to update
@@ -214,7 +213,7 @@ namespace Bed
                         transform->Position = phyObj->Position;
                     }
 
-                    currentTimer -= UpdateDelay;
+                    currentTimer -= PhysicsUpdateDelay;
                 }
             } 
 
