@@ -87,7 +87,7 @@ namespace Bed
         {
             ([&]{
                 uint64_t hashCode = typeid(Comps).hash_code();
-                m_ComponentAttachedlisteners[hashCode].emplace_back(listener);
+                m_ComponentRemovedlisteners[hashCode].emplace_back(listener);
             }(), ...);
         }
 
@@ -111,6 +111,7 @@ namespace Bed
         {
             ([&]{
                 uint64_t hashCode = typeid(Components).hash_code();
+                LOG_DEBUG("Removing component", hashCode);
                 OnComponentRemoved(entity, hashCode);
                 m_ComponentManager.RemoveComponent<Components>(entity);
             }(), ...);

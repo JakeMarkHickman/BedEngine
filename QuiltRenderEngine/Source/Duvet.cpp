@@ -70,9 +70,6 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
     }
     )";
 
-
-    
-
     Quilt::BatchData data;
     data.ShaderID = CreateShader(vertexShader, fragmentShader);
     data.Type = BatchType::Dynamic;

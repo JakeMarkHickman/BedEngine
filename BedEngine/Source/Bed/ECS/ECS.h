@@ -50,7 +50,7 @@ namespace Bed
         std::unordered_map<uint64_t, Bed::World*>& GetActiveWorlds() { return m_WorldRegistry; };
 
         /*
-            This adds a Component attched from a class
+            This adds a Component attched from a class globally
             For exmple:
             Bed::SpriteRenderer::OnSpriteComponentAttached;
 
@@ -77,7 +77,31 @@ namespace Bed
         }
 
         /*
-            This adds a Component removed from a class
+            This adds a Component attched from a class
+            For exmple:
+            Bed::SpriteRenderer::OnSpriteComponentAttached;
+
+            variable 1 - instance: this is the function where you are grabbing the function from I.E SpriteRenderer
+            variable 3 - function: The function refrence I.E &Bed::SpriteRenderer::OnSpriteComponentAttached
+
+            USE CASE:
+            SpriteRenderer spriteRenderer;
+            RegisterOnComponentAttachedGlobal(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentAttached);
+        */
+        template<typename... Comps, typename T>
+        void RegisterOnComponentAttached(T& instance, uint64_t worldID, void(T::*fn)(Bed::World&, uint64_t))
+        {
+            RegisterOnComponentAttached<Comps...>(worldID, [&instance, fn](Bed::World& world, uint64_t entity){(instance.*fn)(world, entity);});
+        }
+
+        template<typename... Comps>
+        void RegisterOnComponentAttached(uint64_t worldID, std::function<void(Bed::World&, uint64_t)> listener)
+        {
+            m_WorldRegistry[worldID]->RegisterOnComponentAttached<Comps...>(listener);
+        }
+
+        /*
+            This adds a Component removed from a class globally
             For exmple:
             Bed::SpriteRenderer::OnSpriteComponentRemoved;
 
@@ -102,6 +126,30 @@ namespace Bed
                 m_GlobalComponentRemovedlisteners[hashCode].emplace_back(listener);
             }(), ...);
         }
+
+        /*
+            This adds a Component removed from a class
+            For exmple:
+            Bed::SpriteRenderer::OnSpriteComponentRemoved;
+
+            variable 1 - instance: this is the function where you are grabbing the function from I.E SpriteRenderer
+            variable 3 - function: The function refrence I.E &Bed::SpriteRenderer::OnSpriteComponentRemoved
+
+            USE CASE:
+            SpriteRenderer spriteRenderer;
+            RegisterOnComponentRemovedGlobal(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentRemoved);
+        */
+        template<typename... Comps, typename T>
+        void RegisterOnComponentRemoved(T& instance, uint64_t worldID, void(T::*fn)(Bed::World&, uint64_t))
+        {
+            RegisterOnComponentRemoved<Comps...>(worldID, [&instance, fn](Bed::World& world, uint64_t entity){(instance.*fn)(world, entity);});
+        }
+
+        template<typename... Comps>
+        void RegisterOnComponentRemoved(uint64_t worldID, std::function<void(Bed::World&, uint64_t)> listener)
+        {
+            m_WorldRegistry[worldID]->RegisterOnComponentRemoved<Comps...>(listener);
+        }
         
         uint64_t CreateWorld();
         void RemoveWorld(uint64_t worldID);
@@ -114,6 +162,27 @@ namespace Bed
         {
             m_WorldRegistry[worldID]->AttachComponents(entityID, std::forward<Components>(comps)...);
         }
+
+        /*
+            This adds a system from a class globally
+            For exmple:
+            Bed::SpriteRenderer::SpriteSystem;
+
+            variable 1 - instance: this is the function where you are grabbing the function from I.E SpriteRenderer
+            variable 2 - worldID: The world that this function will be active on
+            variable 3 - function: The function refrence I.E &Bed::SpriteRenderer::SpriteSystem
+
+            USE CASE:
+            SpriteRenderer spriteRenderer;
+            uin64_t world1 = CreateWorld();
+            AddSystemGlobal(spriteRenderer, world1, &Bed::SpriteRenderer::SpriteSystem);
+        */
+        template<typename T>
+        void AddSystemGlobal(T& instance, void(T::*fn)(Bed::World&))
+        {
+            AddSystemGlobal([&instance, fn](Bed::World& world){(instance.*fn)(world);});
+        }
+        void AddSystemGlobal(std::function<void(Bed::World&)> systemToAdd);
 
         /*
             This adds a system from a class
@@ -149,5 +218,6 @@ namespace Bed
 
         std::unordered_map<uint64_t, std::vector<std::function<void(Bed::World&, uint64_t)>>> m_GlobalComponentAttachedlisteners;
         std::unordered_map<uint64_t, std::vector<std::function<void(Bed::World&, uint64_t)>>> m_GlobalComponentRemovedlisteners;
+        std::vector<std::function<void(Bed::World&)>> m_GlobalSystems;
     };
 }

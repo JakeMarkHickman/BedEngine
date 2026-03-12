@@ -1,15 +1,7 @@
 
 #include <App/BedEngineApplication.h>
 
-#include "Gameplay/TesterWorld.h"
-
-// TODO: Make this able to be editied by the editor when creating project
-
-class TesterGame : public Bed::Application
-{
-    
-};
-
+#include "Gameplay/Game.h"
 
 /*
     TODO: Make the game world load from an asset file JSON
@@ -23,15 +15,14 @@ class TesterGame : public Bed::Application
 
 Bed::Application* CreateApplication()
 {
-    Bed::Application* App = new TesterGame;
+    Bed::Application* App = new Bed::Application;
     const char* Name = "Playground";
     const char* Icon = "Assets/Resources/Textures/LittleGuy.png";
+    Test::Game* game = new Test::Game();
+    
     App->SetApplicationName(Name);
     App->SetWindowIcon(Icon);
-
-    Test::TestWorld* gameWorld = new Test::TestWorld();
-
-    App->SetGame(gameWorld);
+    App->SetGame(game);
 
     return App;
 }

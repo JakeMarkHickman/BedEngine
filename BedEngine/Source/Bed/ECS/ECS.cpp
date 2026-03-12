@@ -7,7 +7,7 @@ uint64_t Bed::ECS::CreateWorld()
     void* rawMemory = m_WorldPool->Allocate();
     if (!rawMemory)
     {
-        throw std::runtime_error("Component Pool is full!");
+        LOG_FATAL("Component pool is full!");
     }
 
     Bed::World* allocatedWorld = new (rawMemory) Bed::World();
@@ -32,12 +32,17 @@ uint64_t Bed::ECS::CreateWorld()
         }
     }
 
+    for(std::function<void(Bed::World&)> system : m_GlobalSystems)
+    {
+        m_WorldRegistry[worldID]->AddSystem(system);
+    }
+
     return worldID;
 }
 
 void Bed::ECS::RemoveWorld(uint64_t worldID)
 {
-    
+    //TODO: create remove world
 }
 
 uint64_t Bed::ECS::CreateEntity(uint64_t worldID)
@@ -48,6 +53,11 @@ uint64_t Bed::ECS::CreateEntity(uint64_t worldID)
 void Bed::ECS::DestroyEntity(uint64_t worldID, uint64_t entityID)
 {
     m_WorldRegistry[worldID]->DestroyEntity(entityID);
+}
+
+void Bed::ECS::AddSystemGlobal(std::function<void(Bed::World&)> systemToAdd)
+{
+    m_GlobalSystems.emplace_back(systemToAdd);
 }
 
 void Bed::ECS::AddSystem(uint64_t worldID, std::function<void(Bed::World&)> systemToAdd)
