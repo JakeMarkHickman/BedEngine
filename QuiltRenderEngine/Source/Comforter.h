@@ -37,10 +37,25 @@ namespace Quilt
                 TextureID == other.TextureID;
         }
 
+        bool operator!=(const BatchData& other) const
+        {
+            /*
+            TODO: this will later need to be expanded on things that affects the GPU pipeline
+            
+            this includes:
+                texture ID (unless bindless or sprite sheet)
+                vertex layout
+            */
+            return Type != other.Type &&
+                ShaderID != other.ShaderID &&
+                TextureID != other.TextureID;
+        }
+
         const BatchData& operator=(const BatchData& other)
         {
             ShaderID = other.ShaderID;
             Type = other.Type;
+            TextureID = other.TextureID;
 
             return *this;
         }

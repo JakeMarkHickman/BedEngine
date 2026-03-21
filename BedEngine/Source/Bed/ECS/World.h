@@ -111,7 +111,6 @@ namespace Bed
         {
             ([&]{
                 uint64_t hashCode = typeid(Components).hash_code();
-                LOG_DEBUG("Removing component", hashCode);
                 OnComponentRemoved(entity, hashCode);
                 m_ComponentManager.RemoveComponent<Components>(entity);
             }(), ...);

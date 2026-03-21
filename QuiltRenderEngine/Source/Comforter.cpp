@@ -6,7 +6,7 @@
 
 unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData)
 {
-    if(m_BatchStorage.IsEmpty())
+    /*if(m_BatchStorage.IsEmpty())
     {
         LOG_INFO("No Batches exist creating");
         return CreateBatchHandle(vertexBufferHandle, indexBufferHandle, batchData);
@@ -17,7 +17,7 @@ unsigned int Quilt::Comforter::GetOrCreateBatch(unsigned int vertexBufferHandle,
         return GetBatchHandle(batchData);
     }
 
-    LOG_INFO("No Batch Found");
+    LOG_INFO("No Batch Found");*/
     return CreateBatchHandle(vertexBufferHandle, indexBufferHandle, batchData);
 }
 
@@ -81,7 +81,7 @@ unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle
     m_BatchStorage.Insert(batchHandle, newBatch);
 
     //check if batch data already exists and add the new batch
-    if(FindBatchsWithData(batchData))
+    /*if(FindBatchsWithData(batchData))
     {
         m_BatchDataLookUp.at(batchData).push_back(batchHandle);
     }
@@ -90,7 +90,7 @@ unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle
         std::vector<unsigned int> handles;
         handles.push_back(batchHandle);
         m_BatchDataLookUp.emplace(batchData, handles);
-    }
+    }*/
 
     return batchHandle;
 }

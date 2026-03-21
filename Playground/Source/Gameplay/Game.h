@@ -26,9 +26,11 @@ namespace Test
 
             Bed::SpriteRenderer spriteRenderer;
 
+            //Global on component attached
             GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Sprite>(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentAttached);
             GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Sprite>(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentRemoved);
 
+            //Global systems
             GetECS().AddSystemGlobal(spriteRenderer, &Bed::SpriteRenderer::SpriteSystem);
 
             //World 1
