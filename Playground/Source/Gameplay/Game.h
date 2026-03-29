@@ -13,6 +13,8 @@
 
 #include <Systems/Input/InputSystem.h>
 #include <Systems/Renderer/SpriteSystem.h>
+#include <Systems/CameraSystem.h>
+#include <Systems/Material/TextureSystem.h>
 #include "Systems/SpawnerSystem.h"
 #include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
 #include <Bed/Game/GameObjects/Systems/TwoPlayerControllerSystem.h>
@@ -22,18 +24,23 @@ namespace Test
     class Game : public Bed::Game
     {
     protected:
-        virtual void BeginPlay() override {
+        virtual void BeginPlay() override 
+        {
+            //GLOBAL
+            Bed::SpriteSystems spriteSystems;
+            GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Sprite>(spriteSystems, &Bed::SpriteSystems::OnSpriteComponentAttached);
+            GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Sprite>(spriteSystems, &Bed::SpriteSystems::OnSpriteComponentRemoved);
+            GetECS().AddSystemGlobal(spriteSystems, &Bed::SpriteSystems::SpriteSystem);
 
-            Bed::SpriteRenderer spriteRenderer;
+            Bed::CameraSystems cameraSystems;
+            GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Camera>(cameraSystems, &Bed::CameraSystems::OnCameraComponentAttached);
+            GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Camera>(cameraSystems, &Bed::CameraSystems::OnCameraComponentRemoved);
 
-            //Global on component attached
-            GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Sprite>(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentAttached);
-            GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Sprite>(spriteRenderer, &Bed::SpriteRenderer::OnSpriteComponentRemoved);
+            Bed::TextureSystems textureSystems;
+            GetECS().RegisterOnComponentAttachedGlobal<Bed::Texture>(textureSystems, &Bed::TextureSystems::OnTextureComponentAttached);
+            GetECS().RegisterOnComponentRemovedGlobal<Bed::Texture>(textureSystems, &Bed::TextureSystems::OnTextureComponentRemoved);
 
-            //Global systems
-            GetECS().AddSystemGlobal(spriteRenderer, &Bed::SpriteRenderer::SpriteSystem);
-
-            //World 1
+            //WORLD 1
             uint64_t world1 = GetECS().CreateWorld();
 
             uint64_t PlayerOne = GetECS().CreateEntity(world1);
@@ -57,7 +64,7 @@ namespace Test
                                                         Bed::Input(),
                                                         Bed::PlayerTwoTag(),
                                                         Mattress::PhysicsObject(),
-                                                        Bed::Texture("Assets/Resources/Textures/LittleGuy.png"));
+                                                        Bed::Texture("Assets/Resources/Textures/LittleGuyGBA.png"));
 
             uint64_t PlayerTwoCam = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, PlayerTwoCam, Pillow::Transform(Pillow::Vector3f(1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),

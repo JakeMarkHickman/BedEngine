@@ -2,81 +2,122 @@
 
 #include <algorithm>
 
-unsigned int Quilt::Duvet::CreateShader(std::string vertexShader, std::string fragmentShader)
-{
-    if(!m_ShaderManager.IsShaderProgram(vertexShader, fragmentShader))
-    {
-        return m_ShaderManager.AddShader(vertexShader, fragmentShader);
-    }
+/*
+    TODO: THIS WHOLE THING NEEDS A REWORK TO GET WORKING PROPERLY
+
+    Mesh should just be the information of a mesh. When created
+    the mesh should return a handle to a mesh that is stored in
+    memory. This allows for quick access if the mesh is common
+    like a sprite.
+        - Vertices
+        - Indices
     
-    return m_ShaderManager.GetShaderProgram(vertexShader, fragmentShader);
+    The external entity in Bed Engines case will hold all information
+    about the state of the component. It stores the Texture ID, Mesh ID,
+    Material ID ect. The engine will be the single source of truth. This
+    means this can be simplified as state is external, expansion for later
+    would be Quilt managing the life cycle for OOP or other achitectures.
+*/
+
+//TODO: This will be outside the lib in Quilts SDK
+void Quilt::Duvet::Init()
+{
+    LOG_INFO("Texture slots available on GPU: ", m_TextureManager.GetTextureSlots());
 }
 
-unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices, const Pillow::Transform* transform)
+unsigned int Quilt::Duvet::CreateShader(std::string shaderName, std::string vertexShader, std::string fragmentShader)
 {
-    LOG_INFO("Device Texture Slots ", m_TextureManager.GetTextureSlots());
+    unsigned int shaderHandle;
 
-    //TODO: Make this shader be parsed in with materials rather than hardcoded here
-    std::string vertexShader = R"(
-    #version 450 core 
-    layout(location = 0) in vec4 a_Position;
-    layout(location = 1) in vec3 a_Normal;
-    layout(location = 2) in vec4 a_Colour;
-    layout(location = 3) in vec2 a_TexCoord;
-    layout(location = 4) in float a_TexID;
-
-    uniform mat4 u_View;
-    uniform mat4 u_Projection;
-    uniform mat4 u_Model;
-
-    out vec4 v_Pos;
-    out vec3 v_Normal;
-    out vec4 v_Colour;
-    out vec2 v_TexCoord;
-    flat out float v_TexID;
-
-    vec4 mvp(vec4 pos)
+    if(m_ShaderLookup.find(shaderName) != m_ShaderLookup.end())
     {
-        return u_Projection * u_View * (u_Model * pos);
+        LOG_FATAL("Shader already exists with name: ", shaderName);
+        return 0;
     }
 
-    void main()
+    if(m_ShaderManager.IsShaderProgram(vertexShader, fragmentShader))
     {
-        v_Pos = u_Model * a_Position;
-        v_Normal = a_Normal;
-        v_Colour = a_Colour;
-        v_TexCoord = a_TexCoord;
-        v_TexID = a_TexID;
-
-        gl_Position = mvp(a_Position);
+        LOG_ERROR("Shader Program already Exists");
+        shaderHandle = m_ShaderManager.GetShaderProgram(vertexShader, fragmentShader);
     }
-    )";
-
-    std::string fragmentShader = R"(
-    #version 450 core
-    in vec4 v_Pos;
-    in vec3 v_Normal;
-    in vec4 v_Colour;
-    in vec2 v_TexCoord;
-    flat in float v_TexID;
-
-    uniform sampler2D u_Textures[32];
-
-    layout(location = 0) out vec4 o_FragColour;
-
-    void main()
+    else
     {
-        o_FragColour = texture(u_Textures[int(v_TexID)], v_TexCoord) * v_Colour;
+        shaderHandle = m_ShaderManager.AddShader(vertexShader, fragmentShader);
     }
-    )";
+    
+    m_ShaderLookup.emplace(shaderName, shaderHandle);
+    return shaderHandle;
+}
 
-    Quilt::BatchData data;
-    data.ShaderID = CreateShader(vertexShader, fragmentShader);
-    data.Type = BatchType::Dynamic;
-    data.TextureID = 0;
-    //TODO: use vertex layout too!
+unsigned int Quilt::Duvet::GetShader(std::string shaderName)
+{
+    if(m_ShaderLookup.find(shaderName) == m_ShaderLookup.end())
+    {
+        LOG_FATAL("No Shader Assigned with name: ", shaderName);
+        return 0;
+    }
 
+    return m_ShaderLookup.at(shaderName);
+}
+
+void Quilt::Duvet::SetDefaultTexture(const std::string& path)
+{
+    m_DefaultTextureID = m_TextureManager.AddTexture(path, Quilt::TextureFiltering::Nearest);
+}
+
+unsigned int Quilt::Duvet::GetDefaultTexture()
+{
+    if(!m_TextureManager.IsTexture(m_DefaultTextureID))
+    {
+        LOG_FATAL("Default Texture exceeds assigned textures: ", m_DefaultTextureID);
+    }
+
+    return m_DefaultTextureID;
+};
+
+unsigned int Quilt::Duvet::CreateMesh(const std::string& name, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices)
+{
+    unsigned int handle;
+    if(m_MeshManager.IsMeshCached(name))
+    {
+        handle = m_MeshManager.GetMeshHandle(name);
+    }
+    else
+    {
+        Quilt::Mesh mesh;
+
+        mesh.Vertices = vertices;
+        mesh.Indices = indices;
+        handle = m_MeshManager.CreateMeshHandle(name, mesh);
+    }
+
+    return handle;
+}
+
+unsigned int Quilt::Duvet::CreateMesh(const std::string& path)
+{
+    unsigned int handle;
+    if(m_MeshManager.IsMeshCached(path))
+    {
+        handle = m_MeshManager.GetMeshHandle(path);
+    }
+    else
+    {
+        handle = m_MeshManager.CreateMeshHandle(path);
+    }
+
+    return handle;
+}
+
+void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID, const Pillow::Transform* transform)
+{
     unsigned int batchHandle;
+
+    Quilt::Mesh& mesh = m_MeshManager.GetMeshData(meshID);
+    Quilt::BatchData data;
+    data.ShaderID = shaderID;
+    data.TextureID = GetDefaultTexture();
+    data.Type = Quilt::BatchType::Dynamic;
     
     if(m_BatchManager.FindBatchsWithData(data))
     {
@@ -88,39 +129,55 @@ unsigned int Quilt::Duvet::CreateMesh(const std::vector<Quilt::Vertex>& vertices
     }
     else
     {
+        LOG_INFO("No batches with data");
+
         //Create the buffers
         unsigned int vertexCount = 16000;
         unsigned int indexCount = 24000;
         unsigned int vertexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
         unsigned int indexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
 
-        batchHandle = m_BatchManager.GetOrCreateBatch(vertexBufferHandle, indexBufferHandle, data);
+        batchHandle = m_BatchManager.CreateBatchHandle(vertexBufferHandle, indexBufferHandle, data);
     }
 
+    unsigned int vertexBufferHandle = m_BatchManager.GetVertexBufferHandle(batchHandle);
+    unsigned int indexBufferHandle = m_BatchManager.GetIndexBufferHandle(batchHandle);
+
     //Create the batch and assign data
-    unsigned int transformOffset = m_BatchManager.AddTransform(batchHandle, transform);
+    DrawInfo info;
+    info.Transform = transform;
+    info.IndexCount = mesh.Indices.size();
+    info.IndexOffset = m_BufferManager.GetOccupiedCount(indexBufferHandle);
+
+    unsigned int drawInfoOffset = m_BatchManager.AddDrawInfo(batchHandle, info);
+
+    Quilt::RenderableObject object;
+    object.BatchID = batchHandle;
+    object.DrawInfoOffset = drawInfoOffset;
+    object.VertexOffset = m_BufferManager.GetOccupiedCount(vertexBufferHandle);
+    object.IndexOffset = m_BufferManager.GetOccupiedCount(indexBufferHandle);
+    object.VertexCount = mesh.Vertices.size();
+    object.IndexCount = mesh.Indices.size();
+    object.MeshHandle = meshID;
+
+    LOG_DEBUG("CreateRenderableObject Entity: ", entityID, " VertexOffset: ", object.VertexOffset);
+
+    std::vector<unsigned int> offsetIndices = mesh.Indices;
+    for(unsigned int& index : offsetIndices)
+    {
+        index += object.VertexOffset;
+    }
 
     //Populate buffers
-    m_BufferManager.PopulateBuffer(m_BatchManager.GetVertexBufferHandle(batchHandle), vertices.data(), vertices.size(), m_BatchManager.GetVertexCount(batchHandle));
-    m_BufferManager.PopulateBuffer(m_BatchManager.GetIndexBufferHandle(batchHandle), indices.data(), indices.size(), m_BatchManager.GetIndexCount(batchHandle));
+    m_BufferManager.PopulateBuffer(vertexBufferHandle, mesh.Vertices.data(), mesh.Vertices.size());
+    m_BufferManager.PopulateBuffer(indexBufferHandle, offsetIndices.data(), offsetIndices.size());
 
-    //Create the Mesh Handle
-    unsigned int newMesh = m_MeshManager.CreateMeshHandle();
-    m_MeshManager.SetMeshBatchID(newMesh, batchHandle);
-    m_MeshManager.SetMeshTransformOffset(newMesh, transformOffset);
-    m_MeshManager.SetMeshVertexOffset(newMesh, m_BatchManager.GetVertexCount(batchHandle));
-    m_MeshManager.SetMeshIndicesOffset(newMesh, m_BatchManager.GetIndexCount(batchHandle));
-    m_MeshManager.SetMeshVertexCount(newMesh, vertices.size());
-    m_MeshManager.SetMeshIndexCount(newMesh, indices.size());
-    m_MeshManager.SetMeshVertices(newMesh, vertices);
-    m_MeshManager.SetMeshIndices(newMesh, indices);
-
-    return newMesh;
+    m_RenderManager.CreateRenderableObject(entityID, object);
 }
 
 void Quilt::Duvet::RemoveMesh(unsigned int& meshHandle)
 {
-    unsigned int batchID = m_MeshManager.GetMeshBatchID(meshHandle);
+    /*unsigned int batchID = m_MeshManager.GetMeshBatchID(meshHandle);
     unsigned int vertBufferID = m_BatchManager.GetIndexBufferHandle(batchID);
     unsigned int indexBufferID = m_BatchManager.GetVertexBufferHandle(batchID);
 
@@ -135,7 +192,7 @@ void Quilt::Duvet::RemoveMesh(unsigned int& meshHandle)
         m_BatchManager.RemoveBatch(batchID); //Remove the batch if Empty
     }
 
-    m_MeshManager.RemoveMesh(meshHandle);
+    m_MeshManager.RemoveMesh(meshHandle);*/
 }
 
 unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize)
@@ -157,22 +214,28 @@ void Quilt::Duvet::RemoveCamera(unsigned int& cameraHandle)
     m_CameraManager.RemoveCamera(cameraHandle);
 }
 
-void Quilt::Duvet::CreateTexture(const std::string texturePath, const TextureFiltering filter, unsigned int& meshHandle)
+void Quilt::Duvet::CreateTexture(const std::string texturePath, const TextureFiltering filter, uint64_t entityID)
 {
     //Load Texture from file
     int slot = m_TextureManager.AddTexture(texturePath, filter);
 
-    unsigned int batchHandle = m_MeshManager.GetMeshBatchID(meshHandle);
-    unsigned int vertexOffset = m_MeshManager.GetMeshVertexOffset(meshHandle);
-    unsigned int vertexCount = m_MeshManager.GetMeshVertexCount(meshHandle);
-    unsigned int vertexBufferHandle = m_BatchManager.GetBatch(batchHandle).VertexBufferHandle;
+    LOG_DEBUG("CreateTexture Entity: ", entityID, " Slot: ", slot);
 
-    for(Quilt::Vertex& vert : m_MeshManager.GetMeshVertices(meshHandle))
+    Quilt::RenderableObject& object = m_RenderManager.GetRenderableObject(entityID);
+
+    unsigned int vertexOffset = object.VertexOffset;
+    unsigned int vertexCount = object.VertexCount;
+    unsigned int vertexBufferHandle = m_BatchManager.GetBatch(object.BatchID).VertexBufferHandle;
+    unsigned int meshID = object.MeshHandle;
+
+    std::vector<Quilt::Vertex> verts = m_MeshManager.GetMeshData(meshID).Vertices;
+
+    for(Quilt::Vertex& vert : verts)
     {
         vert.TextureID = slot;
     }
 
-    m_BufferManager.PopulateBuffer(vertexBufferHandle, m_MeshManager.GetMeshVertices(meshHandle).data(), vertexCount, vertexOffset);
+    m_BufferManager.PopulateBuffer(vertexBufferHandle, verts.data(), vertexCount, vertexOffset);
 };
 
 bool Quilt::Duvet::IsContextValid()
@@ -230,42 +293,43 @@ void Quilt::Duvet::Draw()
                     break;
                 
                 case Quilt::BatchType::Dynamic:
-                    glm::mat4 model;
-                    for (const Pillow::Transform* transform : currentBatch.Transforms)
+                    
+                    m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_View", view);
+                    m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Projection", proj);
+
+                    int samplers[32];
+                    for(int i = 0; i < 32; ++i)
                     {
-                        model = glm::translate(glm::mat4(1.0f), glm::vec3(transform->Position.x, transform->Position.y, transform->Position.z)) *
-                                glm::yawPitchRoll(
-                                    glm::radians(transform->Rotation.y),
-                                    glm::radians(transform->Rotation.x),
-                                    glm::radians(transform->Rotation.z)
-                                ) *
-                                glm::scale(glm::mat4(1.0f), glm::vec3(transform->Scale.x, transform->Scale.y, transform->Scale.z));
+                        samplers[i] = i;
+                    } 
+
+                    m_ShaderManager.SetUniform1iv(currentBatch.Data.ShaderID, "u_Textures", 32, samplers);
+
+                    for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
+                    {
+                        GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
+                        GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
+                    }
+
+                    for(int i = 0; i < currentBatch.DrawInfos.size(); i++)
+                    {
+                        Quilt::DrawInfo& drawinfo = currentBatch.DrawInfos[i];
+                        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(drawinfo.Transform->Position.x, drawinfo.Transform->Position.y, drawinfo.Transform->Position.z)) *
+                            glm::yawPitchRoll(
+                                glm::radians(drawinfo.Transform->Rotation.y),
+                                glm::radians(drawinfo.Transform->Rotation.x),
+                                glm::radians(drawinfo.Transform->Rotation.z)
+                            ) *
+                            glm::scale(glm::mat4(1.0f), glm::vec3(drawinfo.Transform->Scale.x, drawinfo.Transform->Scale.y, drawinfo.Transform->Scale.z));
 
                         m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Model", model);
-                        m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_View", view);
-                        m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Projection", proj);
 
-                        int samplers[32];
-                        for(int i = 0; i < 32; ++i)
-                        {
-                            samplers[i] = i;
-                        } 
+                        //unsigned int indexCount  = 6;
+                        //unsigned int indexOffset = i * indexCount;
 
-                        m_ShaderManager.SetUniform1iv(currentBatch.Data.ShaderID, "u_Textures", 32, samplers);
-
-                        for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
-                        {
-                            GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
-                            GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
-                        }
-
-                        GLCall(glBindVertexArray(currentBatch.VertexLayoutID));
-                        m_BufferManager.BindBuffer(currentBatch.VertexBufferHandle);
-                        m_BufferManager.BindBuffer(currentBatch.IndexBufferHandle);
-
-                        //TODO: This draw seems tedious ideally this would be non-trivial -> m_BatchManager.GetBufferManager().GetBufferStorage().DataCounts[currentBatch.IndexBufferHandle]
-                        GLCall(glDrawElements(GL_TRIANGLES, m_BufferManager.GetBufferStorage().DataCounts[currentBatch.IndexBufferHandle], GL_UNSIGNED_INT, nullptr));
+                        GLCall(glDrawElements(GL_TRIANGLES, drawinfo.IndexCount, GL_UNSIGNED_INT, (void*)(drawinfo.IndexOffset * sizeof(unsigned int))));
                     }
+
                     break;
 
                 case Quilt::BatchType::Instanced:

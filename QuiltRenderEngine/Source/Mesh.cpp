@@ -1,81 +1,42 @@
 #include "Mesh.h"
 
-unsigned int Quilt::MeshManager::CreateMeshHandle()
+unsigned int Quilt::MeshManager::CreateMeshHandle(const std::string& name, Quilt::Mesh& mesh)
 {
-    uint32_t meshID;
+    unsigned int handle = m_Meshes.size();
 
-    if(!m_RemovedMeshIDs.empty())
-    {
-        meshID = m_RemovedMeshIDs.back();
-        m_RemovedMeshIDs.pop_back();
+    m_Meshes.push_back(mesh);
+    m_HandleCache.emplace(name, handle);
 
-        LOG_INFO("Recycled Mesh: ", meshID);
-
-        return meshID;
-    }
-
-    meshID = m_MeshCount;
-    m_MeshCount++;
-
-    LOG_INFO("Created Mesh: ", meshID);
-
-    m_Meshes.BatchIDs.resize(m_MeshCount);
-    m_Meshes.TransformOffset.resize(m_MeshCount);
-    m_Meshes.VertexOffsets.resize(m_MeshCount);
-    m_Meshes.IndexOffsets.resize(m_MeshCount);
-    m_Meshes.VertexCounts.resize(m_MeshCount);
-    m_Meshes.IndexCounts.resize(m_MeshCount);
-    m_Meshes.Vertices.resize(m_MeshCount);
-    m_Meshes.Indices.resize(m_MeshCount);
-
-    return meshID;
+    return handle;
 }
 
-void Quilt::MeshManager::RemoveMesh(unsigned int& meshID)
+unsigned int Quilt::MeshManager::CreateMeshHandle(const std::string& path)
 {
-    LOG_INFO("Removed Mesh: ", meshID);
+    unsigned int handle = m_Meshes.size();
 
-    m_RemovedMeshIDs.push_back(meshID);
+    Quilt::OBJLoader loader(path);
 
-    //TODO: clear data??
+    Quilt::Mesh newMesh;
+    newMesh.Vertices = loader.GetVertices();
+    newMesh.Indices = loader.GetIndices();
+
+    m_Meshes.push_back(newMesh);
+    m_HandleCache.emplace(path, handle);
+
+    return handle;
 }
 
-void Quilt::MeshManager::SetMeshBatchID(unsigned int& meshID, unsigned int batchID)
+bool Quilt::MeshManager::IsMeshCached(const std::string& key)
 {
-    m_Meshes.BatchIDs[meshID] = batchID;
+    return m_HandleCache.find(key) != m_HandleCache.end();
+} 
+
+unsigned int Quilt::MeshManager::GetMeshHandle(const std::string& key)
+{
+    return m_HandleCache.at(key);
 }
 
-void Quilt::MeshManager::SetMeshTransformOffset(unsigned int& meshID, uint64_t transformOffset)
+Quilt::Mesh& Quilt::MeshManager::GetMeshData(const unsigned int& MeshHandle)
 {
-    m_Meshes.TransformOffset[meshID] = transformOffset;
-}
-
-void Quilt::MeshManager::SetMeshVertexOffset(unsigned int& meshID, uint64_t vertexOffset)
-{
-    m_Meshes.VertexOffsets[meshID] = vertexOffset;
-}
-
-void Quilt::MeshManager::SetMeshIndicesOffset(unsigned int& meshID, uint64_t indexOffset)
-{
-    m_Meshes.IndexOffsets[meshID] = indexOffset;
-}
-
-void Quilt::MeshManager::SetMeshVertexCount(unsigned int& meshID, uint64_t vertexCount)
-{
-    m_Meshes.VertexCounts[meshID] = vertexCount;
-}
-
-void Quilt::MeshManager::SetMeshIndexCount(unsigned int& meshID, uint64_t indexCount)
-{
-    m_Meshes.IndexCounts[meshID] = indexCount;
-}
-
-void Quilt::MeshManager::SetMeshVertices(unsigned int& meshID, std::vector<Quilt::Vertex> vertices)
-{
-    m_Meshes.Vertices[meshID] = vertices;
-}
-
-void Quilt::MeshManager::SetMeshIndices(unsigned int& meshID, std::vector<unsigned int> indices)
-{
-    m_Meshes.Indices[meshID] = indices;
+    return m_Meshes[MeshHandle];
 }

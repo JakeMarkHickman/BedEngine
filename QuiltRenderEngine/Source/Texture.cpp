@@ -60,6 +60,11 @@ int Quilt::TextureManager::AddTexture(const std::string& path, const TextureFilt
     return newTexture.Slot;
 }
 
+bool Quilt::TextureManager::IsTexture(unsigned int textureID)
+{
+    return m_Textures.size() >= textureID;
+}
+
 int Quilt::TextureManager::AssignSlot(const std::string& path)
 {
     //TODO: Make this more robust with a array to keep track of available texture slots

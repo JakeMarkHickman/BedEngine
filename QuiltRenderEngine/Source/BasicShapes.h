@@ -1,8 +1,10 @@
 #pragma once
 
-#include <vector>
 #include "Vertex.h"
 #include <Vector/Vector4.h>
+
+#include <vector>
+#include <string>
 
 namespace Quilt
 {

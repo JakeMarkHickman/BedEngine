@@ -21,6 +21,7 @@ unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int da
         m_BufferStorage.DataSizes.resize(m_GPUBufferCount);
         m_BufferStorage.DataCounts.resize(m_GPUBufferCount);
         m_BufferStorage.Handles.resize(m_GPUBufferCount);
+        m_BufferStorage.OccipiedCounts.resize(m_GPUBufferCount);
 
         LOG_INFO("Created Buffer: ", bufferID);
     }
@@ -28,6 +29,7 @@ unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int da
     m_BufferStorage.Types[bufferID] = type;
     m_BufferStorage.DataSizes[bufferID] = dataSize;
     m_BufferStorage.DataCounts[bufferID] = dataCount;
+    m_BufferStorage.OccipiedCounts[bufferID] = 0;
 
     unsigned int bufferType = GetBufferType(type);
 
@@ -55,10 +57,25 @@ void Quilt::BufferManager::PopulateBuffer(unsigned int bufferID, const void* dat
     GLCall(glBufferSubData(type, offset * m_BufferStorage.DataSizes[bufferID], size * m_BufferStorage.DataSizes[bufferID], data));
 }
 
+void Quilt::BufferManager::PopulateBuffer(unsigned int bufferID, const void* data, unsigned int size)
+{
+    unsigned int type = GetBufferType(m_BufferStorage.Types[bufferID]);
+
+    GLCall(glBindBuffer(type, m_BufferStorage.Handles[bufferID]));
+    GLCall(glBufferSubData(type, m_BufferStorage.OccipiedCounts[bufferID] * m_BufferStorage.DataSizes[bufferID], size * m_BufferStorage.DataSizes[bufferID], data));
+
+    m_BufferStorage.OccipiedCounts[bufferID] += size;
+}
+
 void Quilt::BufferManager::BindBuffer(unsigned int bufferID)
 {
     unsigned int type = GetBufferType(m_BufferStorage.Types[bufferID]);
     GLCall(glBindBuffer(type, m_BufferStorage.Handles[bufferID]));
+}
+
+unsigned int Quilt::BufferManager::GetOccupiedCount(unsigned int bufferID)
+{
+    return m_BufferStorage.OccipiedCounts[bufferID];
 }
 
 unsigned int Quilt::BufferManager::GetBufferType(BufferType type)

@@ -54,6 +54,7 @@ namespace Debug
         //TODO: Add a time to see when something happened
         std::cout << type << "[" << file << " " << line << "]: " << message << "\n";
 
+        //TODO: this needs to crash before the function is called.
         if(logType == SleepTrace::LogType::Fatal)
         {
             abort();
@@ -64,37 +65,6 @@ namespace Debug
 
 namespace Bed
 {
-    //RENDERING
-    void OnTextureComponentAttached(Bed::World& world, uint64_t entity)
-    {
-        if(world.HasComponents<Bed::Texture, Bed::Sprite, Pillow::Transform>(entity))
-        {
-            Bed::Texture* texture = world.GetComponent<Bed::Texture>(entity);
-            Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-
-            Quilt::Duvet::CreateTexture(texture->TexturePath, Quilt::TextureFiltering::Nearest, sprite->Handle);
-        }
-    }
-
-    void OnCameraComponentAttached(Bed::World& world, uint64_t entity)
-    {
-        if(world.HasComponents<Pillow::Transform, Bed::Camera>(entity))
-        {
-            Bed::Camera* cam = world.GetComponent<Bed::Camera>(entity);        
-            Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
-            cam->Handle = Quilt::Duvet::CreateCamera(transform, cam->Active, cam->XScreenPosition, cam->YScreenPosition, cam->XScreenSize, cam->YScreenSize);
-        }
-    }
-
-    void OnCameraComponentRemoved(Bed::World& world, uint64_t entity)
-    {
-        if(world.HasComponents<Pillow::Transform, Bed::Camera>(entity))
-        {
-            Bed::Camera* cam = world.GetComponent<Bed::Camera>(entity);
-            Quilt::Duvet::RemoveCamera(cam->Handle);
-        }
-    }
-
     //PHYSICS
     void OnPhysicsComponentAttached(Bed::World& world, uint64_t entity)
     {
@@ -152,9 +122,67 @@ namespace Bed
             TODO: make this a seperate function as this will be able to be modified by users or plugins
         */
 
+        Quilt::Duvet::Init();
+
+        std::string shaderName = "2D Shader";
+
+        std::string vertexShader = R"(
+            #version 450 core 
+            layout(location = 0) in vec4 a_Position;
+            layout(location = 1) in vec3 a_Normal;
+            layout(location = 2) in vec4 a_Colour;
+            layout(location = 3) in vec2 a_TexCoord;
+            layout(location = 4) in float a_TexID;
+
+            uniform mat4 u_View;
+            uniform mat4 u_Projection;
+            uniform mat4 u_Model;
+
+            out vec4 v_Pos;
+            out vec3 v_Normal;
+            out vec4 v_Colour;
+            out vec2 v_TexCoord;
+            flat out float v_TexID;
+
+            vec4 mvp(vec4 pos)
+            {
+                return u_Projection * u_View * (u_Model * pos);
+            }
+
+            void main()
+            {
+                v_Pos = u_Model * a_Position;
+                v_Normal = a_Normal;
+                v_Colour = a_Colour;
+                v_TexCoord = a_TexCoord;
+                v_TexID = a_TexID;
+
+                gl_Position = mvp(a_Position);
+            }
+        )";
+
+        std::string fragmentShader = R"(
+            #version 450 core
+            in vec4 v_Pos;
+            in vec3 v_Normal;
+            in vec4 v_Colour;
+            in vec2 v_TexCoord;
+            flat in float v_TexID;
+
+            uniform sampler2D u_Textures[32];
+
+            layout(location = 0) out vec4 o_FragColour;
+
+            void main()
+            {
+                o_FragColour = texture(u_Textures[int(v_TexID)], v_TexCoord) * v_Colour;
+            }
+        )";
+
+        Quilt::Duvet::CreateShader(shaderName, vertexShader, fragmentShader);
+        Quilt::Duvet::SetDefaultTexture("Assets/Resources/Textures/256xWhite.png");
+
         //TODO: Textures shouldnt rely on needing the sprite or transform
-        m_Game->GetECS().RegisterOnComponentAttachedGlobal<Bed::Texture, Bed::Sprite, Pillow::Transform>(Bed::OnTextureComponentAttached);
-        m_Game->GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Camera>(Bed::OnCameraComponentAttached);
         m_Game->GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Mattress::PhysicsObject>(Bed::OnPhysicsComponentAttached);
 
         m_Game->BeginPlay();

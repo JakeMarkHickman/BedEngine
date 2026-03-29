@@ -1,6 +1,4 @@
 #pragma once
-
-#include <vector>
 #include <SleepTrace.h>
 
 #include <Duvet.h>
@@ -8,7 +6,7 @@
 
 namespace Bed
 {
-    struct SpriteRenderer
+    struct SpriteSystems
     {
         Quilt::Duvet renderer;
 
@@ -17,9 +15,13 @@ namespace Bed
             if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
             {
                 Quilt::Plane plane;
-
                 Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-                sprite->Handle = renderer.CreateMesh(plane.Vertices, plane.Indices, world.GetComponent<Pillow::Transform>(entity));
+                Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
+
+                unsigned int shader = renderer.GetShader("2D Shader");
+                unsigned int meshID = renderer.CreateMesh("plane", plane.Vertices, plane.Indices);
+
+                renderer.CreateRenderableObject(entity, meshID, shader, transform);
             }
         }
 
@@ -27,8 +29,8 @@ namespace Bed
         {
             if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
             {
-                Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-                renderer.RemoveMesh(sprite->Handle);
+                //Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
+                //renderer.RemoveMesh(sprite->Handle);
             }
         }
 

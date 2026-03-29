@@ -17,6 +17,7 @@ namespace Quilt
         std::vector<Quilt::BufferType> Types;
         std::vector<unsigned int> DataSizes;
         std::vector<unsigned int> DataCounts;
+        std::vector<unsigned int> OccipiedCounts;
 
         std::vector<unsigned int> Handles;
     };
@@ -28,7 +29,10 @@ namespace Quilt
 
         void RemoveBuffer(unsigned int bufferID);
         void PopulateBuffer(unsigned int bufferID, const void* data, unsigned int size, unsigned int offset);
+        void PopulateBuffer(unsigned int bufferID, const void* data, unsigned int size);
         void BindBuffer(unsigned int bufferID);
+
+        unsigned int GetOccupiedCount(unsigned int bufferID);
         
 
         GPUBuffers& GetBufferStorage() { return m_BufferStorage; };

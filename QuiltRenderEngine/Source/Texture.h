@@ -28,6 +28,7 @@ namespace Quilt
         int GetTextureSlots();
         std::vector<Quilt::Texture>& GetTextures() { return m_Textures; };
         int AddTexture(const std::string& path, const TextureFiltering& filter);
+        bool IsTexture(unsigned int textureID);
 
     private:
     
