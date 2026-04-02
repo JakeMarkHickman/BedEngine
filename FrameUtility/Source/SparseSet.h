@@ -57,6 +57,11 @@ namespace Frame
             return m_Data[m_Sparse[id]];
         }
 
+        uint64_t GetDenseID(uint64_t id)
+        {
+            return m_Dense[m_Sparse[id]];
+        }
+
         /*void SetData(uint64_t id, const T& data)
         {
             m_Data[m_Sparse[id]] = data;
@@ -101,7 +106,7 @@ namespace Frame
         }
 
     private:
-        std::vector<int64_t> m_Sparse; // This is used to map the ID to its index in the Dense vector
+        std::vector<int64_t> m_Sparse; // This is used to map the ID to its index in the Dense vector 
         std::vector<uint64_t> m_Dense; // Stores the actual ID in a compact manner
         std::vector<T> m_Data; // Stores the Data associated with the ID
     };

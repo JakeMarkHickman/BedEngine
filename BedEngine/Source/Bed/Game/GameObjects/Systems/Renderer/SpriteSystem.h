@@ -29,8 +29,7 @@ namespace Bed
         {
             if(world.HasComponents<Pillow::Transform, Bed::Sprite>(entity))
             {
-                //Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(entity);
-                //renderer.RemoveMesh(sprite->Handle);
+                renderer.RemoveRenderableObject(entity);
             }
         }
 
@@ -41,17 +40,12 @@ namespace Bed
 
         void SpriteSystem(Bed::World& world)
         {
-            for(uint64_t i : world.GetAllEntities())
+            for(uint64_t entity : world.GetAllEntities())
             {
-                /*Bed::Sprite* sprite = world.GetComponent<Bed::Sprite>(i);
-
-                Quilt::Batch& batch = Quilt::Duvet::GetBatch(sprite->Handle);
-                Quilt::Mesh& mesh = Quilt::Duvet::GetMesh(sprite->Handle);
-
-                LOG_DEBUG("Entity: ", i);
-                LOG_DEBUG("Position, X: ", batch.Transforms[mesh.LocalIndex].Position.x, " Y: ", batch.Transforms[mesh.LocalIndex].Position.y, " Z: ", batch.Transforms[mesh.LocalIndex].Position.z);
-                LOG_DEBUG("Rotation, X: ", batch.Transforms[mesh.LocalIndex].Rotation.x, " Y: ", batch.Transforms[mesh.LocalIndex].Rotation.y, " Z: ", batch.Transforms[mesh.LocalIndex].Rotation.z);
-                LOG_DEBUG("Scale, X: ", batch.Transforms[mesh.LocalIndex].Scale.x, " Y: ", batch.Transforms[mesh.LocalIndex].Scale.y, " Z: ", batch.Transforms[mesh.LocalIndex].Scale.z);*/
+                if(world.HasComponents<Bed::Sprite>(entity))
+                {
+                    //TODO: Update Transform;
+                }
             }
         }
     };

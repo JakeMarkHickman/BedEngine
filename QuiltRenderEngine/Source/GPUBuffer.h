@@ -4,6 +4,15 @@
 
 namespace Quilt
 {
+    struct CopyInfo
+    {
+        unsigned int ReadBuffer;
+        unsigned int WriteBuffer;
+        unsigned int ReadOffset;
+        unsigned int WriteOffset;
+        unsigned int Count;
+    };
+
     enum class BufferType
     {
         Vertex,
@@ -33,6 +42,11 @@ namespace Quilt
         void BindBuffer(unsigned int bufferID);
 
         unsigned int GetOccupiedCount(unsigned int bufferID);
+
+        bool IsBufferEmpty(unsigned int bufferID);
+        bool IsBufferFull(unsigned int bufferID);
+
+        void CopyRegion(Quilt::CopyInfo copyInfo);
         
 
         GPUBuffers& GetBufferStorage() { return m_BufferStorage; };

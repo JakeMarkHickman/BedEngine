@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <SparseSet.h>
+#include <SleepTrace.h>
 
 //TODO: This will be outside the lib in Quilts SDK
 namespace Quilt
@@ -24,10 +25,12 @@ namespace Quilt
     {
     public:
         void CreateRenderableObject(uint64_t entityID, RenderableObject object);
+        bool HasRenderableObject(uint64_t entityID);
+        void RemoveRenderableObject(uint64_t entityID);
         Quilt::RenderableObject& GetRenderableObject(uint64_t entityID);
+        uint64_t GetLastRenderableEntity();
 
     private:
         Frame::SparseSet<Quilt::RenderableObject> m_EntityLink;
-
     };
 }

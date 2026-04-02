@@ -11,6 +11,7 @@ namespace Quilt
     //TODO: information that is used on how to draw something is used in here
     struct DrawInfo
     {
+        glm::mat4 TransformMatrix;
         const Pillow::Transform* Transform;
         unsigned int IndexCount;
         unsigned int IndexOffset;

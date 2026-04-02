@@ -78,6 +78,28 @@ unsigned int Quilt::BufferManager::GetOccupiedCount(unsigned int bufferID)
     return m_BufferStorage.OccipiedCounts[bufferID];
 }
 
+bool Quilt::BufferManager::IsBufferEmpty(unsigned int bufferID)
+{
+    return m_BufferStorage.OccipiedCounts[bufferID] <= 0;
+}
+
+bool Quilt::BufferManager::IsBufferFull(unsigned int bufferID)
+{
+    return m_BufferStorage.OccipiedCounts[bufferID] >= m_BufferStorage.DataCounts[bufferID];
+}
+
+void Quilt::BufferManager::CopyRegion(Quilt::CopyInfo copyInfo)
+{
+    unsigned int readBytes = copyInfo.ReadOffset * m_BufferStorage.DataSizes[copyInfo.ReadBuffer];
+    unsigned int writeBytes = copyInfo.WriteOffset * m_BufferStorage.DataSizes[copyInfo.WriteBuffer];
+    unsigned int byteSize = copyInfo.Count * m_BufferStorage.DataSizes[copyInfo.ReadBuffer];
+
+    GLCall(glBindBuffer(GL_COPY_READ_BUFFER, m_BufferStorage.Handles[copyInfo.ReadBuffer]));
+    GLCall(glBindBuffer(GL_COPY_WRITE_BUFFER, m_BufferStorage.Handles[copyInfo.WriteBuffer]));
+
+    GLCall(glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, readBytes, writeBytes, byteSize));
+}
+
 unsigned int Quilt::BufferManager::GetBufferType(BufferType type)
 {
     unsigned int bufferType = 0;

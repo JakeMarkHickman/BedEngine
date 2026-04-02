@@ -13,7 +13,7 @@ namespace Bed
             if(world.HasComponents<Bed::Texture>(entity))
             {
                 Bed::Texture* texture = world.GetComponent<Bed::Texture>(entity);
-                renderer.CreateTexture(texture->TexturePath, Quilt::TextureFiltering::Nearest, entity);
+                renderer.CreateTexture(entity, texture->TexturePath, Quilt::TextureFiltering::Nearest);
             }
         }
 

@@ -32,13 +32,13 @@ namespace Quilt
         static unsigned int CreateMesh(const std::string& path);
 
         static void CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID, const Pillow::Transform* transform);
-
-        static void RemoveMesh(unsigned int& meshHandle);
+        static void UpdateRenderableObjectTransform(uint64_t entityID, Pillow::Transform& transform);
+        static void RemoveRenderableObject(uint64_t entityID);
 
         static unsigned int CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize);
         static void RemoveCamera(unsigned int& cameraHandle);
 
-        static void CreateTexture(const std::string texturePath, const TextureFiltering filter, uint64_t entityID);
+        static void CreateTexture(uint64_t entityID, const std::string texturePath, const TextureFiltering filter);
 
         static void SetViewPort(int width, int height) { WindowWidth = width; WindowHeight = height; };
 
@@ -49,6 +49,10 @@ namespace Quilt
         static void Clear();
 
     private:
+
+        static void CopyRegion(Quilt::CopyInfo copyInfo);
+
+
         inline static Quilt::ShaderManager m_ShaderManager;
         inline static Quilt::BatchManager m_BatchManager;
         inline static Quilt::BufferManager m_BufferManager;

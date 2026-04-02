@@ -175,8 +175,49 @@ void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID
     m_RenderManager.CreateRenderableObject(entityID, object);
 }
 
-void Quilt::Duvet::RemoveMesh(unsigned int& meshHandle)
+void Quilt::Duvet::UpdateRenderableObjectTransform(uint64_t entityID, Pillow::Transform& transform)
 {
+
+}
+
+void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
+{
+    Quilt::RenderableObject& object = m_RenderManager.GetRenderableObject(entityID);
+    unsigned int lastEntity = m_RenderManager.GetLastRenderableEntity();
+
+    if(lastEntity != entityID)
+    {
+        Quilt::RenderableObject& lastObject = m_RenderManager.GetRenderableObject(lastEntity);
+
+        CopyInfo vertCopy;
+        vertCopy.ReadBuffer = m_BatchManager.GetVertexBufferHandle(lastObject.BatchID);
+        vertCopy.WriteBuffer = m_BatchManager.GetVertexBufferHandle(object.BatchID);
+        vertCopy.ReadOffset = lastObject.VertexOffset;
+        vertCopy.WriteOffset = object.VertexOffset;
+        vertCopy.Count = lastObject.VertexCount;
+        
+        CopyInfo indexCopy;
+        indexCopy.ReadBuffer = m_BatchManager.GetIndexBufferHandle(lastObject.BatchID);
+        indexCopy.WriteBuffer = m_BatchManager.GetIndexBufferHandle(object.BatchID);
+        indexCopy.ReadOffset = lastObject.IndexOffset;
+        indexCopy.WriteOffset = object.IndexOffset;
+        indexCopy.Count = lastObject.IndexCount;
+
+        m_BufferManager.CopyRegion(vertCopy);
+        m_BufferManager.CopyRegion(indexCopy);
+
+        lastObject.VertexOffset = object.VertexOffset;
+        lastObject.IndexOffset = object.IndexOffset;
+    }
+
+    //TODO: carry on here
+
+    unsigned int vertHandle = m_BatchManager.GetVertexBufferHandle(object.BatchID);
+
+    m_BufferManager.IsBufferEmpty(vertHandle);
+
+    m_RenderManager.RemoveRenderableObject(entityID);
+
     /*unsigned int batchID = m_MeshManager.GetMeshBatchID(meshHandle);
     unsigned int vertBufferID = m_BatchManager.GetIndexBufferHandle(batchID);
     unsigned int indexBufferID = m_BatchManager.GetVertexBufferHandle(batchID);
@@ -214,12 +255,17 @@ void Quilt::Duvet::RemoveCamera(unsigned int& cameraHandle)
     m_CameraManager.RemoveCamera(cameraHandle);
 }
 
-void Quilt::Duvet::CreateTexture(const std::string texturePath, const TextureFiltering filter, uint64_t entityID)
+void Quilt::Duvet::CreateTexture(uint64_t entityID, const std::string texturePath, const TextureFiltering filter)
 {
+    //TODO: check if entity has Renderable
+    if(!m_RenderManager.HasRenderableObject(entityID))
+    {
+        //TODO: Figure out a way to make a renderable not render if there is no data
+        //m_RenderManager.CreateRenderableObject(entityID);
+    }
+
     //Load Texture from file
     int slot = m_TextureManager.AddTexture(texturePath, filter);
-
-    LOG_DEBUG("CreateTexture Entity: ", entityID, " Slot: ", slot);
 
     Quilt::RenderableObject& object = m_RenderManager.GetRenderableObject(entityID);
 
