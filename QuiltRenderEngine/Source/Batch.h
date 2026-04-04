@@ -12,7 +12,6 @@ namespace Quilt
     struct DrawInfo
     {
         glm::mat4 TransformMatrix;
-        const Pillow::Transform* Transform;
         unsigned int IndexCount;
         unsigned int IndexOffset;
 

@@ -109,7 +109,7 @@ unsigned int Quilt::Duvet::CreateMesh(const std::string& path)
     return handle;
 }
 
-void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID, const Pillow::Transform* transform)
+void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID)
 {
     unsigned int batchHandle;
 
@@ -145,7 +145,6 @@ void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID
 
     //Create the batch and assign data
     DrawInfo info;
-    info.Transform = transform;
     info.IndexCount = mesh.Indices.size();
     info.IndexOffset = m_BufferManager.GetOccupiedCount(indexBufferHandle);
 
@@ -250,9 +249,9 @@ void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
     m_RenderManager.RemoveRenderableObject(entityID);
 }
 
-unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize)
+unsigned int Quilt::Duvet::CreateCamera(bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize)
 {
-    unsigned int cameraID = m_CameraManager.CreateCamera(transform);
+    unsigned int cameraID = m_CameraManager.CreateCamera();
 
     m_CameraManager.ToggleCamera(cameraID, isActive);
     m_CameraManager.SetCameraProjection(cameraID, Quilt::Projection::Orthographic);
@@ -262,6 +261,12 @@ unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool
     m_CameraManager.SetCameraZoom(cameraID, 5.0f);
 
     return cameraID;
+}
+
+void Quilt::Duvet::UpdateCamera(unsigned int cameraHandle, Pillow::Transform& transform)
+{
+    m_CameraManager.UpdateAspectRatio(cameraHandle);
+    m_CameraManager.UpdateCameraTransform(cameraHandle, transform);
 }
 
 void Quilt::Duvet::RemoveCamera(unsigned int& cameraHandle)
@@ -312,27 +317,9 @@ void Quilt::Duvet::Draw()
             continue;
         }
 
-        float xSizePercent = camera.ScreenBounds.XSize * WindowWidth;
-        float ySizePercent = camera.ScreenBounds.YSize * WindowHeight;
+        glm::mat4 view = camera.ViewMatrix;
 
-        float xPosPercent = camera.ScreenBounds.XPosition * WindowWidth;
-        float yPosPercent = camera.ScreenBounds.YPosition * WindowHeight;
-
-        float aspect = xSizePercent / ySizePercent;
-
-        float left = -camera.Zoom * aspect;
-        float right = camera.Zoom * aspect;
-        float bottom = -camera.Zoom;
-        float top = camera.Zoom;
-
-        glm::mat4 proj = glm::orthoLH(left, right, bottom, top, -1.0f, 500.0f); // camera
-        glm::vec3 camPos = glm::vec3(camera.Transform->Position.x, camera.Transform->Position.y, camera.Transform->Position.z);
-        glm::vec3 targetPos = camPos + glm::vec3(0.0f, 0.0f, 1.0f);
-        glm::vec3 upVec = glm::vec3(0.0f, 1.0f, 0.0f);
-
-        glm::mat4 view = glm::lookAtLH(camPos, targetPos, upVec);
-
-        GLCall(glViewport(xPosPercent, yPosPercent, xSizePercent, ySizePercent));
+        GLCall(glViewport(camera.ScreenPosition.XPositionPercent, camera.ScreenPosition.YPositionPercent, camera.ScreenPosition.XSizePercent, camera.ScreenPosition.YSizePercent));
 
         for (Quilt::Batch currentBatch : m_BatchManager.GetAllBatches())
         {
@@ -354,8 +341,8 @@ void Quilt::Duvet::Draw()
                 
                 case Quilt::BatchType::Dynamic:
                     
-                    m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_View", view);
-                    m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Projection", proj);
+                    m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_View", camera.ViewMatrix);
+                    m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Projection", camera.ProjectionMatrix);
 
                     int samplers[32];
                     for(int i = 0; i < 32; ++i)

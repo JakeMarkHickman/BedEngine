@@ -31,16 +31,17 @@ namespace Quilt
         static unsigned int CreateMesh(const std::string& name, const std::vector<Quilt::Vertex>& vertices, const std::vector<unsigned int>& indices);
         static unsigned int CreateMesh(const std::string& path);
 
-        static void CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID, const Pillow::Transform* transform);
+        static void CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID);
         static void UpdateTransform(uint64_t entityID, Pillow::Transform& transform);
         static void RemoveRenderableObject(uint64_t entityID);
 
-        static unsigned int CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize);
+        static unsigned int CreateCamera(bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize);
+        static void UpdateCamera(unsigned int cameraHandle, Pillow::Transform& trnasform);
         static void RemoveCamera(unsigned int& cameraHandle);
 
         static void CreateTexture(uint64_t entityID, const std::string texturePath, const TextureFiltering filter);
 
-        static void SetViewPort(int width, int height) { WindowWidth = width; WindowHeight = height; };
+        static void SetViewPort(int width, int height) { m_CameraManager.SetWindowWidth(width); m_CameraManager.SetWindowHeight(height); };
 
         static bool IsContextValid();
         //Draw all registered meshes to the screen
@@ -64,9 +65,6 @@ namespace Quilt
         inline static Quilt::RenderableManager m_RenderManager;
 
         inline static std::unordered_map<std::string, unsigned int> m_ShaderLookup;
-
-        inline static int WindowWidth = 0;
-        inline static int WindowHeight = 0;
 
         inline static unsigned int m_DefaultTextureID = 0;
     };

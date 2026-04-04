@@ -35,6 +35,7 @@ namespace Test
             Bed::CameraSystems cameraSystems;
             GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Bed::Camera>(cameraSystems, &Bed::CameraSystems::OnCameraComponentAttached);
             GetECS().RegisterOnComponentRemovedGlobal<Pillow::Transform, Bed::Camera>(cameraSystems, &Bed::CameraSystems::OnCameraComponentRemoved);
+            GetECS().AddSystemGlobal(cameraSystems, &Bed::CameraSystems::CameraSystem);
 
             Bed::TextureSystems textureSystems;
             GetECS().RegisterOnComponentAttachedGlobal<Bed::Texture>(textureSystems, &Bed::TextureSystems::OnTextureComponentAttached);
