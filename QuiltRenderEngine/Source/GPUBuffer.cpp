@@ -100,6 +100,11 @@ void Quilt::BufferManager::CopyRegion(Quilt::CopyInfo copyInfo)
     GLCall(glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, readBytes, writeBytes, byteSize));
 }
 
+void Quilt::BufferManager::RemoveRegion(unsigned int bufferID, unsigned int count)
+{
+    m_BufferStorage.OccipiedCounts[bufferID] -= count;
+}
+
 unsigned int Quilt::BufferManager::GetBufferType(BufferType type)
 {
     unsigned int bufferType = 0;

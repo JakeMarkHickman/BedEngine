@@ -160,8 +160,6 @@ void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID
     object.IndexCount = mesh.Indices.size();
     object.MeshHandle = meshID;
 
-    LOG_DEBUG("CreateRenderableObject Entity: ", entityID, " VertexOffset: ", object.VertexOffset);
-
     std::vector<unsigned int> offsetIndices = mesh.Indices;
     for(unsigned int& index : offsetIndices)
     {
@@ -175,9 +173,11 @@ void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID
     m_RenderManager.CreateRenderableObject(entityID, object);
 }
 
-void Quilt::Duvet::UpdateRenderableObjectTransform(uint64_t entityID, Pillow::Transform& transform)
+void Quilt::Duvet::UpdateTransform(uint64_t entityID, Pillow::Transform& transform)
 {
+    Quilt::RenderableObject& object = m_RenderManager.GetRenderableObject(entityID);
 
+    m_BatchManager.UpdateTransform(object.BatchID, object.DrawInfoOffset, transform);
 }
 
 void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
@@ -188,17 +188,22 @@ void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
     if(lastEntity != entityID)
     {
         Quilt::RenderableObject& lastObject = m_RenderManager.GetRenderableObject(lastEntity);
+        unsigned int lastVertHandle = m_BatchManager.GetVertexBufferHandle(lastObject.BatchID);
+        unsigned int lastIndexHandle = m_BatchManager.GetIndexBufferHandle(lastObject.BatchID);
+
+        unsigned int vertHandle = m_BatchManager.GetVertexBufferHandle(object.BatchID);
+        unsigned int indexHandle = m_BatchManager.GetIndexBufferHandle(object.BatchID);
 
         CopyInfo vertCopy;
-        vertCopy.ReadBuffer = m_BatchManager.GetVertexBufferHandle(lastObject.BatchID);
-        vertCopy.WriteBuffer = m_BatchManager.GetVertexBufferHandle(object.BatchID);
+        vertCopy.ReadBuffer = lastVertHandle;
+        vertCopy.WriteBuffer = vertHandle;
         vertCopy.ReadOffset = lastObject.VertexOffset;
         vertCopy.WriteOffset = object.VertexOffset;
         vertCopy.Count = lastObject.VertexCount;
         
         CopyInfo indexCopy;
-        indexCopy.ReadBuffer = m_BatchManager.GetIndexBufferHandle(lastObject.BatchID);
-        indexCopy.WriteBuffer = m_BatchManager.GetIndexBufferHandle(object.BatchID);
+        indexCopy.ReadBuffer = lastIndexHandle;
+        indexCopy.WriteBuffer = indexHandle;
         indexCopy.ReadOffset = lastObject.IndexOffset;
         indexCopy.WriteOffset = object.IndexOffset;
         indexCopy.Count = lastObject.IndexCount;
@@ -208,32 +213,41 @@ void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
 
         lastObject.VertexOffset = object.VertexOffset;
         lastObject.IndexOffset = object.IndexOffset;
+
+        Quilt::Mesh& mesh = m_MeshManager.GetMeshData(lastObject.MeshHandle);
+        std::vector<unsigned int> relocatedIndices = mesh.Indices;
+
+        for(unsigned int& index : relocatedIndices)
+        {
+            index += object.VertexOffset;
+        }
+
+        m_BufferManager.PopulateBuffer(indexHandle, relocatedIndices.data(), lastObject.IndexCount, object.IndexOffset);
+
+        unsigned int lastDrawInfo = lastObject.DrawInfoOffset;
+        unsigned int drawInfo = object.DrawInfoOffset;
+
+        m_BatchManager.GetBatch(object.BatchID).DrawInfos[drawInfo] = m_BatchManager.GetBatch(lastObject.BatchID).DrawInfos[lastDrawInfo];
+
+        lastObject.DrawInfoOffset = drawInfo;
+        object.BatchID = lastObject.BatchID;
     }
 
-    //TODO: carry on here
+    m_BatchManager.GetBatch(object.BatchID).DrawInfos.pop_back();
 
     unsigned int vertHandle = m_BatchManager.GetVertexBufferHandle(object.BatchID);
+    unsigned int indexHandle = m_BatchManager.GetIndexBufferHandle(object.BatchID);
+    m_BufferManager.RemoveRegion(vertHandle, object.VertexCount);
+    m_BufferManager.RemoveRegion(indexHandle, object.IndexCount);
 
-    m_BufferManager.IsBufferEmpty(vertHandle);
-
-    m_RenderManager.RemoveRenderableObject(entityID);
-
-    /*unsigned int batchID = m_MeshManager.GetMeshBatchID(meshHandle);
-    unsigned int vertBufferID = m_BatchManager.GetIndexBufferHandle(batchID);
-    unsigned int indexBufferID = m_BatchManager.GetVertexBufferHandle(batchID);
-
-    m_BufferManager.RemoveBuffer(vertBufferID);
-    m_BufferManager.RemoveBuffer(indexBufferID);
-
-    //TODO: when there is storage buffers loop through all the buffers to remove
-
-    //check if batch is empty
-    if (m_BatchManager.IsBatchEmpty(batchID))
+    if(m_BufferManager.IsBufferEmpty(vertHandle) && m_BufferManager.IsBufferEmpty(indexHandle))
     {
-        m_BatchManager.RemoveBatch(batchID); //Remove the batch if Empty
+        m_BufferManager.RemoveBuffer(vertHandle);
+        m_BufferManager.RemoveBuffer(indexHandle);
+        m_BatchManager.RemoveBatch(object.BatchID);
     }
 
-    m_MeshManager.RemoveMesh(meshHandle);*/
+    m_RenderManager.RemoveRenderableObject(entityID);
 }
 
 unsigned int Quilt::Duvet::CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize)
@@ -360,18 +374,8 @@ void Quilt::Duvet::Draw()
                     for(int i = 0; i < currentBatch.DrawInfos.size(); i++)
                     {
                         Quilt::DrawInfo& drawinfo = currentBatch.DrawInfos[i];
-                        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(drawinfo.Transform->Position.x, drawinfo.Transform->Position.y, drawinfo.Transform->Position.z)) *
-                            glm::yawPitchRoll(
-                                glm::radians(drawinfo.Transform->Rotation.y),
-                                glm::radians(drawinfo.Transform->Rotation.x),
-                                glm::radians(drawinfo.Transform->Rotation.z)
-                            ) *
-                            glm::scale(glm::mat4(1.0f), glm::vec3(drawinfo.Transform->Scale.x, drawinfo.Transform->Scale.y, drawinfo.Transform->Scale.z));
 
-                        m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Model", model);
-
-                        //unsigned int indexCount  = 6;
-                        //unsigned int indexOffset = i * indexCount;
+                        m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Model", drawinfo.TransformMatrix);
 
                         GLCall(glDrawElements(GL_TRIANGLES, drawinfo.IndexCount, GL_UNSIGNED_INT, (void*)(drawinfo.IndexOffset * sizeof(unsigned int))));
                     }

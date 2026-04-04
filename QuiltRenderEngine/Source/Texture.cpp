@@ -40,6 +40,11 @@ int Quilt::TextureManager::AddTexture(const std::string& path, const TextureFilt
             break;
     }
 
+    if (!localBuffer)
+    {
+        LOG_FATAL("Image failed to load: ", path, " Reason: ", stbi_failure_reason());
+    }
+
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texturefilter));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texturefilter));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
@@ -48,10 +53,7 @@ int Quilt::TextureManager::AddTexture(const std::string& path, const TextureFilt
     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, newTexture.Width, newTexture.Hight, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer));
     GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 
-    if (localBuffer)
-    {
-        stbi_image_free(localBuffer);
-    }
+    stbi_image_free(localBuffer);
 
     newTexture.Slot = AssignSlot(path);
 

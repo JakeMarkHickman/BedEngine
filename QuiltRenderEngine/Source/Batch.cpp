@@ -69,9 +69,17 @@ unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle
 void Quilt::Comforter::RemoveBatch(unsigned int batchHandle)
 {
     LOG_INFO("Removed Batch: ", batchHandle);
+    BatchData data = GetBatch(batchHandle).Data;
+    std::vector<unsigned int>& handles = m_BatchDataLookUp.at(data);
+    handles.erase(std::remove(handles.begin(), handles.end(), batchHandle), handles.end());
+
+    if(handles.empty())
+    {
+        m_BatchDataLookUp.erase(data);
+    }
 
     m_RemovedBatchIDs.push_back(batchHandle);
-    return m_BatchStorage.Remove(batchHandle);
+    m_BatchStorage.Remove(batchHandle);
 }
 
 unsigned int Quilt::Comforter::GetBatchHandle(BatchData& batchData)
@@ -95,6 +103,20 @@ bool Quilt::Comforter::FindBatchsWithData(BatchData& batchData)
 std::vector<unsigned int>& Quilt::Comforter::GetBatchesWithData(BatchData& batchData)
 {
     return m_BatchDataLookUp.at(batchData);
+}
+
+void Quilt::Comforter::UpdateTransform(unsigned int batchHandle, uint64_t drawInfoOffset, Pillow::Transform& transform)
+{
+    glm::mat4 matrix = glm::translate(glm::mat4(1.0f), glm::vec3(transform.Position.x, transform.Position.y, transform.Position.z)) *
+                            glm::yawPitchRoll(
+                                glm::radians(transform.Rotation.y),
+                                glm::radians(transform.Rotation.x),
+                                glm::radians(transform.Rotation.z)
+                            ) *
+                            glm::scale(glm::mat4(1.0f), glm::vec3(transform.Scale.x, transform.Scale.y, transform.Scale.z));
+
+
+    m_BatchStorage.GetData(batchHandle).DrawInfos[drawInfoOffset].TransformMatrix = matrix;
 }
 
 unsigned int Quilt::Comforter::AddDrawInfo(unsigned int batchHandle, Quilt::DrawInfo drawInfo)

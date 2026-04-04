@@ -15,6 +15,15 @@ namespace Quilt
         const Pillow::Transform* Transform;
         unsigned int IndexCount;
         unsigned int IndexOffset;
+
+        const DrawInfo& operator=(const DrawInfo& other)
+        {
+            TransformMatrix = other.TransformMatrix;
+            IndexCount = other.IndexCount;
+            IndexOffset = other.IndexOffset;
+
+            return *this;
+        }
     };
 
     enum BatchType
@@ -122,11 +131,13 @@ namespace Quilt
 
         const std::vector<Quilt::Batch>& GetAllBatches() { return m_BatchStorage.GetAllData(); };
 
-        const Quilt::Batch GetBatch(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle); };
+        Quilt::Batch& GetBatch(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle); };
         const BatchData GetBatchData(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).Data; };
         const uint64_t GetVertexBufferHandle(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).VertexBufferHandle; };
         const uint64_t GetIndexBufferHandle(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).IndexBufferHandle; };
         const Pillow::Transform* GetTransform(unsigned int batchHandle, uint64_t indexOffset);
+
+        void UpdateTransform(unsigned int batchHandle, uint64_t drawInfoOffset, Pillow::Transform& transform);
 
         unsigned int AddDrawInfo(unsigned int batchHandle, Quilt::DrawInfo DrawInfo);
 

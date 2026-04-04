@@ -22,6 +22,6 @@ Quilt::RenderableObject& Quilt::RenderableManager::GetRenderableObject(uint64_t 
 
 uint64_t Quilt::RenderableManager::GetLastRenderableEntity()
 {
-    unsigned int size = m_EntityLink.GetIDs().back();
+    unsigned int size = m_EntityLink.GetIDs().size() - 1;
     return m_EntityLink.GetIDs()[size];
 }

@@ -32,7 +32,7 @@ namespace Quilt
         static unsigned int CreateMesh(const std::string& path);
 
         static void CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID, const Pillow::Transform* transform);
-        static void UpdateRenderableObjectTransform(uint64_t entityID, Pillow::Transform& transform);
+        static void UpdateTransform(uint64_t entityID, Pillow::Transform& transform);
         static void RemoveRenderableObject(uint64_t entityID);
 
         static unsigned int CreateCamera(const Pillow::Transform* transform, bool isActive, float xScreenPos, float yScreenPos, float xScreenSize, float yScreenSize);

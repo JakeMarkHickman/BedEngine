@@ -42,9 +42,12 @@ namespace Bed
         {
             for(uint64_t entity : world.GetAllEntities())
             {
-                if(world.HasComponents<Bed::Sprite>(entity))
+                if(world.HasComponents<Bed::Sprite, Pillow::Transform>(entity))
                 {
+                    Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
+
                     //TODO: Update Transform;
+                    renderer.UpdateTransform(entity, *transform);
                 }
             }
         }

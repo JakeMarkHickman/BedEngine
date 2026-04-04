@@ -47,6 +47,7 @@ namespace Quilt
         bool IsBufferFull(unsigned int bufferID);
 
         void CopyRegion(Quilt::CopyInfo copyInfo);
+        void RemoveRegion(unsigned int bufferID, unsigned int count);
         
 
         GPUBuffers& GetBufferStorage() { return m_BufferStorage; };

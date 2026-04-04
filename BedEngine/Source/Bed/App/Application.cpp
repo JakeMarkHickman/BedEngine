@@ -175,7 +175,11 @@ namespace Bed
 
             void main()
             {
-                o_FragColour = texture(u_Textures[int(v_TexID)], v_TexCoord) * v_Colour;
+                vec4 TexColour = texture(u_Textures[int(v_TexID)], v_TexCoord);
+                if(TexColour.a < 0.1)
+                    discard;
+
+                o_FragColour = TexColour * v_Colour;
             }
         )";
 
