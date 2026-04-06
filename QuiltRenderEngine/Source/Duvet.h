@@ -12,6 +12,7 @@
 #include "Vertex.h"
 #include "Camera.h"
 #include "RenderableObject.h"
+#include "VertexArray.h"
 
 #include <Transform.h>
 
@@ -53,6 +54,7 @@ namespace Quilt
 
         static void CopyRegion(Quilt::CopyInfo copyInfo);
 
+        inline static Quilt::VertexArrayManager m_VertexArrayManager;
 
         inline static Quilt::ShaderManager m_ShaderManager;
         inline static Quilt::BatchManager m_BatchManager;

@@ -53,12 +53,6 @@ namespace Debug
 
         //TODO: Add a time to see when something happened
         std::cout << type << "[" << file << " " << line << "]: " << message << "\n";
-
-        //TODO: this needs to crash before the function is called.
-        if(logType == SleepTrace::LogType::Fatal)
-        {
-            abort();
-        }
     }
 }
 #endif

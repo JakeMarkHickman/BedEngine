@@ -30,6 +30,11 @@ namespace SleepTrace
                 (ss << ... << std::forward<Args>(args));
                 m_callback(logType, file, line, ss.str()); 
             } 
+
+            if(logType == LogType::Fatal)
+            {
+                abort();
+            }
         };
 
     private:

@@ -3,34 +3,7 @@
 
 unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
 {
-    uint32_t bufferID;
-
-    if(!m_RemovedBuffers.empty())
-    {
-        bufferID = m_RemovedBuffers.back();
-        m_RemovedBuffers.pop_back();
-
-        LOG_INFO("Recycled Buffer: ", bufferID);
-    }
-    else
-    {
-        bufferID = m_GPUBufferCount;
-        m_GPUBufferCount++;
-
-        m_BufferStorage.Types.resize(m_GPUBufferCount);
-        m_BufferStorage.DataSizes.resize(m_GPUBufferCount);
-        m_BufferStorage.DataCounts.resize(m_GPUBufferCount);
-        m_BufferStorage.Handles.resize(m_GPUBufferCount);
-        m_BufferStorage.OccipiedCounts.resize(m_GPUBufferCount);
-
-        LOG_INFO("Created Buffer: ", bufferID);
-    }
-
-    m_BufferStorage.Types[bufferID] = type;
-    m_BufferStorage.DataSizes[bufferID] = dataSize;
-    m_BufferStorage.DataCounts[bufferID] = dataCount;
-    m_BufferStorage.OccipiedCounts[bufferID] = 0;
-
+    unsigned int bufferID = AssignBuffer(type, dataSize, dataCount);
     unsigned int bufferType = GetBufferType(type);
 
     GLCall(glGenBuffers(1, &m_BufferStorage.Handles[bufferID]));
@@ -69,8 +42,23 @@ void Quilt::BufferManager::PopulateBuffer(unsigned int bufferID, const void* dat
 
 void Quilt::BufferManager::BindBuffer(unsigned int bufferID)
 {
+    if(m_BufferStorage.Types[bufferID] == Quilt::BufferType::Storage)
+    {
+        LOG_FATAL("Buffer ID: ", bufferID, " is a storage buffer. Binding point needed.");
+    }
+
     unsigned int type = GetBufferType(m_BufferStorage.Types[bufferID]);
     GLCall(glBindBuffer(type, m_BufferStorage.Handles[bufferID]));
+}
+
+void Quilt::BufferManager::BindBuffer(unsigned int bufferID, unsigned int bindingPoint)
+{
+    if(m_BufferStorage.Types[bufferID] != Quilt::BufferType::Storage)
+    {
+        LOG_FATAL("Buffer ID: ", bufferID, " is not a storage buffer. No binding point needed.");
+    }
+
+
 }
 
 unsigned int Quilt::BufferManager::GetOccupiedCount(unsigned int bufferID)
@@ -103,6 +91,39 @@ void Quilt::BufferManager::CopyRegion(Quilt::CopyInfo copyInfo)
 void Quilt::BufferManager::RemoveRegion(unsigned int bufferID, unsigned int count)
 {
     m_BufferStorage.OccipiedCounts[bufferID] -= count;
+}
+
+unsigned int Quilt::BufferManager::AssignBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
+{
+    uint32_t bufferID;
+
+    if(!m_RemovedBuffers.empty())
+    {
+        bufferID = m_RemovedBuffers.back();
+        m_RemovedBuffers.pop_back();
+
+        LOG_INFO("Recycled Buffer: ", bufferID);
+    }
+    else
+    {
+        bufferID = m_GPUBufferCount;
+        m_GPUBufferCount++;
+
+        m_BufferStorage.Types.resize(m_GPUBufferCount);
+        m_BufferStorage.DataSizes.resize(m_GPUBufferCount);
+        m_BufferStorage.DataCounts.resize(m_GPUBufferCount);
+        m_BufferStorage.Handles.resize(m_GPUBufferCount);
+        m_BufferStorage.OccipiedCounts.resize(m_GPUBufferCount);
+
+        LOG_INFO("Created Buffer: ", bufferID);
+    }
+
+    m_BufferStorage.Types[bufferID] = type;
+    m_BufferStorage.DataSizes[bufferID] = dataSize;
+    m_BufferStorage.DataCounts[bufferID] = dataCount;
+    m_BufferStorage.OccipiedCounts[bufferID] = 0;
+
+    return bufferID;
 }
 
 unsigned int Quilt::BufferManager::GetBufferType(BufferType type)

@@ -3,7 +3,7 @@
 #include "Vertex.h"
 #include "OpenGl/OpenDebugger.h"
 
-unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData)
+unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, unsigned int vertexArrayHandle, BatchData& batchData)
 {
     unsigned int batchHandle;
 
@@ -26,28 +26,7 @@ unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle
     newBatch.Data = batchData;
     newBatch.VertexBufferHandle = vertexBufferHandle;
     newBatch.IndexBufferHandle = indexBufferHandle;
-
-    //TODO: remove this out of here
-    //Generate vertex array
-    GLCall(glGenVertexArrays(1, &newBatch.VertexLayoutID));
-    GLCall(glBindVertexArray(newBatch.VertexLayoutID));
-
-    size_t stride = 13 * sizeof(float);
-
-    GLCall(glEnableVertexAttribArray(0)); // Position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
-
-    GLCall(glEnableVertexAttribArray(1)); // Normal
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
-
-    GLCall(glEnableVertexAttribArray(2)); // Colour
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, stride, (void*)(6 * sizeof(float)));
-
-    GLCall(glEnableVertexAttribArray(3)); // Texture Coordinates
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, stride, (void*)(10 * sizeof(float)));
-
-    GLCall(glEnableVertexAttribArray(4)); // Texture ID
-    glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, stride, (void*)(12 * sizeof(float)));
+    newBatch.VertexArrayHandle = vertexArrayHandle;
 
     m_BatchStorage.Insert(batchHandle, newBatch);
 

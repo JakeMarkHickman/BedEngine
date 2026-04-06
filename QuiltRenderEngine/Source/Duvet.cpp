@@ -113,8 +113,16 @@ void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID
 {
     unsigned int batchHandle;
 
+    Quilt::VertexBufferLayout twoDimentionLayout;
+        twoDimentionLayout.Push<float>(3);
+        twoDimentionLayout.Push<float>(3);
+        twoDimentionLayout.Push<float>(4);
+        twoDimentionLayout.Push<float>(2);
+        twoDimentionLayout.Push<float>(1);
+
     Quilt::Mesh& mesh = m_MeshManager.GetMeshData(meshID);
     Quilt::BatchData data;
+    data.VertexLayout = twoDimentionLayout;
     data.ShaderID = shaderID;
     data.TextureID = GetDefaultTexture();
     data.Type = Quilt::BatchType::Dynamic;
@@ -135,9 +143,22 @@ void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID
         unsigned int vertexCount = 16000;
         unsigned int indexCount = 24000;
         unsigned int vertexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
+        unsigned int vertArray;
+
+        if(!m_VertexArrayManager.IsVertexArray(twoDimentionLayout))
+        {
+            LOG_INFO("Creating VAO");
+            vertArray = m_VertexArrayManager.CreateVertexArray(twoDimentionLayout);
+        }
+        else
+        {
+            LOG_INFO("Getting VAO");
+            vertArray = m_VertexArrayManager.GetVertexArray(twoDimentionLayout);
+        }
+
         unsigned int indexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
 
-        batchHandle = m_BatchManager.CreateBatchHandle(vertexBufferHandle, indexBufferHandle, data);
+        batchHandle = m_BatchManager.CreateBatchHandle(vertexBufferHandle, indexBufferHandle, vertArray, data);
     }
 
     unsigned int vertexBufferHandle = m_BatchManager.GetVertexBufferHandle(batchHandle);
@@ -351,6 +372,8 @@ void Quilt::Duvet::Draw()
                     } 
 
                     m_ShaderManager.SetUniform1iv(currentBatch.Data.ShaderID, "u_Textures", 32, samplers);
+
+                    m_VertexArrayManager.Bind(currentBatch.VertexArrayHandle);
 
                     for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
                     {

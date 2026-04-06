@@ -18,7 +18,7 @@ Source="QuiltRenderEngine/Source"
 Includes="$SharedDependencies -I$Source $GLFW -I$Dependencies/stb_image -I$Dependencies/GLEW/include"
 
 OpenGL="$Source/OpenGl"
-Cpps="$Source/Duvet.cpp $Source/Shader.cpp $Source/Batch.cpp $Source/GPUBuffer.cpp $Source/Mesh.cpp $Source/Texture.cpp $Source/Camera.cpp $Dependencies/stb_image/stb_image.cpp $Source/BasicShapes.cpp $Source/OBJLoader.cpp $Source/RenderableObject.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
+Cpps="$Source/Duvet.cpp $Source/Shader.cpp $Source/Batch.cpp $Source/GPUBuffer.cpp $Source/VertexArray.cpp $Source/Mesh.cpp $Source/Texture.cpp $Source/Camera.cpp $Dependencies/stb_image/stb_image.cpp $Source/BasicShapes.cpp $Source/OBJLoader.cpp $Source/RenderableObject.cpp" #$OpenGL/OpenGPUBuffer.cpp $OpenGL/OpenShader.cpp $OpenGL/OpenRenderer.cpp  $OpenGL/OpenVertexArray.cpp
 Flags="-std=c++20 -Wno-c++20-extensions"
 Predef="-DGLEW_STATIC"
 OutputFile=""

@@ -5,6 +5,7 @@
 #include <Transform.h>
 #include "GPUBuffer.h"
 #include "Mesh.h"
+#include "VertexBufferLayout.h"
 
 namespace Quilt
 {
@@ -38,6 +39,7 @@ namespace Quilt
         BatchType Type;
         unsigned int ShaderID;
         unsigned int TextureID;
+        VertexBufferLayout VertexLayout;
 
         bool operator==(const BatchData& other) const
         {
@@ -50,7 +52,8 @@ namespace Quilt
             */
             return Type == other.Type &&
                 ShaderID == other.ShaderID &&
-                TextureID == other.TextureID;
+                TextureID == other.TextureID &&
+                VertexLayout == other.VertexLayout;
         }
 
         bool operator!=(const BatchData& other) const
@@ -64,7 +67,8 @@ namespace Quilt
             */
             return Type != other.Type &&
                 ShaderID != other.ShaderID &&
-                TextureID != other.TextureID;
+                TextureID != other.TextureID &&
+                VertexLayout != other.VertexLayout;
         }
 
         const BatchData& operator=(const BatchData& other)
@@ -72,6 +76,7 @@ namespace Quilt
             ShaderID = other.ShaderID;
             Type = other.Type;
             TextureID = other.TextureID;
+            VertexLayout = other.VertexLayout;
 
             return *this;
         }
@@ -83,7 +88,7 @@ namespace Quilt
         uint64_t VertexBufferHandle;
         uint64_t IndexBufferHandle;
 
-        unsigned int VertexLayoutID;
+        unsigned int VertexArrayHandle;
 
         std::vector<DrawInfo> DrawInfos;
     };
@@ -99,8 +104,9 @@ namespace std
             size_t type = std::hash<int>{}(static_cast<int>(data.Type));
             size_t shaderID = std::hash<unsigned int>{}(data.ShaderID);
             size_t textureID = std::hash<unsigned int>{}(data.TextureID);
+            size_t VertexLayout = data.VertexLayout.GetHash();
 
-            return type ^ (shaderID << 1) ^ (textureID << 2);
+            return type ^ (shaderID << 1) ^ (textureID << 2) ^ (VertexLayout << 3);
         }
     };
 }
@@ -121,7 +127,7 @@ namespace Quilt
         /*
             Creates a batch handle to return back to the Mesh SoA. 
         */  
-        unsigned int CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, BatchData& batchData);
+        unsigned int CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, unsigned int vertexArrayHandle, BatchData& batchData);
         void RemoveBatch(unsigned int batchHandle);
         bool IsBatchEmpty(unsigned int batchHandle) { return true; };
 
