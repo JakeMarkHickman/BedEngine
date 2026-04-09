@@ -28,19 +28,20 @@ namespace Quilt
         std::vector<unsigned int> DataCounts;
         std::vector<unsigned int> OccipiedCounts;
 
+        std::vector<int> BindingPoints;
+
         std::vector<unsigned int> Handles;
     };
 
     class BufferManager
     {
     public:
-        unsigned int CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount);
+        unsigned int CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount, int bindingPoint = -1);
 
         void RemoveBuffer(unsigned int bufferID);
         void PopulateBuffer(unsigned int bufferID, const void* data, unsigned int size, unsigned int offset);
         void PopulateBuffer(unsigned int bufferID, const void* data, unsigned int size);
         void BindBuffer(unsigned int bufferID);
-        void BindBuffer(unsigned int bufferID, unsigned int bindingPoint);
 
         unsigned int GetOccupiedCount(unsigned int bufferID);
 
@@ -54,7 +55,7 @@ namespace Quilt
         GPUBuffers& GetBufferStorage() { return m_BufferStorage; };
 
     private:
-        unsigned int AssignBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount);
+        unsigned int AssignBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount, int bindingPoint);
         unsigned int GetBufferType(BufferType type);
 
         GPUBuffers m_BufferStorage;

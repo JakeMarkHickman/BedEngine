@@ -6,6 +6,19 @@
 
 namespace Quilt
 {
+    struct Vertex2D
+    {
+        Vertex2D() {};
+
+        Pillow::Vector3f Position;
+        Pillow::Vector2f TextureCoordinates;
+
+        bool operator==(const Vertex2D& other) const {
+            return Position == other.Position &&
+                    TextureCoordinates == other.TextureCoordinates;
+        };
+    }
+
     struct Vertex
     {
         Vertex() {};

@@ -18,6 +18,14 @@
 
 namespace Quilt
 {
+    struct SpriteInstanceData
+    {
+        glm::mat4 TransfomMatrix;
+        Pillow::Vector4f Colour;
+        Pillow::Vector2f TextureCoordinates;
+        float TextureID;
+    };
+
     class Duvet
     {
     public:
@@ -52,7 +60,8 @@ namespace Quilt
 
     private:
 
-        static void CopyRegion(Quilt::CopyInfo copyInfo);
+        static void CreateDynamicRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID);
+        static void CreateInstancedRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID);
 
         inline static Quilt::VertexArrayManager m_VertexArrayManager;
 

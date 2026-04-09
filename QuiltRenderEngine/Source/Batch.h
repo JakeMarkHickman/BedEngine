@@ -90,6 +90,8 @@ namespace Quilt
 
         unsigned int VertexArrayHandle;
 
+        std::vector<uint64_t> StorageBuffers;
+
         std::vector<DrawInfo> DrawInfos;
     };
 }

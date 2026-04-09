@@ -1,15 +1,20 @@
 #include "GPUBuffer.h"
 #include "OpenGl/OpenDebugger.h"
 
-unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
+unsigned int Quilt::BufferManager::CreateBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount, int bindingPoint)
 {
-    unsigned int bufferID = AssignBuffer(type, dataSize, dataCount);
+    unsigned int bufferID = AssignBuffer(type, dataSize, dataCount, bindingPoint);
     unsigned int bufferType = GetBufferType(type);
 
     GLCall(glGenBuffers(1, &m_BufferStorage.Handles[bufferID]));
     GLCall(glBindBuffer(bufferType, m_BufferStorage.Handles[bufferID]));
     
-    GLCall(glBufferData(bufferType, m_BufferStorage.DataSizes[bufferID] * m_BufferStorage.DataCounts[bufferID], nullptr, GL_DYNAMIC_DRAW)); //TODO: This needs to change later to support shader storage and instances
+    GLCall(glBufferData(bufferType, m_BufferStorage.DataSizes[bufferID] * m_BufferStorage.DataCounts[bufferID], nullptr, GL_DYNAMIC_DRAW));
+
+    if(type == Quilt::BufferType::Storage)
+    {
+        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, m_BufferStorage.BindingPoints[bufferID], m_BufferStorage.Handles[bufferID]));
+    }
 
     return bufferID;
 }
@@ -42,23 +47,13 @@ void Quilt::BufferManager::PopulateBuffer(unsigned int bufferID, const void* dat
 
 void Quilt::BufferManager::BindBuffer(unsigned int bufferID)
 {
-    if(m_BufferStorage.Types[bufferID] == Quilt::BufferType::Storage)
-    {
-        LOG_FATAL("Buffer ID: ", bufferID, " is a storage buffer. Binding point needed.");
-    }
-
     unsigned int type = GetBufferType(m_BufferStorage.Types[bufferID]);
     GLCall(glBindBuffer(type, m_BufferStorage.Handles[bufferID]));
-}
 
-void Quilt::BufferManager::BindBuffer(unsigned int bufferID, unsigned int bindingPoint)
-{
-    if(m_BufferStorage.Types[bufferID] != Quilt::BufferType::Storage)
+    if(m_BufferStorage.Types[bufferID] == Quilt::BufferType::Storage)
     {
-        LOG_FATAL("Buffer ID: ", bufferID, " is not a storage buffer. No binding point needed.");
+        GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, m_BufferStorage.BindingPoints[bufferID], m_BufferStorage.Handles[bufferID]));
     }
-
-
 }
 
 unsigned int Quilt::BufferManager::GetOccupiedCount(unsigned int bufferID)
@@ -93,8 +88,13 @@ void Quilt::BufferManager::RemoveRegion(unsigned int bufferID, unsigned int coun
     m_BufferStorage.OccipiedCounts[bufferID] -= count;
 }
 
-unsigned int Quilt::BufferManager::AssignBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount)
+unsigned int Quilt::BufferManager::AssignBuffer(BufferType type, unsigned int dataSize, unsigned int dataCount, int bindingPoint)
 {
+    if(bindingPoint == -1 && type == Quilt::BufferType::Storage)
+    {
+        LOG_FATAL("Storage buffers need a valid binding point");
+    }
+
     uint32_t bufferID;
 
     if(!m_RemovedBuffers.empty())
@@ -114,6 +114,7 @@ unsigned int Quilt::BufferManager::AssignBuffer(BufferType type, unsigned int da
         m_BufferStorage.DataCounts.resize(m_GPUBufferCount);
         m_BufferStorage.Handles.resize(m_GPUBufferCount);
         m_BufferStorage.OccipiedCounts.resize(m_GPUBufferCount);
+        m_BufferStorage.BindingPoints.resize(m_GPUBufferCount);
 
         LOG_INFO("Created Buffer: ", bufferID);
     }
@@ -122,6 +123,7 @@ unsigned int Quilt::BufferManager::AssignBuffer(BufferType type, unsigned int da
     m_BufferStorage.DataSizes[bufferID] = dataSize;
     m_BufferStorage.DataCounts[bufferID] = dataCount;
     m_BufferStorage.OccipiedCounts[bufferID] = 0;
+    m_BufferStorage.BindingPoints[bufferID] = bindingPoint;
 
     return bufferID;
 }

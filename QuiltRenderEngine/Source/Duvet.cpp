@@ -111,6 +111,11 @@ unsigned int Quilt::Duvet::CreateMesh(const std::string& path)
 
 void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID)
 {
+    CreateDynamicRenderableObject(entityID, meshID, shaderID);
+}
+
+void Quilt::Duvet::CreateDynamicRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID)
+{
     unsigned int batchHandle;
 
     Quilt::VertexBufferLayout twoDimentionLayout;
@@ -191,6 +196,11 @@ void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID
     m_BufferManager.PopulateBuffer(indexBufferHandle, offsetIndices.data(), offsetIndices.size());
 
     m_RenderManager.CreateRenderableObject(entityID, object);
+}
+
+void Quilt::Duvet::CreateInstancedRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID)
+{
+    
 }
 
 void Quilt::Duvet::UpdateTransform(uint64_t entityID, Pillow::Transform& transform)
