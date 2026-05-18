@@ -93,6 +93,11 @@ namespace Quilt
         std::vector<uint64_t> StorageBuffers;
 
         std::vector<DrawInfo> DrawInfos;
+
+        //Instances //TODO: Split this off later
+        unsigned int MeshID; // This is for Instanced Rendering. can be ignored for anything else like dynamic/static
+        unsigned int InstanceBufferHandle;
+        unsigned int InstanceCount;
     };
 }
 
@@ -107,7 +112,7 @@ namespace std
             size_t shaderID = std::hash<unsigned int>{}(data.ShaderID);
             size_t textureID = std::hash<unsigned int>{}(data.TextureID);
             size_t VertexLayout = data.VertexLayout.GetHash();
-
+            
             return type ^ (shaderID << 1) ^ (textureID << 2) ^ (VertexLayout << 3);
         }
     };
@@ -129,7 +134,7 @@ namespace Quilt
         /*
             Creates a batch handle to return back to the Mesh SoA. 
         */  
-        unsigned int CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, unsigned int vertexArrayHandle, BatchData& batchData);
+        unsigned int CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, unsigned int vertexArrayHandle, BatchData& batchData, unsigned int instanceBufferHandle = 0, unsigned int meshID = 0, unsigned int instanceCount = 0);
         void RemoveBatch(unsigned int batchHandle);
         bool IsBatchEmpty(unsigned int batchHandle) { return true; };
 
@@ -140,6 +145,7 @@ namespace Quilt
 
         Quilt::Batch& GetBatch(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle); };
         const BatchData GetBatchData(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).Data; };
+        Quilt::DrawInfo& GetDrawInfo(unsigned int batchHandle, unsigned int drawInfoOffset) { return m_BatchStorage.GetData(batchHandle).DrawInfos[drawInfoOffset]; };
         const uint64_t GetVertexBufferHandle(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).VertexBufferHandle; };
         const uint64_t GetIndexBufferHandle(unsigned int batchHandle) { return m_BatchStorage.GetData(batchHandle).IndexBufferHandle; };
         const Pillow::Transform* GetTransform(unsigned int batchHandle, uint64_t indexOffset);

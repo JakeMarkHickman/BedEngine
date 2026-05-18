@@ -122,6 +122,21 @@ namespace Bed
 
         std::string vertexShader = R"(
             #version 450 core 
+
+            struct InstanceData
+            {
+                mat4 MatTransform;
+                vec4 Colour;
+                vec2 TextureCoordinates;
+                float TextureID;
+                float padding;
+            };
+
+            layout(std430, binding = 0) readonly buffer InstanceBuffer 
+            {
+                InstanceData instances[];
+            };
+
             layout(location = 0) in vec4 a_Position;
             layout(location = 1) in vec3 a_Normal;
             layout(location = 2) in vec4 a_Colour;
@@ -138,18 +153,26 @@ namespace Bed
             out vec2 v_TexCoord;
             flat out float v_TexID;
 
+            InstanceData GetInstance()
+            {
+                InstanceData instance = instances[gl_InstanceID];
+                return instance;
+            }
+
             vec4 mvp(vec4 pos)
             {
-                return u_Projection * u_View * (u_Model * pos);
+                return u_Projection * u_View * (GetInstance().MatTransform * pos);
             }
 
             void main()
             {
-                v_Pos = u_Model * a_Position;
+                InstanceData instance = GetInstance();
+
+                v_Pos = instance.MatTransform * a_Position;
                 v_Normal = a_Normal;
-                v_Colour = a_Colour;
+                v_Colour = instance.Colour;
                 v_TexCoord = a_TexCoord;
-                v_TexID = a_TexID;
+                v_TexID = instance.TextureID;
 
                 gl_Position = mvp(a_Position);
             }
@@ -189,7 +212,6 @@ namespace Bed
         int MaxSteps = 4;
 
         float currentTimer = 0.0f;
-
 
         //Game Loop
         while (m_Window->IsWindowOpen())

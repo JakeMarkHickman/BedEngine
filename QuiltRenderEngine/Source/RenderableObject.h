@@ -12,11 +12,10 @@ namespace Quilt
     {
         unsigned int BatchID;
         uint64_t DrawInfoOffset;
-
         uint64_t VertexOffset;
-        uint64_t IndexOffset;
         uint64_t VertexCount;
-        uint64_t IndexCount;
+
+        uint64_t InstanceSlot;
 
         unsigned int MeshHandle;
     };

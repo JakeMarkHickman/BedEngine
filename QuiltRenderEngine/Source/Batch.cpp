@@ -3,7 +3,7 @@
 #include "Vertex.h"
 #include "OpenGl/OpenDebugger.h"
 
-unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, unsigned int vertexArrayHandle, BatchData& batchData)
+unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle, unsigned int indexBufferHandle, unsigned int vertexArrayHandle, BatchData& batchData, unsigned int instanceBufferHandle, unsigned int meshID, unsigned int instanceCount)
 {
     unsigned int batchHandle;
 
@@ -27,6 +27,9 @@ unsigned int Quilt::Comforter::CreateBatchHandle(unsigned int vertexBufferHandle
     newBatch.VertexBufferHandle = vertexBufferHandle;
     newBatch.IndexBufferHandle = indexBufferHandle;
     newBatch.VertexArrayHandle = vertexArrayHandle;
+    newBatch.InstanceBufferHandle = instanceBufferHandle;
+    newBatch.MeshID = meshID;
+    newBatch.InstanceCount = instanceCount;
 
     m_BatchStorage.Insert(batchHandle, newBatch);
 

@@ -23,6 +23,9 @@
 void Quilt::Duvet::Init()
 {
     LOG_INFO("Texture slots available on GPU: ", m_TextureManager.GetTextureSlots());
+
+    LOG_INFO("Vector 2 size: ", sizeof(Pillow::Vector2f(0.0f)));
+    LOG_INFO("SpriteInstanceData size: ", sizeof(Quilt::SpriteInstanceData));
 }
 
 unsigned int Quilt::Duvet::CreateShader(std::string shaderName, std::string vertexShader, std::string fragmentShader)
@@ -111,7 +114,8 @@ unsigned int Quilt::Duvet::CreateMesh(const std::string& path)
 
 void Quilt::Duvet::CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID)
 {
-    CreateDynamicRenderableObject(entityID, meshID, shaderID);
+    //CreateDynamicRenderableObject(entityID, meshID, shaderID);
+    CreateInstancedRenderableObject(entityID, meshID, shaderID);
 }
 
 void Quilt::Duvet::CreateDynamicRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID)
@@ -148,6 +152,7 @@ void Quilt::Duvet::CreateDynamicRenderableObject(uint64_t entityID, unsigned int
         unsigned int vertexCount = 16000;
         unsigned int indexCount = 24000;
         unsigned int vertexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
+        unsigned int indexBufferHandle;
         unsigned int vertArray;
 
         if(!m_VertexArrayManager.IsVertexArray(twoDimentionLayout))
@@ -161,7 +166,7 @@ void Quilt::Duvet::CreateDynamicRenderableObject(uint64_t entityID, unsigned int
             vertArray = m_VertexArrayManager.GetVertexArray(twoDimentionLayout);
         }
 
-        unsigned int indexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
+        indexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
 
         batchHandle = m_BatchManager.CreateBatchHandle(vertexBufferHandle, indexBufferHandle, vertArray, data);
     }
@@ -180,9 +185,7 @@ void Quilt::Duvet::CreateDynamicRenderableObject(uint64_t entityID, unsigned int
     object.BatchID = batchHandle;
     object.DrawInfoOffset = drawInfoOffset;
     object.VertexOffset = m_BufferManager.GetOccupiedCount(vertexBufferHandle);
-    object.IndexOffset = m_BufferManager.GetOccupiedCount(indexBufferHandle);
     object.VertexCount = mesh.Vertices.size();
-    object.IndexCount = mesh.Indices.size();
     object.MeshHandle = meshID;
 
     std::vector<unsigned int> offsetIndices = mesh.Indices;
@@ -200,20 +203,140 @@ void Quilt::Duvet::CreateDynamicRenderableObject(uint64_t entityID, unsigned int
 
 void Quilt::Duvet::CreateInstancedRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID)
 {
-    
+    unsigned int batchHandle;
+
+    Quilt::VertexBufferLayout twoDimentionLayout;
+        twoDimentionLayout.Push<float>(3);
+        twoDimentionLayout.Push<float>(3);
+        twoDimentionLayout.Push<float>(4);
+        twoDimentionLayout.Push<float>(2);
+        twoDimentionLayout.Push<float>(1);
+
+    Quilt::Mesh& mesh = m_MeshManager.GetMeshData(meshID);
+    Quilt::BatchData data;
+    data.VertexLayout = twoDimentionLayout;
+    data.ShaderID = shaderID;
+    data.TextureID = GetDefaultTexture();
+    data.Type = Quilt::BatchType::Instanced;
+
+    bool foundBatch = false;
+    if(m_BatchManager.FindBatchsWithData(data))
+    {
+        for(unsigned int& handle : m_BatchManager.GetBatchesWithData(data))
+        {
+            if(m_BatchManager.GetBatch(handle).MeshID == meshID)
+            {
+                foundBatch = true;
+                batchHandle = handle;
+                break;
+            }
+        }
+    }
+
+    if(!foundBatch)
+    {
+        LOG_INFO("No batch found... creating");
+
+        //Size for this mesh
+        unsigned int vertexCount = mesh.Vertices.size();
+        unsigned int indexCount = mesh.Indices.size();
+
+        unsigned int vertexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Vertex, sizeof(Quilt::Vertex), vertexCount);
+
+        unsigned int vertArray;
+        if(!m_VertexArrayManager.IsVertexArray(twoDimentionLayout))
+        {
+            LOG_INFO("Creating VAO");
+            vertArray = m_VertexArrayManager.CreateVertexArray(twoDimentionLayout);
+        }
+        else
+        {
+            LOG_INFO("Getting VAO");
+            vertArray = m_VertexArrayManager.GetVertexArray(twoDimentionLayout);
+        }
+        
+        unsigned int indexBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Index, sizeof(unsigned int), indexCount);
+
+        unsigned int maxInstances = 25000;
+        unsigned int instanceBufferHandle = m_BufferManager.CreateBuffer(Quilt::BufferType::Storage, sizeof(Quilt::SpriteInstanceData), maxInstances, 0);
+
+        batchHandle = m_BatchManager.CreateBatchHandle(vertexBufferHandle, indexBufferHandle, vertArray, data, instanceBufferHandle, meshID, 0);
+
+        m_BufferManager.PopulateBuffer(vertexBufferHandle, mesh.Vertices.data(), mesh.Vertices.size());
+        m_BufferManager.PopulateBuffer(indexBufferHandle, mesh.Indices.data(), mesh.Indices.size());
+    } 
+
+    //TODO: not actually populating SpriteInstanceData yet
+
+    unsigned int indexBufferHandle = m_BatchManager.GetIndexBufferHandle(batchHandle);
+
+    DrawInfo info;
+    info.IndexCount = mesh.Indices.size();
+    info.IndexOffset = m_BufferManager.GetOccupiedCount(indexBufferHandle);
+
+    unsigned int drawInfoOffset = m_BatchManager.AddDrawInfo(batchHandle, info);
+
+    Quilt::Batch& batch = m_BatchManager.GetBatch(batchHandle);
+    unsigned int instanceSlot = batch.InstanceCount;
+    batch.InstanceCount++;
+
+    Quilt::RenderableObject object;
+    object.BatchID = batchHandle;
+    object.InstanceSlot = instanceSlot;
+    object.MeshHandle = meshID;
+    object.VertexCount = 0;
+    object.DrawInfoOffset = 0;
+    object.VertexOffset = 0;
+
+    m_RenderManager.CreateRenderableObject(entityID, object);
+}
+
+void Quilt::Duvet::UpdateSpriteInstanceData(uint64_t entityID, Pillow::Transform& transform, Pillow::Vector4f& colour, Pillow::Vector2f& textureCoords, float& textureID)
+{
+    Quilt::RenderableObject& object = m_RenderManager.GetRenderableObject(entityID);
+    Quilt::Batch& batch = m_BatchManager.GetBatch(object.BatchID);
+
+    Quilt::SpriteInstanceData data;
+    data.TransfomMatrix = transform.GetMatrix();
+    data.Colour = colour;
+    data.TextureCoordinates = textureCoords;
+    data.TextureID = textureID;
+
+    unsigned int buffer = m_BufferManager.GetBufferStorage().Handles[batch.InstanceBufferHandle];
+
+    m_BufferManager.PopulateBuffer(batch.InstanceBufferHandle, &data, 1, object.InstanceSlot);
+
+    GLCall(glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT));
 }
 
 void Quilt::Duvet::UpdateTransform(uint64_t entityID, Pillow::Transform& transform)
 {
     Quilt::RenderableObject& object = m_RenderManager.GetRenderableObject(entityID);
+    Quilt::BatchType type = m_BatchManager.GetBatch(object.BatchID).Data.Type;
 
-    m_BatchManager.UpdateTransform(object.BatchID, object.DrawInfoOffset, transform);
+    switch (type)
+    {
+    case Quilt::BatchType::Dynamic:
+            m_BatchManager.UpdateTransform(object.BatchID, object.DrawInfoOffset, transform);
+        break;
+    
+    case Quilt::BatchType::Instanced:
+            LOG_DEBUG("Update instance transform here");
+        break;
+
+    default:
+        break;
+    }
 }
 
 void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
 {
     Quilt::RenderableObject& object = m_RenderManager.GetRenderableObject(entityID);
     unsigned int lastEntity = m_RenderManager.GetLastRenderableEntity();
+
+    unsigned int removedBatchID = object.BatchID;
+    unsigned int removedVertexCount = object.VertexCount;
+    unsigned int removedIndexCount = m_BatchManager.GetDrawInfo(removedBatchID, object.DrawInfoOffset).IndexCount;
 
     if(lastEntity != entityID)
     {
@@ -230,19 +353,19 @@ void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
         vertCopy.ReadOffset = lastObject.VertexOffset;
         vertCopy.WriteOffset = object.VertexOffset;
         vertCopy.Count = lastObject.VertexCount;
-        
+
         CopyInfo indexCopy;
         indexCopy.ReadBuffer = lastIndexHandle;
         indexCopy.WriteBuffer = indexHandle;
-        indexCopy.ReadOffset = lastObject.IndexOffset;
-        indexCopy.WriteOffset = object.IndexOffset;
-        indexCopy.Count = lastObject.IndexCount;
+        indexCopy.ReadOffset = m_BatchManager.GetDrawInfo(lastObject.BatchID, lastObject.DrawInfoOffset).IndexOffset;
+        indexCopy.WriteOffset = m_BatchManager.GetDrawInfo(object.BatchID, object.DrawInfoOffset).IndexOffset;
+        indexCopy.Count = m_BatchManager.GetDrawInfo(lastObject.BatchID, lastObject.DrawInfoOffset).IndexCount;
 
         m_BufferManager.CopyRegion(vertCopy);
         m_BufferManager.CopyRegion(indexCopy);
 
         lastObject.VertexOffset = object.VertexOffset;
-        lastObject.IndexOffset = object.IndexOffset;
+        m_BatchManager.GetDrawInfo(lastObject.BatchID, lastObject.DrawInfoOffset).IndexOffset = m_BatchManager.GetDrawInfo(object.BatchID, object.DrawInfoOffset).IndexOffset;
 
         Quilt::Mesh& mesh = m_MeshManager.GetMeshData(lastObject.MeshHandle);
         std::vector<unsigned int> relocatedIndices = mesh.Indices;
@@ -252,7 +375,7 @@ void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
             index += object.VertexOffset;
         }
 
-        m_BufferManager.PopulateBuffer(indexHandle, relocatedIndices.data(), lastObject.IndexCount, object.IndexOffset);
+        m_BufferManager.PopulateBuffer(indexHandle, relocatedIndices.data(), indexCopy.Count, indexCopy.WriteOffset);
 
         unsigned int lastDrawInfo = lastObject.DrawInfoOffset;
         unsigned int drawInfo = object.DrawInfoOffset;
@@ -260,21 +383,20 @@ void Quilt::Duvet::RemoveRenderableObject(uint64_t entityID)
         m_BatchManager.GetBatch(object.BatchID).DrawInfos[drawInfo] = m_BatchManager.GetBatch(lastObject.BatchID).DrawInfos[lastDrawInfo];
 
         lastObject.DrawInfoOffset = drawInfo;
-        object.BatchID = lastObject.BatchID;
     }
 
-    m_BatchManager.GetBatch(object.BatchID).DrawInfos.pop_back();
+    m_BatchManager.GetBatch(removedBatchID).DrawInfos.pop_back();
 
-    unsigned int vertHandle = m_BatchManager.GetVertexBufferHandle(object.BatchID);
-    unsigned int indexHandle = m_BatchManager.GetIndexBufferHandle(object.BatchID);
-    m_BufferManager.RemoveRegion(vertHandle, object.VertexCount);
-    m_BufferManager.RemoveRegion(indexHandle, object.IndexCount);
+    unsigned int vertHandle = m_BatchManager.GetVertexBufferHandle(removedBatchID);
+    unsigned int indexHandle = m_BatchManager.GetIndexBufferHandle(removedBatchID);
+    m_BufferManager.RemoveRegion(vertHandle, removedVertexCount);
+    m_BufferManager.RemoveRegion(indexHandle, removedIndexCount);
 
     if(m_BufferManager.IsBufferEmpty(vertHandle) && m_BufferManager.IsBufferEmpty(indexHandle))
     {
         m_BufferManager.RemoveBuffer(vertHandle);
         m_BufferManager.RemoveBuffer(indexHandle);
-        m_BatchManager.RemoveBatch(object.BatchID);
+        m_BatchManager.RemoveBatch(removedBatchID);
     }
 
     m_RenderManager.RemoveRenderableObject(entityID);
@@ -305,7 +427,7 @@ void Quilt::Duvet::RemoveCamera(unsigned int& cameraHandle)
     m_CameraManager.RemoveCamera(cameraHandle);
 }
 
-void Quilt::Duvet::CreateTexture(uint64_t entityID, const std::string texturePath, const TextureFiltering filter)
+int Quilt::Duvet::CreateTexture(uint64_t entityID, const std::string texturePath, const TextureFiltering filter)
 {
     //TODO: check if entity has Renderable
     if(!m_RenderManager.HasRenderableObject(entityID))
@@ -313,6 +435,8 @@ void Quilt::Duvet::CreateTexture(uint64_t entityID, const std::string texturePat
         //TODO: Figure out a way to make a renderable not render if there is no data
         //m_RenderManager.CreateRenderableObject(entityID);
     }
+
+    //TODO: this is only for dynamic would be nice to have this change
 
     //Load Texture from file
     int slot = m_TextureManager.AddTexture(texturePath, filter);
@@ -332,6 +456,8 @@ void Quilt::Duvet::CreateTexture(uint64_t entityID, const std::string texturePat
     }
 
     m_BufferManager.PopulateBuffer(vertexBufferHandle, verts.data(), vertexCount, vertexOffset);
+
+    return slot;
 };
 
 bool Quilt::Duvet::IsContextValid()
@@ -362,6 +488,25 @@ void Quilt::Duvet::Draw()
 
             GLCall(glUseProgram(currentBatch.Data.ShaderID));
 
+            m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_View", camera.ViewMatrix);
+            m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Projection", camera.ProjectionMatrix);
+
+            int samplers[32];
+            for(int i = 0; i < 32; ++i)
+            {
+                samplers[i] = i;
+            } 
+
+            m_ShaderManager.SetUniform1iv(currentBatch.Data.ShaderID, "u_Textures", 32, samplers);
+
+            m_VertexArrayManager.Bind(currentBatch.VertexArrayHandle);
+
+            for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
+            {
+                GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
+                GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
+            }
+
             switch (currentBatch.Data.Type)
             {
                 case Quilt::BatchType::None:
@@ -371,25 +516,6 @@ void Quilt::Duvet::Draw()
                     break;
                 
                 case Quilt::BatchType::Dynamic:
-                    
-                    m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_View", camera.ViewMatrix);
-                    m_ShaderManager.SetUniformMat4f(currentBatch.Data.ShaderID, "u_Projection", camera.ProjectionMatrix);
-
-                    int samplers[32];
-                    for(int i = 0; i < 32; ++i)
-                    {
-                        samplers[i] = i;
-                    } 
-
-                    m_ShaderManager.SetUniform1iv(currentBatch.Data.ShaderID, "u_Textures", 32, samplers);
-
-                    m_VertexArrayManager.Bind(currentBatch.VertexArrayHandle);
-
-                    for(const Quilt::Texture& texture : m_TextureManager.GetTextures())
-                    {
-                        GLCall(glActiveTexture(GL_TEXTURE0 + texture.Slot));
-                        GLCall(glBindTexture(GL_TEXTURE_2D, texture.Handle));
-                    }
 
                     for(int i = 0; i < currentBatch.DrawInfos.size(); i++)
                     {
@@ -403,6 +529,9 @@ void Quilt::Duvet::Draw()
                     break;
 
                 case Quilt::BatchType::Instanced:
+                    //TODO: 0 needs to be replaced with renderableObject.InstanceSlot
+                    GLCall(glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, m_BufferManager.GetBufferStorage().Handles[currentBatch.InstanceBufferHandle]));
+                    GLCall(glDrawElementsInstanced(GL_TRIANGLES, currentBatch.DrawInfos[0].IndexCount, GL_UNSIGNED_INT, nullptr, currentBatch.InstanceCount));
                     break;
             }
 

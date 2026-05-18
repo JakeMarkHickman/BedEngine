@@ -24,6 +24,7 @@ namespace Quilt
         Pillow::Vector4f Colour;
         Pillow::Vector2f TextureCoordinates;
         float TextureID;
+        float padding;
     };
 
     class Duvet
@@ -41,6 +42,7 @@ namespace Quilt
         static unsigned int CreateMesh(const std::string& path);
 
         static void CreateRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID);
+        static void UpdateSpriteInstanceData(uint64_t entityID, Pillow::Transform& transform, Pillow::Vector4f& colour, Pillow::Vector2f& textureCoords, float& textureID);
         static void UpdateTransform(uint64_t entityID, Pillow::Transform& transform);
         static void RemoveRenderableObject(uint64_t entityID);
 
@@ -48,7 +50,7 @@ namespace Quilt
         static void UpdateCamera(unsigned int cameraHandle, Pillow::Transform& trnasform);
         static void RemoveCamera(unsigned int& cameraHandle);
 
-        static void CreateTexture(uint64_t entityID, const std::string texturePath, const TextureFiltering filter);
+        static int CreateTexture(uint64_t entityID, const std::string texturePath, const TextureFiltering filter);
 
         static void SetViewPort(int width, int height) { m_CameraManager.SetWindowWidth(width); m_CameraManager.SetWindowHeight(height); };
 

@@ -17,7 +17,7 @@ namespace Quilt
             return Position == other.Position &&
                     TextureCoordinates == other.TextureCoordinates;
         };
-    }
+    };
 
     struct Vertex
     {

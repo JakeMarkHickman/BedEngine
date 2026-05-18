@@ -41,8 +41,25 @@ namespace Bed
                 {
                     Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
 
+                    Pillow::Vector4f colour = Pillow::Vector4f(1.0f);
+                    Pillow::Vector2f texturecoord;
+                    float textureID;
+
+                    if(world.HasComponents<Bed::Texture>(entity))
+                    {
+                        Bed::Texture* texture = world.GetComponent<Bed::Texture>(entity);
+                        textureID = texture->Handle;
+                        texturecoord = Pillow::Vector2f(0.0f, 1.0f);
+                    }
+                    else
+                    {
+                        textureID = renderer.GetDefaultTexture();
+                        texturecoord = Pillow::Vector2f(0.0f, 1.0f);
+                    }
+
                     //TODO: Update Transform;
-                    renderer.UpdateTransform(entity, *transform);
+                    //renderer.UpdateTransform(entity, *transform);
+                    renderer.UpdateSpriteInstanceData(entity, *transform, colour, texturecoord, textureID);
                 }
             }
         }
