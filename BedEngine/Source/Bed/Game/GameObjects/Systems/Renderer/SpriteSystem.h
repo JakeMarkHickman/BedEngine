@@ -41,25 +41,29 @@ namespace Bed
                 {
                     Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
 
-                    Pillow::Vector4f colour = Pillow::Vector4f(1.0f);
-                    Pillow::Vector2f texturecoord;
-                    float textureID;
+                    Quilt::SpriteInstanceData data;
+
+                    data.Colour = Pillow::Vector4f(1.0f);
+                    data.TransfomMatrix = transform->GetMatrix();
 
                     if(world.HasComponents<Bed::Texture>(entity))
                     {
                         Bed::Texture* texture = world.GetComponent<Bed::Texture>(entity);
-                        textureID = texture->Handle;
-                        texturecoord = Pillow::Vector2f(0.0f, 1.0f);
+
+                        data.TextureID = texture->Handle;
+                        data.UVMin = texture->MinUV;
+                        data.UVMax = texture->MaxUV;
                     }
                     else
                     {
-                        textureID = renderer.GetDefaultTexture();
-                        texturecoord = Pillow::Vector2f(0.0f, 1.0f);
+                        data.TextureID = renderer.GetDefaultTexture();
+                        data.UVMin = Pillow::Vector2f(0.0f);
+                        data.UVMax = Pillow::Vector2f(1.0f);
                     }
 
-                    //TODO: Update Transform;
+                    //TODO: Update Transform only;
                     //renderer.UpdateTransform(entity, *transform);
-                    renderer.UpdateSpriteInstanceData(entity, *transform, colour, texturecoord, textureID);
+                    renderer.QueueInstance(entity, data);
                 }
             }
         }

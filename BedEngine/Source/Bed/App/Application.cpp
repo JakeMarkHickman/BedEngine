@@ -127,9 +127,12 @@ namespace Bed
             {
                 mat4 MatTransform;
                 vec4 Colour;
-                vec2 TextureCoordinates;
+                vec2 UVMin;
+                vec2 UVMax;
                 float TextureID;
-                float padding;
+                float padding1;
+                float padding2;
+                float padding3;
             };
 
             layout(std430, binding = 0) readonly buffer InstanceBuffer 
@@ -171,7 +174,7 @@ namespace Bed
                 v_Pos = instance.MatTransform * a_Position;
                 v_Normal = a_Normal;
                 v_Colour = instance.Colour;
-                v_TexCoord = a_TexCoord;
+                v_TexCoord = mix(instance.UVMin, instance.UVMax, a_TexCoord);
                 v_TexID = instance.TextureID;
 
                 gl_Position = mvp(a_Position);
@@ -265,6 +268,8 @@ namespace Bed
                 }
             } 
 
+            //Push the instance queue to the 
+            Quilt::Duvet::FlushInstanceDataQueue();
             //Clear the screen
             Quilt::Duvet::Clear();
             //Draw

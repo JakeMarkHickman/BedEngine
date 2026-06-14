@@ -299,7 +299,6 @@ void Quilt::Duvet::UpdateSpriteInstanceData(uint64_t entityID, Pillow::Transform
     Quilt::SpriteInstanceData data;
     data.TransfomMatrix = transform.GetMatrix();
     data.Colour = colour;
-    data.TextureCoordinates = textureCoords;
     data.TextureID = textureID;
 
     unsigned int buffer = m_BufferManager.GetBufferStorage().Handles[batch.InstanceBufferHandle];

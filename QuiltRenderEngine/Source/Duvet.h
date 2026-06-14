@@ -22,9 +22,19 @@ namespace Quilt
     {
         glm::mat4 TransfomMatrix;
         Pillow::Vector4f Colour;
-        Pillow::Vector2f TextureCoordinates;
+        Pillow::Vector2f UVMin;
+        Pillow::Vector2f UVMax;
         float TextureID;
-        float padding;
+        float padding1;
+        float padding2;
+        float padding3;
+    };
+
+    struct InstanceUpload
+    {
+        unsigned int InstanceBufferHandle;
+        unsigned int Slot;
+        std::vector<uint8_t> Data;
     };
 
     class Duvet
@@ -51,10 +61,32 @@ namespace Quilt
         static void RemoveCamera(unsigned int& cameraHandle);
 
         static int CreateTexture(uint64_t entityID, const std::string texturePath, const TextureFiltering filter);
+        static int RegisterTexture(const std::string texturePath, Quilt::TextureFiltering filter) { return m_TextureManager.AddTexture(texturePath, filter); };
+        static int GetTexture(const std::string texturePath) { return m_TextureManager.GetTexture(texturePath); };
+        static bool IsRegisteredTexture(const std::string texturePath) { return m_TextureManager.IsTextureAssigned(texturePath); };
 
         static void SetViewPort(int width, int height) { m_CameraManager.SetWindowWidth(width); m_CameraManager.SetWindowHeight(height); };
 
+        template<typename T>
+        static void QueueInstance(unsigned int entityID, const T& data)
+        {
+            RenderableObject& object = m_RenderManager.GetRenderableObject(entityID);
+            Batch& batch = m_BatchManager.GetBatch(object.BatchID);
+
+            QueueInstanceData(batch.InstanceBufferHandle, object.InstanceSlot, &data, sizeof(T));
+        }
+
+        //Check if linked context is valid like OpenGL
         static bool IsContextValid();
+        //Flush the Instance Queue to the GPU
+        static void FlushInstanceDataQueue() 
+        { 
+            for(const InstanceUpload& command: m_InstanceUploadQueue)
+            {
+                m_BufferManager.PopulateBuffer(command.InstanceBufferHandle, command.Data.data(), 1, command.Slot);
+            }
+            m_InstanceUploadQueue.clear();
+        };
         //Draw all registered meshes to the screen
         static void Draw();
         //Clears the screen from previous draw call
@@ -64,6 +96,16 @@ namespace Quilt
 
         static void CreateDynamicRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID);
         static void CreateInstancedRenderableObject(uint64_t entityID, unsigned int meshID, unsigned int shaderID);
+
+        static void QueueInstanceData(unsigned int instanceBufferHandle, unsigned int slot, const void* data, size_t size) 
+        {
+            InstanceUpload command;
+            command.InstanceBufferHandle = instanceBufferHandle;
+            command.Slot = slot;
+            command.Data.assign(static_cast<const uint8_t*>(data), static_cast<const uint8_t*>(data) + size);
+
+            m_InstanceUploadQueue.push_back(command);
+        };
 
         inline static Quilt::VertexArrayManager m_VertexArrayManager;
 
@@ -78,6 +120,8 @@ namespace Quilt
         inline static Quilt::RenderableManager m_RenderManager;
 
         inline static std::unordered_map<std::string, unsigned int> m_ShaderLookup;
+
+        inline static std::vector<InstanceUpload> m_InstanceUploadQueue;
 
         inline static unsigned int m_DefaultTextureID = 0;
     };

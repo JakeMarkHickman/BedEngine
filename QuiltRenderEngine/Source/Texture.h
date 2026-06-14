@@ -28,12 +28,13 @@ namespace Quilt
         int GetTextureSlots();
         std::vector<Quilt::Texture>& GetTextures() { return m_Textures; };
         int AddTexture(const std::string& path, const TextureFiltering& filter);
+        int GetTexture(const std::string& path) { return m_SlotLookup.at(path); };
         bool IsTexture(unsigned int textureID);
+        bool IsTextureAssigned(const std::string& path);
 
     private:
     
         int AssignSlot(const std::string& path);
-        bool IsTextureAssigned(const std::string& path);
         bool IsAllSlotsFilled();
 
         void AssignMaxSlots() 

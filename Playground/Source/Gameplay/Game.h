@@ -11,6 +11,9 @@
 #include <Components/Tag/PlayerTag.h>
 #include <Components/Camera.h>
 
+#include <Components/Renderer/Animation/UVAnimation.h>
+#include <Systems/Renderer/Animation/UVAnimationSystem.h>
+
 #include <Systems/Input/InputSystem.h>
 #include <Systems/Renderer/SpriteSystem.h>
 #include <Systems/CameraSystem.h>
@@ -40,6 +43,37 @@ namespace Test
             Bed::TextureSystems textureSystems;
             GetECS().RegisterOnComponentAttachedGlobal<Bed::Texture>(textureSystems, &Bed::TextureSystems::OnTextureComponentAttached);
             GetECS().RegisterOnComponentRemovedGlobal<Bed::Texture>(textureSystems, &Bed::TextureSystems::OnTextureComponentRemoved);
+            GetECS().AddSystemGlobal(textureSystems, &Bed::TextureSystems::TextureSystem);
+
+            std::vector<Bed::UVFrame> textureAnim;
+            Bed::UVFrame frameOne = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.0f, 0.5f), Pillow::Vector2f(0.5f, 1.0f));
+            Bed::UVFrame frameTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.5f), Pillow::Vector2f(1.0f));
+            Bed::UVFrame frameThree = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.0f), Pillow::Vector2f(0.5f));
+            Bed::UVFrame frameFour = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.5f, 0.0f), Pillow::Vector2f(1.0f, 0.5f));
+
+            textureAnim.push_back(frameOne);
+            textureAnim.push_back(frameTwo);
+            textureAnim.push_back(frameThree);
+            textureAnim.push_back(frameFour);
+
+            std::vector<Bed::UVFrame> textureAnimTwo;
+            Bed::UVFrame frameOneTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuyGBA.png", Pillow::Vector2f(0.0f, 0.5f), Pillow::Vector2f(0.5f, 1.0f));
+            Bed::UVFrame frameTwoTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuyGBA.png", Pillow::Vector2f(0.5f), Pillow::Vector2f(1.0f));
+            Bed::UVFrame frameThreeTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuyGBA.png", Pillow::Vector2f(0.0f), Pillow::Vector2f(0.5f));
+            Bed::UVFrame frameFourTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuyGBA.png", Pillow::Vector2f(0.5f, 0.0f), Pillow::Vector2f(1.0f, 0.5f));
+            Bed::UVFrame frameFiveTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.0f, 0.5f), Pillow::Vector2f(0.5f, 1.0f));
+            Bed::UVFrame frameSixTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.5f), Pillow::Vector2f(1.0f));
+            Bed::UVFrame frameSevenTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.0f), Pillow::Vector2f(0.5f));
+            Bed::UVFrame frameEightTwo = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.5f, 0.0f), Pillow::Vector2f(1.0f, 0.5f));
+
+            textureAnimTwo.push_back(frameOneTwo);
+            textureAnimTwo.push_back(frameTwoTwo);
+            textureAnimTwo.push_back(frameThreeTwo);
+            textureAnimTwo.push_back(frameFourTwo);
+            textureAnimTwo.push_back(frameFiveTwo);
+            textureAnimTwo.push_back(frameSixTwo);
+            textureAnimTwo.push_back(frameSevenTwo);
+            textureAnimTwo.push_back(frameEightTwo);
 
             //WORLD 1
             uint64_t world1 = GetECS().CreateWorld();
@@ -50,7 +84,8 @@ namespace Test
                                                         Bed::Input(),
                                                         Bed::PlayerOneTag(),
                                                         Mattress::PhysicsObject(),
-                                                        Bed::Texture("Assets/Resources/Textures/LittleGuy.png"));
+                                                        Bed::Texture("Assets/Resources/Textures/LittleGuy.png"),
+                                                        Bed::UVAnimation(textureAnim, 10, true));
 
             uint64_t PlayerOneCam = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, PlayerOneCam, Pillow::Transform(Pillow::Vector3f(-1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
@@ -65,7 +100,8 @@ namespace Test
                                                         Bed::Input(),
                                                         Bed::PlayerTwoTag(),
                                                         Mattress::PhysicsObject(),
-                                                        Bed::Texture("Assets/Resources/Textures/LittleGuyGBA.png"));
+                                                        Bed::Texture("Assets/Resources/Textures/LittleGuyGBA.png"),
+                                                        Bed::UVAnimation(textureAnimTwo, 10, true));
 
             uint64_t PlayerTwoCam = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, PlayerTwoCam, Pillow::Transform(Pillow::Vector3f(1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
@@ -91,6 +127,7 @@ namespace Test
             GetECS().AddSystem(world1, Bed::InputSystem);
             GetECS().AddSystem(world1, Bed::TwoPlayerControllerSystem);
             GetECS().AddSystem(world1, SpawnerSystem);
+            GetECS().AddSystem(world1, Bed::UVAnimationSystem);
         };
     };
 }
