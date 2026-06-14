@@ -17,13 +17,13 @@ Bed::Application* CreateApplication()
 {
     Bed::Application* App = new Bed::Application;
     const char* Name = "Playground";
-    const char* Icon = "Assets/Resources/Textures/LittleGuy.png";
+    //const char* Icon = "Assets/Resources/Textures/LittleGuy.png";
     float PhysicsUpdate = 60.0f;
     float RenderingUpdate = 60.0f;
     Test::Game* game = new Test::Game();
 
     App->SetApplicationName(Name);
-    App->SetWindowIcon(Icon);
+    //App->SetWindowIcon(Icon);
     App->SetPhysicsFramerate(PhysicsUpdate);
     App->SetRendererFramerate(RenderingUpdate);
     App->SetGame(game);

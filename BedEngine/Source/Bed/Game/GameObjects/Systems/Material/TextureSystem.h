@@ -10,11 +10,11 @@ namespace Bed
 
         void OnTextureComponentAttached(Bed::World& world, uint64_t entity)
         {
-            if(world.HasComponents<Bed::Texture>(entity))
-            {
-                Bed::Texture* texture = world.GetComponent<Bed::Texture>(entity);
-                texture->Handle = renderer.CreateTexture(entity, texture->TexturePath, Quilt::TextureFiltering::Nearest);
-            }
+            //if(world.HasComponents<Bed::Texture>(entity))
+            //{
+            //    Bed::Texture* texture = world.GetComponent<Bed::Texture>(entity);
+            //    texture->Handle = renderer.CreateTexture(entity, texture->TexturePath, Quilt::TextureFiltering::Nearest);
+            //}
         }
 
         void OnTextureComponentRemoved(Bed::World& world, uint64_t entity)

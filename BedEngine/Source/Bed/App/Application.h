@@ -83,6 +83,8 @@ namespace Bed
 
         Bed::Platform* m_Platform = nullptr;
         Bed::Window* m_Window = nullptr;
+
+        
     }; 
 
     Application* CreateApplication();

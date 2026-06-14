@@ -49,6 +49,19 @@ namespace Bed
 
         std::unordered_map<uint64_t, Bed::World*>& GetActiveWorlds() { return m_WorldRegistry; };
 
+        Bed::World& GetWorld(uint64_t worldID) { return *m_WorldRegistry.at(worldID); };
+
+        template<typename T>
+        void RegisterOnWorldCreated(T& instance, void(T::*fn)(uint64_t))
+        {
+            m_WorldCreatedListeners.emplace_back([&instance, fn](uint64_t worldID){(instance.*fn)(worldID);});
+        }
+
+        void RegisterOnWorldCreated(std::function<void(uint64_t)> listner)
+        {
+            m_WorldCreatedListeners.emplace_back(listner);
+        }
+
         /*
             This adds a Component attched from a class globally
             For exmple:
@@ -212,12 +225,24 @@ namespace Bed
 
     private:
 
+        void OnWorldCreated(uint64_t worldID)
+        {
+            for(std::function<void(uint64_t)> function : m_WorldCreatedListeners)
+            {
+                function(worldID);
+            }
+        }
+
         std::unordered_map<uint64_t, Bed::World*> m_WorldRegistry;
         Bed::MemoryPool* m_WorldPool;
         int64_t m_NextId = 0;
 
         std::unordered_map<uint64_t, std::vector<std::function<void(Bed::World&, uint64_t)>>> m_GlobalComponentAttachedlisteners;
         std::unordered_map<uint64_t, std::vector<std::function<void(Bed::World&, uint64_t)>>> m_GlobalComponentRemovedlisteners;
+
+        std::vector<std::function<void(uint64_t)>> m_WorldCreatedListeners;
+        std::vector<std::function<void(uint64_t)>> m_WorldDestroyedListeners;
+
         std::vector<std::function<void(Bed::World&)>> m_GlobalSystems;
     };
 }

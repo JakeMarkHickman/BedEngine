@@ -24,6 +24,11 @@
 
 namespace Test
 {
+    void TestWorldCreated(uint64_t worldID)
+    {
+        LOG_DEBUG("World Created: ", worldID);
+    }
+
     class Game : public Bed::Game
     {
     protected:
@@ -44,6 +49,8 @@ namespace Test
             GetECS().RegisterOnComponentAttachedGlobal<Bed::Texture>(textureSystems, &Bed::TextureSystems::OnTextureComponentAttached);
             GetECS().RegisterOnComponentRemovedGlobal<Bed::Texture>(textureSystems, &Bed::TextureSystems::OnTextureComponentRemoved);
             GetECS().AddSystemGlobal(textureSystems, &Bed::TextureSystems::TextureSystem);
+
+            GetECS().RegisterOnWorldCreated(Test::TestWorldCreated);
 
             std::vector<Bed::UVFrame> textureAnim;
             Bed::UVFrame frameOne = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.0f, 0.5f), Pillow::Vector2f(0.5f, 1.0f));

@@ -37,12 +37,16 @@ uint64_t Bed::ECS::CreateWorld()
         m_WorldRegistry[worldID]->AddSystem(system);
     }
 
+    OnWorldCreated(worldID);
+
     return worldID;
 }
 
 void Bed::ECS::RemoveWorld(uint64_t worldID)
 {
     //TODO: create remove world
+
+
 }
 
 uint64_t Bed::ECS::CreateEntity(uint64_t worldID)

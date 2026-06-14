@@ -206,7 +206,6 @@ namespace Bed
         Quilt::Duvet::CreateShader(shaderName, vertexShader, fragmentShader);
         Quilt::Duvet::SetDefaultTexture("Assets/Resources/Textures/256xWhite.png");
 
-        //TODO: Textures shouldnt rely on needing the sprite or transform
         m_Game->GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Mattress::PhysicsObject>(Bed::OnPhysicsComponentAttached);
 
         m_Game->BeginPlay();
@@ -263,9 +262,9 @@ namespace Bed
                         //Update the Position of the Object
                         transform->Position = phyObj->Position;
                     }
-
-                    currentTimer -= PhysicsUpdateDelay;
                 }
+
+                currentTimer -= PhysicsUpdateDelay;
             } 
 
             //Push the instance queue to the 

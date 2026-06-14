@@ -180,6 +180,10 @@ namespace Bed
             }
         }
 
+        void OnWorldCreated() {}
+
+        void OnWorldDestoyed() {}
+
         //Managers
         Bed::EntityManager m_EntityManager;
         Bed::ComponentManager m_ComponentManager;
@@ -194,6 +198,7 @@ namespace Bed
         //Events
         std::unordered_map<uint64_t, std::vector<std::function<void(Bed::World&, uint64_t)>>> m_ComponentAttachedlisteners;
         std::unordered_map<uint64_t, std::vector<std::function<void(Bed::World&, uint64_t)>>> m_ComponentRemovedlisteners;
+
         std::vector<std::function<void(Bed::World&, uint64_t)>> m_EntityCreatedlisteners;
         std::vector<std::function<void(Bed::World&, uint64_t)>> m_EntityDestroyedlisteners;
     };

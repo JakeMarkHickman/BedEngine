@@ -40,6 +40,4 @@ void Mattress::TuftingWorld::PhysicsStep(float deltaTime)
 
         Clear All Accumulated Forces
     */
-
-
 }

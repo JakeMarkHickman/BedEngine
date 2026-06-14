@@ -26,7 +26,6 @@ namespace Bed
                 world.GetWorldPhysics().AddPhysicsObject(physicsObject);
 
                 world.AttachComponents(i, Bed::RegisteredToPhysics());
-            
             }
         }
     }
