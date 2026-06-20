@@ -27,15 +27,13 @@ uint64_t Bed::EntityManager::CreateEntity()
 
 bool Bed::EntityManager::DestroyEntity(uint64_t entityToDestroy)
 {
-    for(size_t i = 0; i < m_Entities.size(); i++)
+    auto entityLocation = std::find(m_Entities.begin(), m_Entities.end(), entityToDestroy);
+    if(entityLocation != m_Entities.end())
     {
-        if(entityToDestroy == m_Entities[i])
-        {
-            LOG_INFO("Removing Entity: ", m_Entities[i]);
-            m_RemovedEntities.push_back(entityToDestroy);
-            m_Entities.erase(m_Entities.begin() + i); // because it needs a iterator for some reason and now causes a crash brill
-            return true;
-        }
+        *entityLocation = m_Entities.back();
+        m_Entities.pop_back();
+        m_RemovedEntities.push_back(entityToDestroy);
+        return true;
     }
 
     LOG_WARN("Entity ", entityToDestroy, " not found");

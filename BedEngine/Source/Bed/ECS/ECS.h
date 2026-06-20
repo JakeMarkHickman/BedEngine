@@ -62,6 +62,18 @@ namespace Bed
             m_WorldCreatedListeners.emplace_back(listner);
         }
 
+        template<typename T>
+        void RegisterOnWorldDestroyed(T& instance, void(T::*fn)(uint64_t))
+        {
+            m_WorldDestroyedListeners.emplace_back([&instance, fn](uint64_t worldID){(instance.*fn)(worldID);});
+        }
+
+        void RegisterOnWorldDestroyed(std::function<void(uint64_t)> listner)
+        {
+            m_WorldDestroyedListeners.emplace_back(listner);
+        }
+
+
         /*
             This adds a Component attched from a class globally
             For exmple:
@@ -228,6 +240,14 @@ namespace Bed
         void OnWorldCreated(uint64_t worldID)
         {
             for(std::function<void(uint64_t)> function : m_WorldCreatedListeners)
+            {
+                function(worldID);
+            }
+        }
+
+        void OnWorldDestroyed(uint64_t worldID)
+        {
+            for(std::function<void(uint64_t)> function : m_WorldDestroyedListeners)
             {
                 function(worldID);
             }

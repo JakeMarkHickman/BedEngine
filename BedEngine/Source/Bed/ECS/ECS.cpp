@@ -44,9 +44,16 @@ uint64_t Bed::ECS::CreateWorld()
 
 void Bed::ECS::RemoveWorld(uint64_t worldID)
 {
-    //TODO: create remove world
+    OnWorldDestroyed(worldID);
 
+    Bed::World& world = GetWorld(worldID);
 
+    for(uint64_t entity : world.GetAllEntities())
+    {
+        world.DestroyEntity(entity);
+    }
+
+    //TODO: remove the world as its still technially there
 }
 
 uint64_t Bed::ECS::CreateEntity(uint64_t worldID)

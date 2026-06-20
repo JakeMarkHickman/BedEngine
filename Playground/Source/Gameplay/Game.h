@@ -29,6 +29,11 @@ namespace Test
         LOG_DEBUG("World Created: ", worldID);
     }
 
+    void TestWorldDestroyed(uint64_t worldID)
+    {
+        LOG_DEBUG("World Destroyed: ", worldID);
+    }
+
     class Game : public Bed::Game
     {
     protected:
@@ -51,6 +56,7 @@ namespace Test
             GetECS().AddSystemGlobal(textureSystems, &Bed::TextureSystems::TextureSystem);
 
             GetECS().RegisterOnWorldCreated(Test::TestWorldCreated);
+            GetECS().RegisterOnWorldDestroyed(Test::TestWorldDestroyed);
 
             std::vector<Bed::UVFrame> textureAnim;
             Bed::UVFrame frameOne = Bed::UVFrame("Assets/Resources/Textures/LittleGuy.png", Pillow::Vector2f(0.0f, 0.5f), Pillow::Vector2f(0.5f, 1.0f));
@@ -115,7 +121,7 @@ namespace Test
                                                         Bed::Input(),
                                                         Bed::PlayerTwoTag(),
                                                         Mattress::PhysicsObject(),
-                                                        Bed::Camera(0.5f, 0.0f, 0.5f, 1.0f)); 
+                                                        Bed::Camera(0.5f, 0.0f, 0.5f, 1.0f));
 
             uint64_t MiniMapCam = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, MiniMapCam, Pillow::Transform(Pillow::Vector3f(0.0f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
@@ -135,6 +141,7 @@ namespace Test
             GetECS().AddSystem(world1, Bed::TwoPlayerControllerSystem);
             GetECS().AddSystem(world1, SpawnerSystem);
             GetECS().AddSystem(world1, Bed::UVAnimationSystem);
+
         };
     };
 }

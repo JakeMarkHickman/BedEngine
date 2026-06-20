@@ -475,6 +475,8 @@ void Quilt::Duvet::Draw()
 
         glm::mat4 view = camera.ViewMatrix;
 
+        //TODO: if there is no cameras after having cameras game crashes. this is due to not deleting cameras properly 
+
         GLCall(glViewport(camera.ScreenPosition.XPositionPercent, camera.ScreenPosition.YPositionPercent, camera.ScreenPosition.XSizePercent, camera.ScreenPosition.YSizePercent));
 
         for (Quilt::Batch currentBatch : m_BatchManager.GetAllBatches())
