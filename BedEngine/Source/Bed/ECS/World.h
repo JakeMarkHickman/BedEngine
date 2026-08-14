@@ -3,6 +3,7 @@
 #include "EntityManager.h"
 #include "ComponentManager.h"
 
+#include <SparseSet.h>
 #include <PhysicsWorld.h>
 #include <TuftingWorld.h>
 #include <SleepTrace.h>
@@ -14,7 +15,8 @@ namespace Bed
     class World
     {
     public:
-        Mattress::PhysicsWorld& GetWorldPhysics() { return m_Physics; };
+        //Mattress::PhysicsWorld& GetWorldPhysics() { return m_Physics; };
+        Mattress::TuftingWorld& GetWorldPhysics() { return m_PhysicsWorld; }
 
         //TODO: Finish the event system for entities and components. After this document and move onto hooking in physics and renderering
 

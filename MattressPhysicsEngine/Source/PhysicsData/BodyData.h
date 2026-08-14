@@ -6,7 +6,7 @@
 
 namespace Mattress
 {
-    struct RigidBodyData
+    struct BodyData
     {
         std::vector<Pillow::Vector3f> Positions;
         std::vector<float> Masses;

@@ -11,10 +11,10 @@
 
 //Components
 #include <Transform.h>
+#include <Components/Physics/PhysicsObject.h>
 #include <Components/Renderer/Sprite.h>
 #include <Components/Material/Texture.h>
 #include <Components/Camera.h>
-#include <PhysicsObject.h>
 
 #include <Vertex.h>
 
@@ -56,23 +56,6 @@ namespace Debug
     }
 }
 #endif
-
-namespace Bed
-{
-    //PHYSICS
-    void OnPhysicsComponentAttached(Bed::World& world, uint64_t entity)
-    {
-        if(world.HasComponents<Pillow::Transform, Mattress::PhysicsObject>(entity))
-        {
-            Mattress::PhysicsObject* physicsObject = world.GetComponent<Mattress::PhysicsObject>(entity);
-            Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
-
-            physicsObject->Position = transform->Position;
-
-            world.GetWorldPhysics().AddPhysicsObject(physicsObject);
-        }
-    }
-}
 
 namespace Bed
 {
@@ -206,8 +189,6 @@ namespace Bed
         Quilt::Duvet::CreateShader(shaderName, vertexShader, fragmentShader);
         Quilt::Duvet::SetDefaultTexture("Assets/Resources/Textures/256xWhite.png");
 
-        m_Game->GetECS().RegisterOnComponentAttachedGlobal<Pillow::Transform, Mattress::PhysicsObject>(Bed::OnPhysicsComponentAttached);
-
         m_Game->BeginPlay();
 
         float PhysicsUpdateDelay = 1.0f / PhysicsFramerate;
@@ -244,23 +225,22 @@ namespace Bed
                 
                 for(auto& world : m_Game->GetActiveWorlds())
                 {
-                    world.second->GetWorldPhysics().Step(PhysicsUpdateDelay); //Physics update
+                    world.second->GetWorldPhysics().PhysicsStep(PhysicsUpdateDelay); //Physics update
                     
                     //Update Entity Positions from physics step
                     //TODO: Use quieries to test for physics data not a physics object to update
                     //TODO: This could be a call back so that all data/worlds gets registered then
                     for(uint64_t i : world.second->GetAllEntities())
                     {
-                        if(!world.second->HasComponents<Pillow::Transform, Mattress::PhysicsObject>(i))
+                        if(!world.second->HasComponents<Pillow::Transform, Bed::PhysicsObject>(i))
                         {
                             continue;
                         }
 
                         Pillow::Transform* transform = world.second->GetComponent<Pillow::Transform>(i);
-                        Mattress::PhysicsObject* phyObj = world.second->GetComponent<Mattress::PhysicsObject>(i);
-
+                        Bed::PhysicsObject* object = world.second->GetComponent<Bed::PhysicsObject>(i);
                         //Update the Position of the Object
-                        transform->Position = phyObj->Position;
+                        transform->Position = world.second->GetWorldPhysics().GetPhysicsBodyLocation(object->Handle);
                     }
                 }
 

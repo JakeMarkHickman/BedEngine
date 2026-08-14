@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "PhysicsData/RigidBodyData.h" 
+#include "PhysicsData/BodyData.h" 
 #include "PhysicsIntergration.h"
 
 namespace Mattress
@@ -16,8 +16,11 @@ namespace Mattress
     {
     public:
     
-        uint64_t AddPhysicsHandle();
+        uint64_t AddPhysicsBody(Pillow::Vector3f& position, float mass);
+        Pillow::Vector3f GetPhysicsBodyLocation(uint64_t handle);
         void RemovePhysicsHandle(uint64_t handle);
+
+        void ApplyForce(uint64_t handle, Pillow::Vector3f forceToAdd);
 
         void PhysicsStep(float deltaTime);
         
@@ -27,9 +30,8 @@ namespace Mattress
         std::vector<uint64_t> m_PhysicsHandles;
         std::vector<uint64_t> m_RecycledHandles;
 
-        Mattress::RigidBodyData m_RigidBodyData;
+        Mattress::BodyData m_BodyData;
 
         Mattress::PhysicsIntergration m_IntergrationMethod;
-
     };
 }
