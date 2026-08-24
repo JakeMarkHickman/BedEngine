@@ -55,6 +55,8 @@ void Mattress::TuftingWorld::PhysicsStep(float deltaTime)
         Clear All Accumulated Forces
     */
 
+
+
     for(int bodyHandle = 0; bodyHandle < m_NextPhysicsHandle; bodyHandle++)
     {
         Pillow::Vector3f acceleration = m_BodyData.Forces[bodyHandle] / m_BodyData.Masses[bodyHandle];

@@ -22,6 +22,8 @@ namespace Mattress
 
         void ApplyForce(uint64_t handle, Pillow::Vector3f forceToAdd);
 
+        uint64_t AddCollider() {};
+
         void PhysicsStep(float deltaTime);
         
     private:
@@ -34,4 +36,6 @@ namespace Mattress
 
         Mattress::PhysicsIntergration m_IntergrationMethod;
     };
+
+    using PhysicsWorld = TuftingWorld;
 }

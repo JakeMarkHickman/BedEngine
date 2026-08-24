@@ -20,7 +20,6 @@
 #include <Systems/CameraSystem.h>
 #include <Systems/Material/TextureSystem.h>
 #include "Systems/SpawnerSystem.h"
-#include <Bed/Game/GameObjects/Systems/PlayerControllerSystem.h>
 #include <Bed/Game/GameObjects/Systems/TwoPlayerControllerSystem.h>
 
 namespace Test
@@ -84,6 +83,8 @@ namespace Test
             textureAnimTwo.push_back(frameThreeTwo);
             textureAnimTwo.push_back(frameFourTwo);
 
+            float playerSpeed = 10.0f;
+
             //WORLD 1
             uint64_t world1 = GetECS().CreateWorld();
 
@@ -91,7 +92,7 @@ namespace Test
             GetECS().AttachComponents(world1, PlayerOne, Bed::Sprite(), 
                                                         Pillow::Transform(Pillow::Vector3f(-1.5f, 0.0f, 0.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
-                                                        Bed::PlayerOneTag(),
+                                                        Bed::PlayerTag(0, playerSpeed),
                                                         Bed::PhysicsObject(),
                                                         Bed::Texture("Assets/Resources/Textures/LittleGuy.png"),
                                                         Bed::UVAnimation(textureAnim, 10, true));
@@ -99,7 +100,7 @@ namespace Test
             uint64_t PlayerOneCam = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, PlayerOneCam, Pillow::Transform(Pillow::Vector3f(-1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
-                                                        Bed::PlayerOneTag(),
+                                                        Bed::PlayerTag(0, playerSpeed),
                                                         Bed::PhysicsObject(),
                                                         Bed::Camera(0.0f, 0.0f, 0.5f, 1.0f));
 
@@ -107,7 +108,7 @@ namespace Test
             GetECS().AttachComponents(world1, PlayerTwo, Bed::Sprite(), 
                                                         Pillow::Transform(Pillow::Vector3f(1.5f, 0.0f, 0.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
-                                                        Bed::PlayerTwoTag(),
+                                                        Bed::PlayerTag(1, playerSpeed),
                                                         Bed::PhysicsObject(),
                                                         Bed::Texture("Assets/Resources/Textures/LittleGuyGBA.png"),
                                                         Bed::UVAnimation(textureAnimTwo, 10, true));
@@ -115,7 +116,7 @@ namespace Test
             uint64_t PlayerTwoCam = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, PlayerTwoCam, Pillow::Transform(Pillow::Vector3f(1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
-                                                        Bed::PlayerTwoTag(),
+                                                        Bed::PlayerTag(1, playerSpeed),
                                                         Bed::PhysicsObject(),
                                                         Bed::Camera(0.5f, 0.0f, 0.5f, 1.0f));
 

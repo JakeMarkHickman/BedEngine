@@ -2,9 +2,9 @@
 
 namespace Bed
 {
-    struct PlayerTag {};
-
-    struct PlayerOneTag{};
-
-    struct PlayerTwoTag{};
+    struct PlayerTag {
+        PlayerTag(int id, float speed) : ID(id), Speed(speed) {}; 
+        int ID = 0;
+        float Speed = 10.0f;
+    };
 }

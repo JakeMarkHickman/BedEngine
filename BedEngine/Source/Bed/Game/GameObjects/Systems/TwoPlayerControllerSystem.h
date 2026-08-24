@@ -8,70 +8,33 @@ namespace Bed
     {
         for(uint64_t i : world.GetAllEntities())
         {
-            //TODO: * by delta time shouldnt be done here and needs to just work out of the box with physics
-
-            //Player One
-            if(world.HasComponents<Bed::Input, Bed::PlayerOneTag, Bed::PhysicsObject>(i))
+            if(world.HasComponents<Bed::Input, Bed::PlayerTag, Bed::PhysicsObject>(i))
             {
                 Bed::Input* input = world.GetComponent<Bed::Input>(i);
                 Bed::PhysicsObject* object = world.GetComponent<Bed::PhysicsObject>(i);
+                Bed::PlayerTag* player = world.GetComponent<Bed::PlayerTag>(i);
+
+                Pillow::Vector3f direction;
+                float speed = player->Speed;
 
                 //MOVEMENT
-                if(input->KeyData[GLFW_KEY_W] == KeyState::Pressed)
+                if(player->ID == 0) //Player 1
                 {
-                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, 0.0f, 1.0f)) * 5.0f;
-                    world.GetWorldPhysics().ApplyForce(object->Handle, Pillow::Vector3f(0.0f, 10.0f, 0.0f));
+                    if(input->KeyData[GLFW_KEY_W] == KeyState::Pressed) direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, 1.0f, 0.0f)) * speed;
+                    if(input->KeyData[GLFW_KEY_A] == KeyState::Pressed) direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(-1.0f, 0.0f, 0.0f)) * speed;
+                    if(input->KeyData[GLFW_KEY_S] == KeyState::Pressed) direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, -1.0f, 0.0f)) * speed;
+                    if(input->KeyData[GLFW_KEY_D] == KeyState::Pressed) direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(1.0f, 0.0f, 0.0f)) * speed;
                 }
 
-                if(input->KeyData[GLFW_KEY_A] == KeyState::Pressed)
+                if(player->ID == 1) //Player 2
                 {
-                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(-1.0f, 0.0f, 0.0f)) * 5.0f;
-                    world.GetWorldPhysics().ApplyForce(object->Handle, Pillow::Vector3f(-10.0f, 0.0f, 0.0f));
+                    if(input->KeyData[GLFW_KEY_UP] == KeyState::Pressed) direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, 1.0f, 0.0f)) * speed;
+                    if(input->KeyData[GLFW_KEY_LEFT] == KeyState::Pressed) direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(-1.0f, 0.0f, 0.0f)) * speed;
+                    if(input->KeyData[GLFW_KEY_DOWN] == KeyState::Pressed) direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, -1.0f, 0.0f)) * speed;
+                    if(input->KeyData[GLFW_KEY_RIGHT] == KeyState::Pressed) direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(1.0f, 0.0f, 0.0f)) * speed;
                 }
 
-                if(input->KeyData[GLFW_KEY_S] == KeyState::Pressed)
-                {
-                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, 0.0f, -1.0f)) * 5.0f;
-                    world.GetWorldPhysics().ApplyForce(object->Handle, Pillow::Vector3f(0.0f, -10.0f, 0.0f));
-                }
-
-                if(input->KeyData[GLFW_KEY_D] == KeyState::Pressed)
-                {
-                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(1.0f, 0.0f, 0.0f)) * 5.0f;
-                    world.GetWorldPhysics().ApplyForce(object->Handle, Pillow::Vector3f(10.0f, 0.0f, 0.0f));
-                }
-            }
-
-            //Player2
-            if(world.HasComponents<Bed::Input, Bed::PlayerTwoTag, Bed::PhysicsObject>(i))
-            {
-                Bed::Input* input = world.GetComponent<Bed::Input>(i);
-                Bed::PhysicsObject* object = world.GetComponent<Bed::PhysicsObject>(i);
-
-                //MOVEMENT
-                if(input->KeyData[GLFW_KEY_UP] == KeyState::Pressed)
-                {
-                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, 0.0f, 1.0f)) * 5.0f;
-                    world.GetWorldPhysics().ApplyForce(object->Handle, Pillow::Vector3f(0.0f, 10.0f, 0.0f));
-                }
-
-                if(input->KeyData[GLFW_KEY_LEFT] == KeyState::Pressed)
-                {
-                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(-1.0f, 0.0f, 0.0f)) * 5.0f;
-                    world.GetWorldPhysics().ApplyForce(object->Handle, Pillow::Vector3f(-10.0f, 0.0f, 0.0f));
-                }
-
-                if(input->KeyData[GLFW_KEY_DOWN] == KeyState::Pressed)
-                {
-                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(0.0f, 0.0f, -1.0f)) * 5.0f;
-                    world.GetWorldPhysics().ApplyForce(object->Handle, Pillow::Vector3f(0.0f, -10.0f, 0.0f));
-                }
-
-                if(input->KeyData[GLFW_KEY_RIGHT] == KeyState::Pressed)
-                {
-                    //direction += Pillow::VectorMath::Normalise(Pillow::Vector3f(1.0f, 0.0f, 0.0f)) * 5.0f;
-                    world.GetWorldPhysics().ApplyForce(object->Handle, Pillow::Vector3f(10.0f, 0.0f, 0.0f));
-                }
+                world.GetWorldPhysics().ApplyForce(object->Handle, direction);
             }
         }
     }
