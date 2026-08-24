@@ -4,7 +4,6 @@
 #include "ComponentManager.h"
 
 #include <SparseSet.h>
-#include <PhysicsWorld.h>
 #include <TuftingWorld.h>
 #include <SleepTrace.h>
 #include <unordered_map>

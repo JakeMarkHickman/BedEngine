@@ -22,7 +22,7 @@ namespace Mattress
 
         void ApplyForce(uint64_t handle, Pillow::Vector3f forceToAdd);
 
-        uint64_t AddCollider() {};
+        uint64_t AddCollider() {return 0;};
 
         void PhysicsStep(float deltaTime);
         

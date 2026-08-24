@@ -46,7 +46,7 @@ Dependencies="MattressPhysicsEngine/Dependencies"
 Source="MattressPhysicsEngine/Source"
 
 Includes="$SharedDependencies -I$Source"
-Cpps="$Source/TuftingWorld.cpp $Source/PhysicsWorld.cpp $Source/PhysicsIntergration.cpp"
+Cpps="$Source/TuftingWorld.cpp $Source/PhysicsIntergration.cpp"
 Flags="-std=c++20 -Wno-c++20-extensions"
 Predef=""
 OutputFile=""

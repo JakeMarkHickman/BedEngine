@@ -5,9 +5,6 @@
 #include <Bed/Core.h>
 #include <Bed/Game/Game.h>
 
-//Physics
-#include <PhysicsWorld.h>
-
 //Renderer
 #include <Duvet.h>
 

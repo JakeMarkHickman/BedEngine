@@ -4,7 +4,7 @@
 
 namespace Mattress
 {
-    struct CollisionData
+    struct AABBCollisionData
     {
         std::vector<Pillow::Vector3f> HalfExents;
     };
