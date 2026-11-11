@@ -60,5 +60,23 @@ namespace Pillow
 
             return Pillow::Vector4<float>(x, y, z, w);
         };
+
+        template<Arithmetic T>
+        static T Dot(const Pillow::Vector2<T>& a, const Pillow::Vector2<T>& b)
+        {
+            return (a.x * b.x) + (a.y * b.y);
+        }
+
+        template<Arithmetic T>
+        static T Dot(const Pillow::Vector3<T>& a, const Pillow::Vector3<T>& b)
+        {
+            return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
+        }
+
+        template<Arithmetic T>
+        static T Dot(const Pillow::Vector4<T>& a, const Pillow::Vector4<T>& b)
+        {
+            return (a.x * b.x) + (a.y * b.y) + (a.z * b.z) + (a.w * b.w);
+        }
     };
 }

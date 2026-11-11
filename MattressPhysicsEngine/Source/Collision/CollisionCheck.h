@@ -1,12 +1,13 @@
 #pragma once
 
-#include "AABB.h"
+#include "../PhysicsData/CollisionData.h"
+#include <SleepTrace.h>
 
 namespace Mattress
 {
     class CollisionChecks
     {
     public:
-        static bool AABBOverlap(Mattress::AABB& a, Mattress::AABB& b);
-    }
+        static bool AABBOverlap(const Pillow::Vector3f& bodyPositionA, const Pillow::Vector3f& halfExtentA, const Pillow::Vector3f& bodyPositionB, const Pillow::Vector3f& halfExtentB, Mattress::ContactData& outContact);
+    };
 }

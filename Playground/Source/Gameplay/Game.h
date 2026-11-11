@@ -9,7 +9,9 @@
 #include <Components/Material/Texture.h>
 #include <Components/Physics/PhysicsObject.h>
 #include <Components/Camera.h>
+#include <Components/Parent.h>
 #include "Components/Player.h"
+#include <Components/Collision/AABBCollision.h>
 
 #include <Components/Renderer/Animation/UVAnimation.h>
 #include <Systems/Renderer/Animation/UVAnimationSystem.h>
@@ -19,8 +21,10 @@
 #include <Systems/Physics/PhysicsObjectSystems.h>
 #include <Systems/CameraSystem.h>
 #include <Systems/Material/TextureSystem.h>
+#include <Systems/Collision/AABBCollisionSystem.h>
 #include "Systems/SpawnerSystem.h"
 #include "Systems/TwoPlayerControllerSystem.h"
+#include <Systems/ParentSystem.h>
 
 namespace Test
 {
@@ -58,6 +62,9 @@ namespace Test
             Bed::PhysicsObjectSystems physicsSystems;
             GetECS().RegisterOnComponentAttachedGlobal<Bed::PhysicsObject>(physicsSystems, &Bed::PhysicsObjectSystems::OnPhysicsObjectComponentAttached);
 
+            Bed::AABBCollisionSystems collisionSystems;
+            GetECS().RegisterOnComponentAttachedGlobal<Bed::AABBCollision>(collisionSystems, &Bed::AABBCollisionSystems::OnAABBCollisionComponentAttached);
+
             GetECS().RegisterOnWorldCreated(Test::TestWorldCreated);
             GetECS().RegisterOnWorldDestroyed(Test::TestWorldDestroyed);
 
@@ -84,6 +91,7 @@ namespace Test
             textureAnimTwo.push_back(frameFourTwo);
 
             float playerSpeed = 10.0f;
+            Pillow::Vector3f cameraOffset = Pillow::Vector3f(0.0f, 0.0f, -5.0f);
 
             //WORLD 1
             uint64_t world1 = GetECS().CreateWorld();
@@ -95,13 +103,14 @@ namespace Test
                                                         Playground::Player(0, playerSpeed),
                                                         Bed::PhysicsObject(),
                                                         Bed::Texture("Assets/Resources/Textures/LittleGuy.png"),
-                                                        Bed::UVAnimation(textureAnim, 10, true));
+                                                        Bed::UVAnimation(textureAnim, 10, true), 
+                                                        Bed::AABBCollision(0.25f, true));
 
             uint64_t PlayerOneCam = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, PlayerOneCam, Pillow::Transform(Pillow::Vector3f(-1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
                                                         Playground::Player(0, playerSpeed),
-                                                        Bed::PhysicsObject(),
+                                                        Bed::Parent(PlayerOne, cameraOffset),
                                                         Bed::Camera(0.0f, 0.0f, 0.5f, 1.0f));
 
             uint64_t PlayerTwo = GetECS().CreateEntity(world1);
@@ -111,13 +120,14 @@ namespace Test
                                                         Playground::Player(1, playerSpeed),
                                                         Bed::PhysicsObject(),
                                                         Bed::Texture("Assets/Resources/Textures/LittleGuyGBA.png"),
-                                                        Bed::UVAnimation(textureAnimTwo, 10, true));
+                                                        Bed::UVAnimation(textureAnimTwo, 10, true),
+                                                        Bed::AABBCollision(0.25f, true));
 
             uint64_t PlayerTwoCam = GetECS().CreateEntity(world1);
             GetECS().AttachComponents(world1, PlayerTwoCam, Pillow::Transform(Pillow::Vector3f(1.5f, 0.0f, -5.0f), Pillow::Vector3f(0.0f, 0.0f, 0.0f), Pillow::Vector3f(1.0f, 1.0f, 1.0f)),
                                                         Bed::Input(),
                                                         Playground::Player(1, playerSpeed),
-                                                        Bed::PhysicsObject(),
+                                                        Bed::Parent(PlayerTwo, cameraOffset),
                                                         Bed::Camera(0.5f, 0.0f, 0.5f, 1.0f));
 
             uint64_t MiniMapCam = GetECS().CreateEntity(world1);
@@ -138,7 +148,7 @@ namespace Test
             GetECS().AddSystem(world1, Playground::TwoPlayerControllerSystem);
             GetECS().AddSystem(world1, SpawnerSystem);
             GetECS().AddSystem(world1, Bed::UVAnimationSystem);
-
+            GetECS().AddSystem(world1, Bed::ParentSystem);
         };
     };
 }

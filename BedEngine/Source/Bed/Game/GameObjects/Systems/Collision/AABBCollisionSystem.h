@@ -14,7 +14,33 @@
 
 namespace Bed
 {
-    void AABBCollisionSystem(Bed::World& world)
+    struct AABBCollisionSystems
+    {
+        void OnAABBCollisionComponentAttached(Bed::World& world, uint64_t entity)
+        {
+            //TODO: I want to make it so that you dont need to add the physics object and Collision in the right order before adding
+
+            if(world.HasComponents<Pillow::Transform, Bed::PhysicsObject, Bed::AABBCollision>(entity))
+            {
+                Bed::AABBCollision* collision = world.GetComponent<Bed::AABBCollision>(entity);
+                Bed::PhysicsObject* object = world.GetComponent<Bed::PhysicsObject>(entity);
+
+                collision->Handle = world.GetWorldPhysics().AddCollider(Mattress::CollisionType::Box, object->Handle, collision->HalfExtent);
+            }
+        }
+
+        void OnAABBCollisionComponentRemoved(Bed::World& world, uint64_t entity)
+        {
+            
+        }
+
+        void AABBCollisionSystem(Bed::World& world)
+        {
+            
+        }
+    };
+
+    /*void AABBCollisionSystem(Bed::World& world)
     {
         std::vector<uint64_t>& allEntities = world.GetAllEntities();
         std::unordered_map<uint64_t, std::vector<uint64_t>> curCollisions; // stops crash after deleting an entity
@@ -63,7 +89,7 @@ namespace Bed
             }
         }
 
-        /*for (uint64_t i : allEntities)
+        for (uint64_t i : allEntities)
         {
             if (!world.HasComponents<Bed::AABBCollision, Bed::Transform>(i))
                 continue;
@@ -137,6 +163,6 @@ namespace Bed
             }
 
             std::cout << "Collision end: " << i << "\n";
-        }*/
-    }
+        }
+    }*/
 }

@@ -4,10 +4,11 @@ namespace Bed
 {
     struct PhysicsObject
     {
-        PhysicsObject() {};
+        PhysicsObject() : Mass(10.0f) {};
+        PhysicsObject(float mass) : Mass(mass) {};
 
         uint64_t Handle;
 
-        float Mass = 10.0f;
+        float Mass;
     };
 }

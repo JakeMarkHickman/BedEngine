@@ -13,6 +13,9 @@ namespace Bed
             {
                 Pillow::Transform* transform = world.GetComponent<Pillow::Transform>(entity);
                 Bed::PhysicsObject* object = world.GetComponent<Bed::PhysicsObject>(entity);
+                //if(object->Handle != UINT64_MAX)
+                //    return;
+
                 float mass = object->Mass;
 
                 object->Handle = world.GetWorldPhysics().AddPhysicsBody(transform->Position, mass);
